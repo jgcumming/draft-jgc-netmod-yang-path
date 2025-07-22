@@ -1,8 +1,8 @@
 <!-- regenerate: on (set to off if you edit this file) -->
 
-# TODO - Your title
+# YANG path format
 
-This is the working area for the individual Internet-Draft, "TODO - Your title".
+This is the working area for the individual Internet-Draft, "YANG path format".
 
 * [Editor's Copy](https://jgcumming.github.io/draft-jgc-netmod-yang-path/#go.draft-jgc-netmod-yang-path.html)
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-jgc-netmod-yang-path)
