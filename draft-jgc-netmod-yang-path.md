@@ -1,6 +1,5 @@
 ---
-title: "TODO - Your title"
-abbrev: "TODO - Abbreviation"
+title: "YANG path format"
 category: info
 
 docname: draft-jgc-netmod-yang-path-latest
@@ -26,8 +25,8 @@ venue:
 author:
  -
     fullname: "James Cumming"
-    organization: Your Organization Here
-    email: "jgcumming@users.noreply.github.com"
+    organization: Nokia
+    email: "james.cumming@nokia.com"
 
 normative:
 
