@@ -72,6 +72,33 @@ instance data and the YANG path format in this document is a familiar format.
 
 {::boilerplate bcp14-tagged}
 
+# Format definition
+
+This section will define the YANG path format using a number of examples to cover
+each situation.
+
+The YANG path format is designed to be applicable to both YANG schema information
+and YANG instance data.
+
+## Module:Field format
+
+The YANG path format is always provided from the root of the YANG tree and uses
+a `module:field` format where the `module` is the name of the YANG module.  For
+example:
+
+```
+/ietf-interfaces:interfaces
+```
+
+The module is inherited along the path from left to right.  That means that if
+the module does not change (as occurs in augments which are discussed later in this
+document) the module does not need to be provided again.  For example:
+
+```
+/ietf-routing-policy:routing-policy/defined-sets/prefix-sets
+```
+
+
 # Security Considerations
 
 TODO Security
