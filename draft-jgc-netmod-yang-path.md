@@ -1,6 +1,6 @@
 ---
 title: "YANG path format"
-category: info
+category: std
 
 docname: draft-jgc-netmod-yang-path-latest
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
