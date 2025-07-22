@@ -23,7 +23,7 @@ venue:
   mail: "netmod@ietf.org"
   arch: "https://mailarchive.ietf.org/arch/browse/netmod/"
   github: "jgcumming/draft-jgc-netmod-yang-path"
-  latest: "https://jgcumming.github.io/draft-jgc-netmod-yang-path/draft-jgc-netmod-yang-path.html"
+  latest: "https://draft-jgc-netmod-yang-path.jgc.dev/draft-jgc-netmod-yang-path.html"
 
 author:
  -
