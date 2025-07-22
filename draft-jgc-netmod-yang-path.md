@@ -19,75 +19,68 @@
 # Change the file extension to match the format (.xml for XML, etc...)
 #
 ###
-title: "YANG path format"
+title: "TODO - Your title"
+abbrev: "TODO - Abbreviation"
 category: info
 
-docname: draft-jgc-netmod-yang-path-latest
+docname: draft-todo-yourname-protocol-latest
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
 consensus: true
 v: 3
-area: NETMOD
-workgroup: NETMOD Working Group
-
+area: AREA
+workgroup: WG Working Group
+keyword:
+ - next generation
+ - unicorn
+ - sparkling distributed ledger
 venue:
-  group: NETMOD
+  group: WG
   type: Working Group
   mail: WG@example.com
   arch: https://example.com/WG
-  github: jgcumming/draft-jgc-netmod-yang-path
+  github: USER/REPO
   latest: https://example.com/LATEST
 
 author:
  -
-    fullname: James Cumming
-    organization: Nokia
-    email: james.cumming@nokia.com
+    fullname: Your Name Here
+    organization: Your Organization Here
+    email: your.email@example.com
 
 normative:
 
 informative:
 
-[RFC9535](https://datatracker.ietf.org/doc/rfc9535/)
-[XPATH](http://www.w3.org/TR/1999/REC-xpath-19991116)
-
 ...
 
 --- abstract
 
-There is a common path format described when interacting with YANG
-modules and the tools surrounding it, named xpath.  The xpath format
-has some shortcomings for YANG module and tool designers and users.
+TODO Abstract
 
-This draft provides a common path format, the YANG path, to
-provide a self describing method of detailing YANG modelled paths
-(both in schema and in instance data).
 
 --- middle
 
 # Introduction
 
-A number of path formats currently exist, such as JSON path and Xpath.
-These path formats serve well for their initial use cases, however,
-when considering a broader YANG generic path format that describes both
-the path and the YANG models that the paths are described in are not covered
-completely.
+TODO Introduction
 
-In addition, there is a trend towards using JSON for described data for YANG
-instance data and the YANG path format in this document is a familiar format.
 
 # Conventions and Definitions
 
 {::boilerplate bcp14-tagged}
 
+
 # Security Considerations
 
 TODO Security
 
+
 # IANA Considerations
 
 This document has no IANA actions.
+
 
 --- back
 
