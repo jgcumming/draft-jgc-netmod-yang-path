@@ -30,13 +30,6 @@ consensus: true
 v: 3
 area: NETMOD
 workgroup: NETMOD Working Group
-keyword:
-
-- YANG
-- path
-- JSON
-- JSON instance path
-- YANG path
 
 venue:
   group: NETMOD
