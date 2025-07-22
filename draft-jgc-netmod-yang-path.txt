@@ -4,7 +4,7 @@
 
 Network Modeling                                              J. Cumming
 Internet-Draft                                                     Nokia
-Intended status: Informational                              22 July 2025
+Intended status: Standards Track                            22 July 2025
 Expires: 23 January 2026
 
 
