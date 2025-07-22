@@ -64,7 +64,6 @@ instance data and the YANG path format in this document is a familiar format.
 
 {::boilerplate bcp14-tagged}
 
-
 # Security Considerations
 
 TODO Security
