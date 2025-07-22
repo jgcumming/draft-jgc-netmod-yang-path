@@ -129,6 +129,9 @@ Table of Contents
               DOI 10.17487/RFC9535, February 2024,
               <https://www.rfc-editor.org/rfc/rfc9535>.
 
+   [XPATH]    W3C, "XML Path Language (XPath) Version 1.0",
+              <https://www.w3.org/TR/1999/REC-xpath-19991116/>.
+
 Acknowledgments
 
    TODO acknowledge.
