@@ -82,21 +82,17 @@ completely.
 In addition, there is a trend towards using JSON for described data for YANG
 instance data and the YANG path format in this document is a familiar format.
 
-
 # Conventions and Definitions
 
 {::boilerplate bcp14-tagged}
-
 
 # Security Considerations
 
 TODO Security
 
-
 # IANA Considerations
 
 This document has no IANA actions.
-
 
 --- back
 
