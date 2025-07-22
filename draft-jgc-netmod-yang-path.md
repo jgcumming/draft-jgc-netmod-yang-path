@@ -11,9 +11,12 @@ v: 3
 area: "Operations and Management"
 workgroup: "Network Modeling"
 keyword:
- - next generation
- - unicorn
- - sparkling distributed ledger
+
+- YANG
+- path
+- YANG path
+- JSON instance path
+
 venue:
   group: "Network Modeling"
   type: "Working Group"
