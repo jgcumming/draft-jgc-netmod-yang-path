@@ -54,8 +54,8 @@ normative:
 
 informative:
 
-- [RFC9535](https://datatracker.ietf.org/doc/rfc9535/)
-- [XPATH](http://www.w3.org/TR/1999/REC-xpath-19991116)
+[RFC9535](https://datatracker.ietf.org/doc/rfc9535/)
+[XPATH](http://www.w3.org/TR/1999/REC-xpath-19991116)
 
 ...
 
