@@ -37,6 +37,11 @@ informative:
 
   RFC9535:
   XPATH:
+    target: https://www.w3.org/TR/1999/REC-xpath-19991116/
+    title: XML Path Language (XPath) Version 1.0
+    author:
+      - name: W3C
+    date: false
 
 ...
 
