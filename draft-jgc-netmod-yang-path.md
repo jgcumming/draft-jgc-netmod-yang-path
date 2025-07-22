@@ -19,52 +19,68 @@
 # Change the file extension to match the format (.xml for XML, etc...)
 #
 ###
-title: "TODO - Your title"
-abbrev: "TODO - Abbreviation"
+title: "YANG path format"
 category: info
 
-docname: draft-todo-yourname-protocol-latest
+docname: draft-jgc-netmod-yang-path-latest
 submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
 consensus: true
 v: 3
-area: AREA
-workgroup: WG Working Group
+area: NETMOD
+workgroup: NETMOD Working Group
 keyword:
- - next generation
- - unicorn
- - sparkling distributed ledger
+ - YANG
+ - path
+ - JSON
+ - JSON instance path
+ - YANG path
 venue:
-  group: WG
+  group: NETMOD
   type: Working Group
   mail: WG@example.com
   arch: https://example.com/WG
-  github: USER/REPO
+  github: jgcumming/draft-jgc-netmod-yang-path
   latest: https://example.com/LATEST
 
 author:
  -
-    fullname: Your Name Here
-    organization: Your Organization Here
-    email: your.email@example.com
+    fullname: James Cumming
+    organization: Nokia
+    email: james.cumming@nokia.com
 
 normative:
 
 informative:
 
+- [RFC9535](https://datatracker.ietf.org/doc/rfc9535/)
+- [XPATH](http://www.w3.org/TR/1999/REC-xpath-19991116)
+
 ...
 
 --- abstract
 
-TODO Abstract
+There is a common path format described when interacting with YANG
+modules and the tools surrounding it, named xpath.  The xpath format
+has some shortcomings for YANG module and tool designers and users.
 
+This draft provides a common path format, the YANG path, to
+provide a self describing method of detailing YANG modelled paths
+(both in schema and in instance data).
 
 --- middle
 
 # Introduction
 
-TODO Introduction
+A number of path formats currently exist, such as JSON path and Xpath.
+These path formats serve well for their initial use cases, however,
+when considering a broader YANG generic path format that describes both
+the path and the YANG models that the paths are described in are not covered
+completely.
+
+In addition, there is a trend towards using JSON for described data for YANG
+instance data and the YANG path format in this document is a familiar format.
 
 
 # Conventions and Definitions
