@@ -4,8 +4,8 @@
 
 Network Modeling                                              J. Cumming
 Internet-Draft                                                     Nokia
-Intended status: Standards Track                            22 July 2025
-Expires: 23 January 2026
+Intended status: Standards Track                            23 July 2025
+Expires: 24 January 2026
 
 
                             YANG path format
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 January 2026.
+   This Internet-Draft will expire on 24 January 2026.
 
 Copyright Notice
 
@@ -75,6 +75,15 @@ Table of Contents
    2.  Conventions and Definitions
    3.  Format definition
      3.1.  Module:Field format
+     3.2.  Augmentations
+     3.3.  Deviations
+     3.4.  Import/Include
+     3.5.  Lists
+       3.5.1.  Lists in schema
+       3.5.2.  Lists in instance data
+     3.6.  Leaf lists
+     3.7.  Metadata annotations
+     3.8.  Wildcards/Regex
    4.  Security Considerations
    5.  IANA Considerations
    6.  References
@@ -125,6 +134,64 @@ Table of Contents
    provided again.  For example:
 
    /ietf-routing-policy:routing-policy/defined-sets/prefix-sets
+
+3.2.  Augmentations
+
+   When a YANG module is augmented into another the namespace changes.
+   This is represented in the YANG path by a change in the module field.
+
+   /ietf-routing:routing/control-plane-protocols/ietf-ospf:ospf/address-
+   family
+
+   In this example the module inheritance approach remains, the control-
+   plane-protocols container is in the ietf-routing YANG module and the
+   address-family leaf is in the ietf-ospf YANG module that has been
+   augmented into the ietf-routing module.
+
+3.3.  Deviations
+
+   Deviations do not change the namespace of the YANG nodes and
+   therefore the module portion of the YANG path does not change.
+
+3.4.  Import/Include
+
+   Imports and includes do not change the namespace of the YANG nodes
+   and therefore the module portion of the YANG path does not change.
+
+3.5.  Lists
+
+   When considering the YANG path for lists it is important to consider
+   both the schema and the instance data as these are represented in
+   slightly different ways.
+
+3.5.1.  Lists in schema
+
+   YANG lists in schema are represented in the YANG path to the top of
+   the list.  For example:
+
+   /ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-
+   set
+
+3.5.2.  Lists in instance data
+
+   YANG lists in instance data are represented in the YANG path to the
+   top of the list with the list key and the list key's value being
+   provided in square brackets.  For example:
+
+   /ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-
+   set[name="loopbacks"]
+
+   This means that the YANG path to a leaf under the loopbacks list
+   entry would be:
+
+   /ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-
+   set[name="loopbacks"]/mode
+
+3.6.  Leaf lists
+
+3.7.  Metadata annotations
+
+3.8.  Wildcards/Regex
 
 4.  Security Considerations
 
