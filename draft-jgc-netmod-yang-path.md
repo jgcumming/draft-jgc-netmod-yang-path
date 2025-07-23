@@ -98,6 +98,65 @@ document) the module does not need to be provided again.  For example:
 /ietf-routing-policy:routing-policy/defined-sets/prefix-sets
 ```
 
+## Augmentations
+
+When a YANG module is augmented into another the namespace changes.  This is represented
+in the YANG path by a change in the `module` field.
+
+```
+/ietf-routing:routing/control-plane-protocols/ietf-ospf:ospf/address-family
+```
+
+In this example the module inheritance approach remains, the `control-plane-protocols` container
+is in the `ietf-routing` YANG module and the `address-family` leaf is in the `ietf-ospf` YANG
+module that has been augmented into the `ietf-routing` module.
+
+## Deviations
+
+Deviations do not change the namespace of the YANG nodes and therefore the `module`
+portion of the YANG path does not change.
+
+## Import/Include
+
+Imports and includes do not change the namespace of the YANG nodes and therefore the `module`
+portion of the YANG path does not change.
+
+## Lists
+
+When considering the YANG path for lists it is important to consider both the schema 
+and the instance data as these are represented in slightly different ways.
+
+### Lists in schema
+
+YANG lists in schema are represented in the YANG path to the top of the list.  For example:
+
+```
+/ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set
+```
+
+### Lists in instance data
+
+YANG lists in instance data are represented in the YANG path to the top of the list with the
+list key and the list key's value being provided in square brackets.  For example:
+
+```
+/ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set[name="loopbacks"]
+```
+
+This means that the YANG path to a leaf under the `loopbacks` list entry would be:
+
+```
+/ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set[name="loopbacks"]/mode
+```
+
+
+## Leaf lists
+
+## Metadata annotations
+
+## Wildcards/Regex
+
+
 
 # Security Considerations
 
