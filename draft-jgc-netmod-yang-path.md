@@ -123,7 +123,7 @@ portion of the YANG path does not change.
 
 ## Lists
 
-When considering the YANG path for lists it is important to consider both the schema 
+When considering the YANG path for lists it is important to consider both the schema
 and the instance data as these are represented in slightly different ways.
 
 ### Lists in schema
