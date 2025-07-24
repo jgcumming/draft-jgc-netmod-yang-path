@@ -35,6 +35,7 @@ normative:
 
 informative:
 
+  RFC7952:
   RFC9535:
   XPATH:
     target: https://www.w3.org/TR/1999/REC-xpath-19991116/
@@ -134,6 +135,19 @@ YANG lists in schema are represented in the YANG path to the top of the list.  F
 /ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set
 ```
 
+The provide the path to the key of a list
+
+```
+/ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set[name]
+```
+
+and
+
+```
+/ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set/name
+```
+
+
 ### Lists in instance data
 
 YANG lists in instance data are represented in the YANG path to the top of the list with the
@@ -149,14 +163,33 @@ This means that the YANG path to a leaf under the `loopbacks` list entry would b
 /ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set[name="loopbacks"]/mode
 ```
 
-
 ## Leaf lists
+
+The YANG path to a leaf-list is the path to the
 
 ## Metadata annotations
 
+Metadata annotations as defined in {{RFC7952}} are applied to items in a path.  The YANG path
+does not support referencing any metadata annotations attached to any element in the path.
+
 ## Wildcards/Regex
 
+## Similarity to JSON
 
+Considering this path `/ietf-routing:routing/control-plane-protocols/ietf-ospf:ospf/address-family`
+with a value of `ipv4`, the translation to JSON based on {{RFC7952}} would be:
+
+```
+{
+  "ietf-routing:routing": {
+    "control-plane-protocols": {
+      "ietf-ospf:ospf": {
+        "address-family": "ipv4"
+      }
+    }
+  }
+}
+```
 
 # Security Considerations
 
