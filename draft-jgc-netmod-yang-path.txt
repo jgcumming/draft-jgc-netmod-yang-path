@@ -4,8 +4,8 @@
 
 Network Modeling                                              J. Cumming
 Internet-Draft                                                     Nokia
-Intended status: Standards Track                            23 July 2025
-Expires: 24 January 2026
+Intended status: Standards Track                            24 July 2025
+Expires: 25 January 2026
 
 
                             YANG path format
@@ -53,7 +53,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 24 January 2026.
+   This Internet-Draft will expire on 25 January 2026.
 
 Copyright Notice
 
@@ -84,6 +84,7 @@ Table of Contents
      3.6.  Leaf lists
      3.7.  Metadata annotations
      3.8.  Wildcards/Regex
+     3.9.  Similarity to JSON
    4.  Security Considerations
    5.  IANA Considerations
    6.  References
@@ -172,6 +173,16 @@ Table of Contents
    /ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-
    set
 
+   The provide the path to the key of a list
+
+   /ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-
+   set[name]
+
+   and
+
+   /ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-
+   set/name
+
 3.5.2.  Lists in instance data
 
    YANG lists in instance data are represented in the YANG path to the
@@ -189,9 +200,24 @@ Table of Contents
 
 3.6.  Leaf lists
 
+   The YANG path to a leaf-list is the path to the
+
 3.7.  Metadata annotations
 
+   Metadata annotations as defined in [RFC7952] are applied to items in
+   a path.  The YANG path does not support referencing any metadata
+   annotations attached to any element in the path.
+
 3.8.  Wildcards/Regex
+
+3.9.  Similarity to JSON
+
+   Considering this path /ietf-routing:routing/control-plane-protocols/
+   ietf-ospf:ospf/address-family with a value of ipv4, the translation
+   to JSON based on [RFC7952] would be:
+
+   { "ietf-routing:routing": { "control-plane-protocols": { "ietf-
+   ospf:ospf": { "address-family": "ipv4" } } } }
 
 4.  Security Considerations
 
@@ -215,6 +241,10 @@ Table of Contents
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
 6.2.  Informative References
+
+   [RFC7952]  Lhotka, L., "Defining and Using Metadata with YANG",
+              RFC 7952, DOI 10.17487/RFC7952, August 2016,
+              <https://www.rfc-editor.org/rfc/rfc7952>.
 
    [RFC9535]  Gössner, S., Ed., Normington, G., Ed., and C. Bormann,
               Ed., "JSONPath: Query Expressions for JSON", RFC 9535,
