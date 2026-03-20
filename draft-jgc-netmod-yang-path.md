@@ -63,7 +63,7 @@ module and tool designers and users and some provide significantly extended
 functionality that is not applicable to common use-cases.
 
 There is a need to provide a self-describing single-line generic YANG path
-format that can used to decsribe schema data, instance data and filtering.
+format that can used to describe schema data, instance data and filtering.
 
 This draft defines a self-describing, generic path format for referencing YANG
 schema, instance data and filters named ypath (short for YANG path).
@@ -134,6 +134,13 @@ In this example the module inheritance approach remains, the `control-plane-prot
 is in the `ietf-routing` YANG module and the `address-family` leaf is in the `ietf-ospf` YANG
 module that has been augmented into the `ietf-routing` module.
 
+As mentioned in the `Module:Field` section of this document, the following path in this example
+is also valid:
+
+```
+/ietf-routing:routing/ietf-routing:control-plane-protocols/ietf-ospf:ospf/ietf-ospf:address-family
+```
+
 ## Deviations
 
 Deviations do not change the namespace of the YANG nodes and therefore the `module`
@@ -146,29 +153,30 @@ portion of the YANG path does not change.
 
 ## Lists
 
-When considering the YANG path for lists it is important to consider both the schema
-and the instance data as these are represented in slightly different ways.
+When considering the YANG path for lists it is important to consider both schema
+and instance data as these are represented in slightly different ways.
 
 ### Lists in schema
 
-YANG lists in schema are represented in the YANG path to the top of the list.  For example:
+YANG lists in schema are represented in the YANG path to the top of the list.
+For example:
 
 ```
 /ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set
 ```
 
-The provide the path to the key of a list
+The provide the path to the key of a list identify the key inside square
+brackets. For example:
 
 ```
 /ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set[name]
 ```
 
-and
+For multi-key lists these are represented as shown:
 
 ```
-/ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set/name
+/module:node1/node2/list[key1][key2]
 ```
-
 
 ### Lists in instance data
 
@@ -196,6 +204,17 @@ does not support referencing any metadata annotations attached to any element in
 
 ## Wildcards/Regex
 
+When using the YANG path format, it is possible to reference data using wildcards and regular
+expressions.
+
+```
+r' '
+m' '
+```
+
+TODO: Provide details of which regexp semantics and detail what is applicable for simple
+wildcarding and what is out of scope.
+
 ## Similarity to JSON
 
 Considering this path `/ietf-routing:routing/control-plane-protocols/ietf-ospf:ospf/address-family`
@@ -213,15 +232,21 @@ with a value of `ipv4`, the translation to JSON based on {{RFC7952}} would be:
 }
 ```
 
+## Examples
+
+### Referencing YANG paths in NETCONF filters
+
+### Referencing YANG paths in NETCONF rpc-error messages
+
+### Checking existence
+
 # Security Considerations
 
-TODO Security
-
+TODO: Security
 
 # IANA Considerations
 
 This document has no IANA actions.
-
 
 --- back
 
