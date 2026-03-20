@@ -188,6 +188,21 @@ The path to a non-presence container in schema will exist at all times.
 
 ## Leafs
 
+A path to a leaf in both schema and instance data is identical (although
+parent nodes will be different).
+
+Schema example:
+
+```
+/ietf-interfaces:interfaces[name]/description
+```
+
+Instance data example:
+
+```
+/ietf-interfaces:interfaces[name="my_interface"]/description
+```
+
 ## Choices
 
 ## Identities and identity references (identityref)
