@@ -259,7 +259,24 @@ does not support referencing any metadata annotations attached to any element in
 
 ## Wildcards/Regex
 
-When using the YANG path format, it is possible to reference data using wildcards and regular
+### Simple wildcard
+
+The YANG path format allows for the use of a simple, single, wildcard statement for list keys
+when referencing instance data.  Wildcarding is not supported to reference schema.
+
+If more complex wilcarding is required, the user should consider regular expressions instead.
+
+An example YANG path (ypath) referencing all interfaces in instance data would be:
+
+```
+/ietf-interfaces:interfaces[name="*"]
+```
+
+TODO: Should the * be inside or outside the quotes? (Issue #1)
+
+### Regular expressions
+
+When using the YANG path format, it is possible to reference data using regular
 expressions.
 
 ```
@@ -268,7 +285,7 @@ m' '
 ```
 
 TODO: Provide details of which regexp semantics and detail what is applicable for simple
-wildcarding and what is out of scope.
+wildcarding and what is out of scope. (Issue #2)
 
 ## Similarity to JSON
 
