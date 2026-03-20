@@ -1452,7 +1452,17 @@ instantiated.<a href="#section-3.6.2-3" class="pilcrow">¶</a></p>
 <section id="section-3.7">
         <h3 id="name-leafs">
 <a href="#section-3.7" class="section-number selfRef">3.7. </a><a href="#name-leafs" class="section-name selfRef">Leafs</a>
-      </h3>
+        </h3>
+<p id="section-3.7-1">A path to a leaf in both schema and instance data is identical (although
+parent nodes will be different).<a href="#section-3.7-1" class="pilcrow">¶</a></p>
+<p id="section-3.7-2">Schema example:<a href="#section-3.7-2" class="pilcrow">¶</a></p>
+<p id="section-3.7-3"><code>
+/ietf-interfaces:interfaces[name]/description
+</code><a href="#section-3.7-3" class="pilcrow">¶</a></p>
+<p id="section-3.7-4">Instance data example:<a href="#section-3.7-4" class="pilcrow">¶</a></p>
+<p id="section-3.7-5"><code>
+/ietf-interfaces:interfaces[name="my_interface"]/description
+</code><a href="#section-3.7-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="choices">

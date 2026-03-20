@@ -242,6 +242,17 @@ Table of Contents
 
 3.7.  Leafs
 
+   A path to a leaf in both schema and instance data is identical
+   (although parent nodes will be different).
+
+   Schema example:
+
+   /ietf-interfaces:interfaces[name]/description
+
+   Instance data example:
+
+   /ietf-interfaces:interfaces[name="my_interface"]/description
+
 3.8.  Choices
 
 3.9.  Identities and identity references (identityref)
