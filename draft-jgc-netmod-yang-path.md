@@ -1,5 +1,5 @@
 ---
-title: "YANG path format"
+title: "YANG path format (ypath)"
 category: std
 
 docname: draft-jgc-netmod-yang-path-latest
@@ -48,11 +48,7 @@ informative:
 
 --- abstract
 
-There is a common path format described when interacting with YANG
-modules and the tools surrounding it, named xpath.  The xpath format
-has some shortcomings for YANG module and tool designers and users.
-
-This draft provides a common path format, the YANG path, to
+This draft provides a common path format, the YANG path (ypath), to
 provide a self describing method of detailing YANG modelled paths
 (both in schema and in instance data).
 
@@ -60,14 +56,17 @@ provide a self describing method of detailing YANG modelled paths
 
 # Introduction
 
-A number of path formats currently exist, such as JSON path and Xpath.
-These path formats serve well for their initial use cases, however,
-when considering a broader YANG generic path format that describes both
-the path and the YANG models that the paths are described in are not covered
-completely.
+A number of path formats currently exist to describe YANG modelled information,
+such as JSON path and Xpath. These path formats serve well for their initial
+use cases, however, some of these path formats have shortcomings for YANG
+module and tool designers and users and some provide significantly extended
+functionality that is not applicable to common use-cases.
 
-In addition, there is a trend towards using JSON for described data for YANG
-instance data and the YANG path format in this document is a familiar format.
+There is a need to provide a self-describing single-line generic YANG path
+format that can used to decsribe schema data, instance data and filtering.
+
+This draft defines a self-describing, generic path format for referencing YANG
+schema, instance data and filters named ypath (short for YANG path).
 
 # Conventions and Definitions
 
@@ -78,14 +77,30 @@ instance data and the YANG path format in this document is a familiar format.
 This section will define the YANG path format using a number of examples to cover
 each situation.
 
-The YANG path format is designed to be applicable to both YANG schema information
-and YANG instance data.
+The YANG path format is designed to be applicable to both YANG schema information,
+YANG instance data and for the definition of filters.
+
+## Root of the YANG path
+
+The YANG path format is always provided from the root of the YANG tree.  It is
+possible that a specification relying on a YANG path may choose to split a path
+into two parts; a prefix and a sub-path, however, these MUST always be evaluated
+together from the root.
+
+Approach 1:
+
+- Path: /item1/item2/item3/item4
+
+Approach 2:
+
+- Prefix: /item1/item2
+- Sub-Path: /item3/item4
+- (Yields) Path: /item1/item2/item3/item4
 
 ## Module:Field format
 
-The YANG path format is always provided from the root of the YANG tree and uses
-a `module:field` format where the `module` is the name of the YANG module.  For
-example:
+The YANG path format uses a `module:field` format where the `module`
+is the name of the YANG module.  For example:
 
 ```
 /ietf-interfaces:interfaces
@@ -97,6 +112,13 @@ document) the module does not need to be provided again.  For example:
 
 ```
 /ietf-routing-policy:routing-policy/defined-sets/prefix-sets
+```
+
+It is also valid to provide the module on every element of the path if desired.  For
+example:
+
+```
+/ietf-routing-policy:routing-policy/ietf-routing-policy:defined-sets/ietf-routing-policy:prefix-sets
 ```
 
 ## Augmentations
