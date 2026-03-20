@@ -163,10 +163,27 @@ A YANG path to a presence container references the container.  It is considered 
 is configured.  The YANG path representation is:
 
 ```
-
+/module:node1/node2/container1/presencecontainer1
 ```
 
+The path to a presence container in instance data will only exist if the presence container has been
+instantiated.
+
+The path to a presence container in schema will exist at all times.
+
 ### Non-presence containers
+
+A YANG path to a non-presence container references the container.  It is considered to exist when any 
+child nodes are instantiated.  The YANG path representation is:
+
+```
+/module:node1/node2/container1/presencecontainer1
+```
+
+The path to a non-presence container in instance data will only exist if any child nodes have been
+instantiated.
+
+The path to a non-presence container in schema will exist at all times.
 
 ## Leafs
 
