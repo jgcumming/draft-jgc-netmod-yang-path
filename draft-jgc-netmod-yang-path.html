@@ -1192,7 +1192,7 @@ provide a self describing method of detailing YANG modelled paths
                 <p id="section-toc.1-1.3.2.7.1"><a href="#section-3.7" class="auto internal xref">3.7</a>.  <a href="#name-leafs" class="internal xref">Leafs</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.8">
-                <p id="section-toc.1-1.3.2.8.1"><a href="#section-3.8" class="auto internal xref">3.8</a>.  <a href="#name-choice" class="internal xref">Choice</a></p>
+                <p id="section-toc.1-1.3.2.8.1"><a href="#section-3.8" class="auto internal xref">3.8</a>.  <a href="#name-choices" class="internal xref">Choices</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.9">
                 <p id="section-toc.1-1.3.2.9.1"><a href="#section-3.9" class="auto internal xref">3.9</a>.  <a href="#name-identities-and-identity-ref" class="internal xref">Identities and identity references (identityref)</a></p>
@@ -1360,6 +1360,9 @@ example:<a href="#section-3.2-5" class="pilcrow">¶</a></p>
 <p id="section-3.2-6"><code>
 /ietf-routing-policy:routing-policy/ietf-routing-policy:defined-sets/ietf-routing-policy:prefix-sets
 </code><a href="#section-3.2-6" class="pilcrow">¶</a></p>
+<p id="section-3.2-7">The top-level element of a YANG path <span class="bcp14">SHOULD</span> contain the YANG module.  This will be the
+situation in the majority of cases.  This is left as a <span class="bcp14">SHOULD</span> as some implementations
+may only ever use one YANG module and so the module name could be considered superfluous.<a href="#section-3.2-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="augmentations">
@@ -1409,7 +1412,11 @@ portion of the YANG path does not change.<a href="#section-3.5-1" class="pilcrow
 <section id="section-3.6.1">
           <h4 id="name-presence-containers">
 <a href="#section-3.6.1" class="section-number selfRef">3.6.1. </a><a href="#name-presence-containers" class="section-name selfRef">Presence containers</a>
-        </h4>
+          </h4>
+<p id="section-3.6.1-1">A YANG path to a presence container references the container.  It is considered to exist when it
+is configured.  The YANG path representation is:<a href="#section-3.6.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.6.1-2">```<a href="#section-3.6.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.6.1-3">```<a href="#section-3.6.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="non-presence-containers">
@@ -1428,10 +1435,10 @@ portion of the YANG path does not change.<a href="#section-3.5-1" class="pilcrow
       </h3>
 </section>
 </div>
-<div id="choice">
+<div id="choices">
 <section id="section-3.8">
-        <h3 id="name-choice">
-<a href="#section-3.8" class="section-number selfRef">3.8. </a><a href="#name-choice" class="section-name selfRef">Choice</a>
+        <h3 id="name-choices">
+<a href="#section-3.8" class="section-number selfRef">3.8. </a><a href="#name-choices" class="section-name selfRef">Choices</a>
       </h3>
 </section>
 </div>

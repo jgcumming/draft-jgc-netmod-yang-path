@@ -79,7 +79,7 @@ Table of Contents
        3.6.1.  Presence containers
        3.6.2.  Non-presence containers
      3.7.  Leafs
-     3.8.  Choice
+     3.8.  Choices
      3.9.  Identities and identity references (identityref)
      3.10. Lists
        3.10.1.  Lists in schema
@@ -175,6 +175,11 @@ Table of Contents
    /ietf-routing-policy:routing-policy/ietf-routing-policy:defined-sets/
    ietf-routing-policy:prefix-sets
 
+   The top-level element of a YANG path SHOULD contain the YANG module.
+   This will be the situation in the majority of cases.  This is left as
+   a SHOULD as some implementations may only ever use one YANG module
+   and so the module name could be considered superfluous.
+
 3.3.  Augmentations
 
    When a YANG module is augmented into another the namespace changes.
@@ -208,11 +213,19 @@ Table of Contents
 
 3.6.1.  Presence containers
 
+   A YANG path to a presence container references the container.  It is
+   considered to exist when it is configured.  The YANG path
+   representation is:
+
+   ```
+
+   ```
+
 3.6.2.  Non-presence containers
 
 3.7.  Leafs
 
-3.8.  Choice
+3.8.  Choices
 
 3.9.  Identities and identity references (identityref)
 
