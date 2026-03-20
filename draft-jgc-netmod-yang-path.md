@@ -290,7 +290,7 @@ wildcarding and what is out of scope. (Issue #2)
 ## Similarity to JSON
 
 Considering this path `/ietf-routing:routing/control-plane-protocols/ietf-ospf:ospf/address-family`
-with a value of `ipv4`, the translation to JSON based on {{RFC7952}} would be:
+with a value of `ipv4`, the translation to JSON based on {{RFC7951}} would be:
 
 ```
 {
