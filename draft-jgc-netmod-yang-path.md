@@ -173,7 +173,7 @@ The path to a presence container in schema will exist at all times.
 
 ### Non-presence containers
 
-A YANG path to a non-presence container references the container.  It is considered to exist when any 
+A YANG path to a non-presence container references the container.  It is considered to exist when any
 child nodes are instantiated.  The YANG path representation is:
 
 ```
