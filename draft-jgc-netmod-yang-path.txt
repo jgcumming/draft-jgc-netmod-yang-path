@@ -82,6 +82,10 @@ Table of Contents
      3.8.  Metadata annotations
      3.9.  Wildcards/Regex
      3.10. Similarity to JSON
+     3.11. Examples
+       3.11.1.  Referencing YANG paths in NETCONF filters
+       3.11.2.  Referencing YANG paths in NETCONF rpc-error messages
+       3.11.3.  Checking existence
    4.  Security Considerations
    5.  IANA Considerations
    6.  References
@@ -100,7 +104,7 @@ Table of Contents
    applicable to common use-cases.
 
    There is a need to provide a self-describing single-line generic YANG
-   path format that can used to decsribe schema data, instance data and
+   path format that can used to describe schema data, instance data and
    filtering.
 
    This draft defines a self-describing, generic path format for
@@ -175,6 +179,12 @@ Table of Contents
    address-family leaf is in the ietf-ospf YANG module that has been
    augmented into the ietf-routing module.
 
+   As mentioned in the Module:Field section of this document, the
+   following path in this example is also valid:
+
+   /ietf-routing:routing/ietf-routing:control-plane-protocols/ietf-
+   ospf:ospf/ietf-ospf:address-family
+
 3.4.  Deviations
 
    Deviations do not change the namespace of the YANG nodes and
@@ -188,8 +198,8 @@ Table of Contents
 3.6.  Lists
 
    When considering the YANG path for lists it is important to consider
-   both the schema and the instance data as these are represented in
-   slightly different ways.
+   both schema and instance data as these are represented in slightly
+   different ways.
 
 3.6.1.  Lists in schema
 
@@ -199,15 +209,15 @@ Table of Contents
    /ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-
    set
 
-   The provide the path to the key of a list
+   The provide the path to the key of a list identify the key inside
+   square brackets.  For example:
 
    /ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-
    set[name]
 
-   and
+   For multi-key lists these are represented as shown:
 
-   /ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-
-   set/name
+   /module:node1/node2/list[key1][key2]
 
 3.6.2.  Lists in instance data
 
@@ -236,6 +246,14 @@ Table of Contents
 
 3.9.  Wildcards/Regex
 
+   When using the YANG path format, it is possible to reference data
+   using wildcards and regular expressions.
+
+   r' ' m' '
+
+   TODO: Provide details of which regexp semantics and detail what is
+   applicable for simple wildcarding and what is out of scope.
+
 3.10.  Similarity to JSON
 
    Considering this path /ietf-routing:routing/control-plane-protocols/
@@ -245,9 +263,17 @@ Table of Contents
    { "ietf-routing:routing": { "control-plane-protocols": { "ietf-
    ospf:ospf": { "address-family": "ipv4" } } } }
 
+3.11.  Examples
+
+3.11.1.  Referencing YANG paths in NETCONF filters
+
+3.11.2.  Referencing YANG paths in NETCONF rpc-error messages
+
+3.11.3.  Checking existence
+
 4.  Security Considerations
 
-   TODO Security
+   TODO: Security
 
 5.  IANA Considerations
 

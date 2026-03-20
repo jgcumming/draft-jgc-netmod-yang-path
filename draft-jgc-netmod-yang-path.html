@@ -1200,6 +1200,20 @@ provide a self describing method of detailing YANG modelled paths
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.10">
                 <p id="section-toc.1-1.3.2.10.1"><a href="#section-3.10" class="auto internal xref">3.10</a>. <a href="#name-similarity-to-json" class="internal xref">Similarity to JSON</a></p>
 </li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.11">
+                <p id="section-toc.1-1.3.2.11.1"><a href="#section-3.11" class="auto internal xref">3.11</a>. <a href="#name-examples" class="internal xref">Examples</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.11.2.1">
+                    <p id="section-toc.1-1.3.2.11.2.1.1"><a href="#section-3.11.1" class="auto internal xref">3.11.1</a>.  <a href="#name-referencing-yang-paths-in-n" class="internal xref">Referencing YANG paths in NETCONF filters</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.11.2.2">
+                    <p id="section-toc.1-1.3.2.11.2.2.1"><a href="#section-3.11.2" class="auto internal xref">3.11.2</a>.  <a href="#name-referencing-yang-paths-in-ne" class="internal xref">Referencing YANG paths in NETCONF rpc-error messages</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.11.2.3">
+                    <p id="section-toc.1-1.3.2.11.2.3.1"><a href="#section-3.11.3" class="auto internal xref">3.11.3</a>.  <a href="#name-checking-existence" class="internal xref">Checking existence</a></p>
+</li>
+                </ul>
+</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
@@ -1240,7 +1254,7 @@ use cases, however, some of these path formats have shortcomings for YANG
 module and tool designers and users and some provide significantly extended
 functionality that is not applicable to common use-cases.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">There is a need to provide a self-describing single-line generic YANG path
-format that can used to decsribe schema data, instance data and filtering.<a href="#section-1-2" class="pilcrow">¶</a></p>
+format that can used to describe schema data, instance data and filtering.<a href="#section-1-2" class="pilcrow">¶</a></p>
 <p id="section-1-3">This draft defines a self-describing, generic path format for referencing YANG
 schema, instance data and filters named ypath (short for YANG path).<a href="#section-1-3" class="pilcrow">¶</a></p>
 </section>
@@ -1330,6 +1344,11 @@ in the YANG path by a change in the <code>module</code> field.<a href="#section-
 <p id="section-3.3-3">In this example the module inheritance approach remains, the <code>control-plane-protocols</code> container
 is in the <code>ietf-routing</code> YANG module and the <code>address-family</code> leaf is in the <code>ietf-ospf</code> YANG
 module that has been augmented into the <code>ietf-routing</code> module.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.3-4">As mentioned in the <code>Module:Field</code> section of this document, the following path in this example
+is also valid:<a href="#section-3.3-4" class="pilcrow">¶</a></p>
+<p id="section-3.3-5"><code>
+/ietf-routing:routing/ietf-routing:control-plane-protocols/ietf-ospf:ospf/ietf-ospf:address-family
+</code><a href="#section-3.3-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="deviations">
@@ -1355,24 +1374,26 @@ portion of the YANG path does not change.<a href="#section-3.5-1" class="pilcrow
         <h3 id="name-lists">
 <a href="#section-3.6" class="section-number selfRef">3.6. </a><a href="#name-lists" class="section-name selfRef">Lists</a>
         </h3>
-<p id="section-3.6-1">When considering the YANG path for lists it is important to consider both the schema
-and the instance data as these are represented in slightly different ways.<a href="#section-3.6-1" class="pilcrow">¶</a></p>
+<p id="section-3.6-1">When considering the YANG path for lists it is important to consider both schema
+and instance data as these are represented in slightly different ways.<a href="#section-3.6-1" class="pilcrow">¶</a></p>
 <div id="lists-in-schema">
 <section id="section-3.6.1">
           <h4 id="name-lists-in-schema">
 <a href="#section-3.6.1" class="section-number selfRef">3.6.1. </a><a href="#name-lists-in-schema" class="section-name selfRef">Lists in schema</a>
           </h4>
-<p id="section-3.6.1-1">YANG lists in schema are represented in the YANG path to the top of the list.  For example:<a href="#section-3.6.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.6.1-1">YANG lists in schema are represented in the YANG path to the top of the list.
+For example:<a href="#section-3.6.1-1" class="pilcrow">¶</a></p>
 <p id="section-3.6.1-2"><code>
 /ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set
 </code><a href="#section-3.6.1-2" class="pilcrow">¶</a></p>
-<p id="section-3.6.1-3">The provide the path to the key of a list<a href="#section-3.6.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.6.1-3">The provide the path to the key of a list identify the key inside square
+brackets. For example:<a href="#section-3.6.1-3" class="pilcrow">¶</a></p>
 <p id="section-3.6.1-4"><code>
 /ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set[name]
 </code><a href="#section-3.6.1-4" class="pilcrow">¶</a></p>
-<p id="section-3.6.1-5">and<a href="#section-3.6.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.6.1-5">For multi-key lists these are represented as shown:<a href="#section-3.6.1-5" class="pilcrow">¶</a></p>
 <p id="section-3.6.1-6"><code>
-/ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set/name
+/module:node1/node2/list[key1][key2]
 </code><a href="#section-3.6.1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -1415,7 +1436,15 @@ does not support referencing any metadata annotations attached to any element in
 <section id="section-3.9">
         <h3 id="name-wildcards-regex">
 <a href="#section-3.9" class="section-number selfRef">3.9. </a><a href="#name-wildcards-regex" class="section-name selfRef">Wildcards/Regex</a>
-      </h3>
+        </h3>
+<p id="section-3.9-1">When using the YANG path format, it is possible to reference data using wildcards and regular
+expressions.<a href="#section-3.9-1" class="pilcrow">¶</a></p>
+<p id="section-3.9-2"><code>
+r' '
+m' '
+</code><a href="#section-3.9-2" class="pilcrow">¶</a></p>
+<p id="section-3.9-3">TODO: Provide details of which regexp semantics and detail what is applicable for simple
+wildcarding and what is out of scope.<a href="#section-3.9-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="similarity-to-json">
@@ -1438,6 +1467,34 @@ with a value of <code>ipv4</code>, the translation to JSON based on <span>[<a hr
 </code><a href="#section-3.10-2" class="pilcrow">¶</a></p>
 </section>
 </div>
+<div id="examples">
+<section id="section-3.11">
+        <h3 id="name-examples">
+<a href="#section-3.11" class="section-number selfRef">3.11. </a><a href="#name-examples" class="section-name selfRef">Examples</a>
+        </h3>
+<div id="referencing-yang-paths-in-netconf-filters">
+<section id="section-3.11.1">
+          <h4 id="name-referencing-yang-paths-in-n">
+<a href="#section-3.11.1" class="section-number selfRef">3.11.1. </a><a href="#name-referencing-yang-paths-in-n" class="section-name selfRef">Referencing YANG paths in NETCONF filters</a>
+        </h4>
+</section>
+</div>
+<div id="referencing-yang-paths-in-netconf-rpc-error-messages">
+<section id="section-3.11.2">
+          <h4 id="name-referencing-yang-paths-in-ne">
+<a href="#section-3.11.2" class="section-number selfRef">3.11.2. </a><a href="#name-referencing-yang-paths-in-ne" class="section-name selfRef">Referencing YANG paths in NETCONF rpc-error messages</a>
+        </h4>
+</section>
+</div>
+<div id="checking-existence">
+<section id="section-3.11.3">
+          <h4 id="name-checking-existence">
+<a href="#section-3.11.3" class="section-number selfRef">3.11.3. </a><a href="#name-checking-existence" class="section-name selfRef">Checking existence</a>
+        </h4>
+</section>
+</div>
+</section>
+</div>
 </section>
 </div>
 <div id="security-considerations">
@@ -1445,7 +1502,7 @@ with a value of <code>ipv4</code>, the translation to JSON based on <span>[<a hr
       <h2 id="name-security-considerations">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-4-1">TODO Security<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-1">TODO: Security<a href="#section-4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="iana-considerations">
