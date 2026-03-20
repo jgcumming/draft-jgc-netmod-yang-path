@@ -121,6 +121,10 @@ example:
 /ietf-routing-policy:routing-policy/ietf-routing-policy:defined-sets/ietf-routing-policy:prefix-sets
 ```
 
+The top-level element of a YANG path SHOULD contain the YANG module.  This will be the
+situation in the majority of cases.  This is left as a SHOULD as some implementations
+may only ever use one YANG module and so the module name could be considered superfluous.
+
 ## Augmentations
 
 When a YANG module is augmented into another the namespace changes.  This is represented
@@ -155,11 +159,18 @@ portion of the YANG path does not change.
 
 ### Presence containers
 
+A YANG path to a presence container references the container.  It is considered to exist when it
+is configured.  The YANG path representation is:
+
+```
+
+```
+
 ### Non-presence containers
 
 ## Leafs
 
-## Choice
+## Choices
 
 ## Identities and identity references (identityref)
 
