@@ -341,7 +341,7 @@ Table of Contents
 
    Considering this path /ietf-routing:routing/control-plane-protocols/
    ietf-ospf:ospf/address-family with a value of ipv4, the translation
-   to JSON based on [RFC7952] would be:
+   to JSON based on [RFC7951] would be:
 
    { "ietf-routing:routing": { "control-plane-protocols": { "ietf-
    ospf:ospf": { "address-family": "ipv4" } } } }
