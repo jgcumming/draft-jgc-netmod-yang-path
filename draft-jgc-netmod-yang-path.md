@@ -151,6 +151,18 @@ portion of the YANG path does not change.
 Imports and includes do not change the namespace of the YANG nodes and therefore the `module`
 portion of the YANG path does not change.
 
+## Containers
+
+### Presence containers
+
+### Non-presence containers
+
+## Leafs
+
+## Choice
+
+## Identities and identity references (identityref)
+
 ## Lists
 
 When considering the YANG path for lists it is important to consider both schema
@@ -178,6 +190,14 @@ For multi-key lists these are represented as shown:
 /module:node1/node2/list[key1][key2]
 ```
 
+When walking a YANG tree to provide a list of paths, lists are provided with the
+keys in square brackets as shown above.  The following path is invalid and will not
+be returned:
+
+```
+/ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set/name
+```
+
 ### Lists in instance data
 
 YANG lists in instance data are represented in the YANG path to the top of the list with the
@@ -195,12 +215,18 @@ This means that the YANG path to a leaf under the `loopbacks` list entry would b
 
 ## Leaf lists
 
-The YANG path to a leaf-list is the path to the
+The YANG path to a leaf-list is the path to the top of the list.
 
 ## Metadata annotations
 
 Metadata annotations as defined in {{RFC7952}} are applied to items in a path.  The YANG path
 does not support referencing any metadata annotations attached to any element in the path.
+
+## Actions
+
+### Input
+
+### Output
 
 ## Wildcards/Regex
 
