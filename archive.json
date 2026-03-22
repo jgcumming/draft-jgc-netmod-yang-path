@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-03-19T00:29:55.650040+00:00",
+  "timestamp": "2026-03-22T00:30:03.646375+00:00",
   "repo": "jgcumming/draft-jgc-netmod-yang-path",
   "labels": [
     {
@@ -49,6 +49,43 @@
       "color": "ffffff"
     }
   ],
-  "issues": [],
+  "issues": [
+    {
+      "number": 1,
+      "id": "I_kwDOPQ7g8M70s4Zq",
+      "title": "Should simple wildcarding be inside of outside of quotes",
+      "url": "https://github.com/jgcumming/draft-jgc-netmod-yang-path/issues/1",
+      "state": "OPEN",
+      "author": "jgcumming",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [
+        "question"
+      ],
+      "body": "",
+      "createdAt": "2026-03-20T02:59:08Z",
+      "updatedAt": "2026-03-20T02:59:08Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 2,
+      "id": "I_kwDOPQ7g8M70s5kD",
+      "title": "Which regex syntax/semantics should be supported",
+      "url": "https://github.com/jgcumming/draft-jgc-netmod-yang-path/issues/2",
+      "state": "OPEN",
+      "author": "jgcumming",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [
+        "question"
+      ],
+      "body": "",
+      "createdAt": "2026-03-20T03:00:48Z",
+      "updatedAt": "2026-03-20T03:00:48Z",
+      "closedAt": null,
+      "comments": []
+    }
+  ],
   "pulls": []
 }
