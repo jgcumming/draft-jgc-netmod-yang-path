@@ -7,7 +7,7 @@ submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
 number:
 date:
 consensus: true
-v: 7
+v: 3
 area: "Operations and Management"
 workgroup: "Network Modeling"
 keyword:
@@ -61,7 +61,10 @@ list key predicates.  The format is closely related to the YANG
 filter wildcards, regular expression key matching, key value sets, and path
 enumeration.  Ypath is intended for management APIs,
 path enumeration tools, and filtering specifications where a compact,
-human-readable representation of a YANG location is required.  This document
+human-readable representation of a YANG location is required.  Additional uses
+for this path format can easily been forseen as path selection for streaming
+telemetry and for YANG reference statements, such as when and must statements,
+in future YANG versions.  This document
 specifies the ypath syntax, formal grammar, and conformance requirements.  It
 does not define a protocol, API, or encoding.  Selection based on the contents
 of node values (other than list keys) is out of scope.

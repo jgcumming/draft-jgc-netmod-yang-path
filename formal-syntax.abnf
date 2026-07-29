@@ -29,7 +29,8 @@ key-value = quoted-string
           / regex-value
           / key-value-set
 
-key-value-set = "{" *WSP set-member *(set-separator set-member) *WSP "}"
+key-value-set = "{" *WSP set-member
+              *(set-separator set-member) *WSP "}"
 
 set-separator = *WSP "," *WSP
 
@@ -48,6 +49,7 @@ escaped-quote = "\" SQUOTE
 escaped-backslash = "\" "\"
 
 unescaped-char = %x00-26 / %x28-5B / %x5D-FF
-                 ; any character except SQUOTE (0x27) and backslash (0x5C)
+                 ; any character except SQUOTE (0x27) and
+                   backslash (0x5C)
 
 leaf-list-predicate = "[" *WSP "." *WSP "=" *WSP key-value *WSP "]"
