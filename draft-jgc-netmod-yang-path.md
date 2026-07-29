@@ -33,8 +33,6 @@ author:
 
 normative:
 
-  RFC2119:
-  RFC8174:
   RFC7950:
 
 informative:
@@ -636,61 +634,9 @@ The grammar below uses ABNF as defined in {{RFC7950}}, Section 14.  The rules
 `identifier`, `identifier-ref-arg`, and `quoted-string` are used as defined
 there.
 
-```
-ypath = absolute-path
-
-absolute-path = 1*("/" path-step)
-
-path-step = node-name *predicate
-
-node-name = [identifier ":"] identifier
-
-predicate = schema-predicate
-          / instance-predicate
-          / filter-predicate
-          / leaf-list-predicate
-
-schema-predicate = "[" *WSP key-name *WSP "]"
-
-instance-predicate = "[" *WSP key-predicate-expr *WSP "]"
-
-filter-predicate = "[" *WSP key-predicate-expr *WSP "]"
-                 ; key-value is literal, wildcard, regex-value,
-                 ; or key-value-set
-
-key-name = identifier
-
-key-predicate-expr = key-name *WSP "=" *WSP key-value
-
-key-value = quoted-string
-          / unquoted-value
-          / wildcard
-          / regex-value
-          / key-value-set
-
-key-value-set = "{" *WSP set-member *(set-separator set-member) *WSP "}"
-
-set-separator = *WSP "," *WSP
-
-set-member = quoted-string / unquoted-value
-
-unquoted-value = 1*(DIGIT / (ALPHA / "_" / "-"))
-
-wildcard = "*"
-
-regex-value = "r" SQUOTE *regex-char SQUOTE
-
-regex-char = escaped-quote / escaped-backslash / unescaped-char
-
-escaped-quote = "\" SQUOTE
-
-escaped-backslash = "\" "\"
-
-unescaped-char = %x00-26 / %x28-5B / %x5D-FF
-                 ; any character except SQUOTE (0x27) and backslash (0x5C)
-
-leaf-list-predicate = "[" *WSP "." *WSP "=" *WSP key-value *WSP "]"
-```
+~~~~ abnf
+{::include formal-syntax.abnf}
+~~~~
 
 A `filter-predicate` is an `instance-predicate` in which one or more
 `key-value` elements are a `wildcard`, a `quoted-string` containing only `*`,
@@ -875,7 +821,7 @@ registration.
 
 # Acknowledgments
 
-The author the Network Modeling (NETMOD) working   
+The author would like to thank the Network Modeling (NETMOD) working
 group for its discussion of YANG path formats.
 
 
