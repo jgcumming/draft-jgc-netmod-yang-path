@@ -1454,10 +1454,10 @@ where <code>enabled</code> is <code>true</code>"); and<a href="#section-1.2-2.3.
 protocol-specific filter mechanisms, not in ypath.  A ypath <span class="bcp14">MAY</span> identify a
 leaf node (for example, <code>/.../description</code>), but <span class="bcp14">MUST NOT</span> specify a condition on
 that leaf's value.<a href="#section-1.2-3" class="pilcrow">¶</a></p>
-<p id="section-1.2-4"><strong>TODO: Whilst this section is the initial position, there are use-cases such as a
+<p id="section-1.2-4">**TODO: Whilst this section is the initial position, there are use-cases such as a
 short-form subtree-filter representation for NETCONF that may be useful to include,
 for example, all interfaces in a YANG list where the <code>enabled</code> child field is
-set to <code>True</code>.</strong><a href="#section-1.2-4" class="pilcrow">¶</a></p>
+set to <code>True</code>.<a href="#section-1.2-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="relationship-to-other-path-formats">
@@ -1555,8 +1555,7 @@ and their values appear in square brackets (for example,
             <p id="section-2.1-2.8.1">A ypath used to select a set of instance data nodes.  Filter paths use
 wildcards, regular expressions, or key value sets in one or more list key
 values only.  Predicates on non-key node values are out of scope (see
-<a href="#out-of-scope" class="auto internal xref">Section 1.2</a>).  Filter paths are not used to identify a single known
-instance node.<a href="#section-2.1-2.8.1" class="pilcrow">¶</a></p>
+<a href="#out-of-scope" class="auto internal xref">Section 1.2</a>).<a href="#section-2.1-2.8.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
 <dt id="section-2.1-2.9">module-qualified name:</dt>
@@ -1626,21 +1625,23 @@ module that defines the node.  For example:<a href="#section-3.2-1" class="pilcr
 <p id="section-3.2-2"><code>
 /ietf-interfaces:interfaces
 </code><a href="#section-3.2-2" class="pilcrow">¶</a></p>
-<p id="section-3.2-3">The module name is inherited along the path from left to right.  If the
+<p id="section-3.2-3"><strong>TODO: Do we need to handle different module versions/semantic versions in the path?</strong><a href="#section-3.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.2-4">The module name is inherited along the path from left to right.  If the
 defining module does not change (as is typical within a single module, and
 unlike at augment boundaries) the module name does not need to be repeated.
-For example:<a href="#section-3.2-3" class="pilcrow">¶</a></p>
-<p id="section-3.2-4"><code>
+For example:<a href="#section-3.2-4" class="pilcrow">¶</a></p>
+<p id="section-3.2-5"><code>
 /ietf-routing-policy:routing-policy/defined-sets/prefix-sets
-</code><a href="#section-3.2-4" class="pilcrow">¶</a></p>
-<p id="section-3.2-5">It is also valid to provide the module name on every path segment.  For example:<a href="#section-3.2-5" class="pilcrow">¶</a></p>
-<p id="section-3.2-6"><code>
+</code><a href="#section-3.2-5" class="pilcrow">¶</a></p>
+<p id="section-3.2-6">It is also valid to provide the module name on every path segment.  For example:<a href="#section-3.2-6" class="pilcrow">¶</a></p>
+<p id="section-3.2-7"><code>
 /ietf-routing-policy:routing-policy/ietf-routing-policy:defined-sets/ietf-routing-policy:prefix-sets
-</code><a href="#section-3.2-6" class="pilcrow">¶</a></p>
-<p id="section-3.2-7">The first path segment of a ypath <span class="bcp14">SHOULD</span> include a module name.  This ensures
+</code><a href="#section-3.2-7" class="pilcrow">¶</a></p>
+<p id="section-3.2-8">The first path segment of a ypath <span class="bcp14">SHOULD</span> include a module name.  This ensures
 that the path is self-describing without external schema context.  A
 specification that allows omission of the module name on the first segment
-<span class="bcp14">MUST</span> state the default module to be assumed.<a href="#section-3.2-7" class="pilcrow">¶</a></p>
+<span class="bcp14">MUST</span> state the default module to be assumed.<a href="#section-3.2-8" class="pilcrow">¶</a></p>
+<p id="section-3.2-9"><strong>TODO: Is the <span class="bcp14">SHOULD</span> correct here or should it be a <span class="bcp14">MUST</span>?</strong><a href="#section-3.2-9" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="augmentations">

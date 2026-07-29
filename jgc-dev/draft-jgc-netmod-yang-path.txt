@@ -210,10 +210,10 @@ Table of Contents
    ypath MAY identify a leaf node (for example, /.../description), but
    MUST NOT specify a condition on that leaf's value.
 
-   *TODO: Whilst this section is the initial position, there are use-
+   **TODO: Whilst this section is the initial position, there are use-
    cases such as a short-form subtree-filter representation for NETCONF
    that may be useful to include, for example, all interfaces in a YANG
-   list where the enabled child field is set to True.*
+   list where the enabled child field is set to True.
 
 1.3.  Relationship to Other Path Formats
 
@@ -283,8 +283,7 @@ Table of Contents
    filter path:  A ypath used to select a set of instance data nodes.
       Filter paths use wildcards, regular expressions, or key value sets
       in one or more list key values only.  Predicates on non-key node
-      values are out of scope (see Section 1.2).  Filter paths are not
-      used to identify a single known instance node.
+      values are out of scope (see Section 1.2).
 
    module-qualified name:  A YANG node identifier prefixed with the
       defining module name and a colon (for example, ietf-
@@ -332,6 +331,9 @@ Table of Contents
 
    /ietf-interfaces:interfaces
 
+   *TODO: Do we need to handle different module versions/semantic
+   versions in the path?*
+
    The module name is inherited along the path from left to right.  If
    the defining module does not change (as is typical within a single
    module, and unlike at augment boundaries) the module name does not
@@ -349,6 +351,8 @@ Table of Contents
    ensures that the path is self-describing without external schema
    context.  A specification that allows omission of the module name on
    the first segment MUST state the default module to be assumed.
+
+   *TODO: Is the SHOULD correct here or should it be a MUST?*
 
 3.3.  Augmentations
 
