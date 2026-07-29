@@ -871,11 +871,11 @@ registration.
 
 --- back
 
-# Acknowledgments
-
 {:numbered="false"}
 
-The author thanks Robert Wilton and the Network Modeling (NETMOD) working   
+# Acknowledgments
+
+The author the Network Modeling (NETMOD) working   
 group for its discussion of YANG path formats.
 
 
