@@ -1,0 +1,2452 @@
+<!DOCTYPE html>
+<html lang="en" class="Internet-Draft">
+<head>
+<meta charset="utf-8">
+<meta content="Common,Latin" name="scripts">
+<meta content="initial-scale=1.0" name="viewport">
+<title>YANG path format (ypath)</title>
+<meta content="James Cumming" name="author">
+<meta content="
+       This document defines ypath (YANG path), a single-line, self-describing path
+format for referencing nodes in YANG schema trees, YANG instance data, and
+data filters.  A ypath identifies YANG nodes using module-qualified names and
+list key predicates.  The format is closely related to the YANG
+ instance-identifier  built-in type but additionally supports schema paths,
+filter wildcards, regular expression key matching, key value sets, and path
+enumeration.  Ypath is intended for management APIs,
+path enumeration tools, and filtering specifications where a compact,
+human-readable representation of a YANG location is required.  This document
+specifies the ypath syntax, formal grammar, and conformance requirements.  It
+does not define a protocol, API, or encoding.  Selection based on the contents
+of node values (other than list keys) is out of scope. 
+    " name="description">
+<meta content="xml2rfc 3.34.0" name="generator">
+<meta content="YANG" name="keyword">
+<meta content="path" name="keyword">
+<meta content="YANG path" name="keyword">
+<meta content="JSON instance path" name="keyword">
+<meta content="draft-jgc-netmod-yang-path-latest" name="ietf.draft">
+<!-- Generator version information:
+  xml2rfc 3.34.0
+    Python 3.14.5
+    ConfigArgParse 1.7.5
+    google-i18n-address 3.1.1
+    intervaltree 3.2.1
+    Jinja2 3.1.6
+    lxml 6.1.1
+    natsort 8.4.0
+    platformdirs 4.10.1
+    pycountry 24.6.1
+    PyYAML 6.0.3
+    requests 2.33.1
+    wcwidth 0.8.2
+-->
+<link href="draft-jgc-netmod-yang-path.xml" rel="alternate" type="application/rfc+xml">
+<link href="#copyright" rel="license">
+<style type="text/css">@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Lora SemiBold'), local('Lora-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-greek.woff2') format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-greek.woff2') format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: light dark;
+  --background-color: #fff;
+  --text-color: #222;
+  --title-color: #191919;
+  --link-color: #2a6496;
+  --highlight-color: #f9f9f9;
+  --line-color: #eee;
+  --pilcrow-weak: #ddd;
+  --pilcrow-strong: #bbb;
+  --small-font-size: 14.5px;
+  --font-mono: 'Oxygen Mono', monospace;
+  --font-title: "Sofia Sans Semi Condensed", sans-serif;
+  scrollbar-color: #bbb #eee;
+}
+body {
+  max-width: 600px;
+  margin: 75px auto;
+  padding: 0 5px;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  font: 16px/22px "Lora", serif;
+  scroll-behavior: smooth;
+}
+
+.ears {
+  display: none;
+}
+
+/* headings */
+section {
+  clear: both;
+}
+.section-number {
+  padding-right: 0.5em;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-title);
+  font-weight: 680;
+  margin: 0.8em 0 0.3em;
+  font-size-adjust: 0.5;
+  color: var(--title-color);
+}
+h1 {
+  &#title {
+    font-size: 32px;
+    line-height: 40px;
+    clear: both;
+    margin: 1.5em 0 0.2em;
+  }
+  &#rfcnum {
+    margin: 1.5em 0 0.2em;
+    & + h1#title {
+      margin: 0.2em 0;
+    }
+  }
+}
+
+h1, h2, h3 {
+  font-size: 22px;
+  line-height: 27px;
+}
+h4, h5, h6 {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+/* general structure */
+.author {
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+#abstract+p {
+  font-size: 18px;
+  line-height: 24px;
+  & code, & samp, & tt {
+    font-size: 16px;
+    line-height: 0;
+  }
+}
+
+p {
+  padding: 0;
+  margin: 0.5em 0;
+  text-align: left;
+}
+div {
+  margin: 0;
+}
+.alignRight {
+  margin: 1em 0;
+  &.art-text {
+    background-color: var(--highlight-color);
+    border: 1px solid var(--line-color);
+    border-radius: 3px;
+    padding: 0.5em 1em 0;
+    margin-bottom: 0.5em;
+    & pre {
+      padding: 0;
+      width: auto;
+    }
+  }
+  & > *:first-child {
+    border: none;
+    margin: 0;
+    float: right;
+    clear: both;
+  }
+  & > *:nth-child(2) {
+    clear: both;
+    display: block;
+    border: none;
+  }
+}
+svg {
+  display: block;
+  /* font-family isn't space-separated, but =~ will have to do */
+  &[font-family~="monospace" i], & [font-family~="monospace" i] {
+    font-family: var(--font-mono);
+  }
+}
+.alignCenter {
+  margin: 1em 0;
+  &.art-text {
+    background-color: var(--highlight-color);
+    border: 1px solid var(--line-color);
+    border-radius: 3px;
+    padding: 0.5em 1em 0;
+    margin-bottom: 0.5em;
+    & pre {
+      padding: 0;
+      width: auto;
+    }
+  }
+  & > *:first-child {
+    border: none;
+    /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+       support flexbox yet.
+    */
+    display: table;
+    margin: 0 auto;
+  }
+}
+
+/* lists */
+ol, ul {
+  padding: 0;
+  margin: 0 0 0.5em 2em;
+  & :is(ol, ul) {
+    margin-left: 1em;
+  }
+}
+li {
+  margin: 0 0 0.25em 0;
+}
+ul.empty, .ulEmpty {
+  list-style-type: none;
+  & li {
+    margin-top: 0.5em;
+  }
+}
+:is(ul, ol).compact, .ulCompact, .olCompact {
+  margin: 0 0 0 2em;
+  & li {
+    margin: 0;
+    & :first-child { margin-top: 0; }
+    & :last-child { margin-bottom: 0; }
+  }
+}
+
+/* definition lists */
+dl {
+  clear: left;
+  --indent: 3ch;
+  /* --indent: attr(indent ch); not supported in any browser, but we can dream */
+  &.olPercent {
+    --indent: 5ch;
+    & > dt {
+      min-width: calc(var(--indent) - 2ch);
+      float: none;
+    }
+  }
+
+  dl > dd > & {
+    margin-top: 0.5em;
+    margin-bottom: 0;
+  }
+
+  &:not(.dlNewline) > dt {
+    float: left;
+    margin-right: 2ch;
+    min-width: 8ch;
+  }
+  & > dd {
+    margin-bottom: .8em;
+    margin-left: var(--indent) !important; /* stupid element overrides */
+    min-height: 2ex;
+  }
+}
+:is(dl.compact, .dlCompact) > dd {
+  margin-bottom: 0;
+  & > :is(:first-child, .break:first-child + *) {
+    margin-top: 0;
+  }
+  & > :is(:last-child) {
+    margin-bottom: 0;
+  }
+}
+:is(dd, span).break {
+  display: none;
+}
+
+/* links */
+a {
+  text-decoration: none;
+  &[href] {
+    color: var(--link-color);
+    &:hover { text-decoration: underline; }
+    &.selfRef {
+      color: var(--text-color);
+      &:hover {
+        text-decoration: none;
+        background-color: var(--highlight-color);
+      }
+    }
+  }
+}
+.iref + a[href].internal {
+  color: var(--text-color);
+}
+a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
+  white-space: nowrap;
+}
+
+/* Figures */
+tt, code, pre {
+  background-color: var(--highlight-color);
+  font: 14px/22px var(--font-mono);
+}
+tt, code {
+  /* changing the font for inline elements leads to different ascender
+     and descender heights; as we want to retain baseline alignment,
+     remove leading to avoid altering the final height of lines
+     note: this fails if these blocks take an entire line,
+     a different solution would be great */
+  line-height: 0;
+}
+:is(h1, h2, h3, h4, h5, h6) :is(tt, code) {
+  font-size: 84%;
+}
+pre {
+  border: 1px solid var(--line-color);
+  font-size: 13.5px;
+  line-height: 16px;
+  letter-spacing: -0.2px;
+  margin: 5px;
+  padding: 5px;
+}
+img {
+  max-width: 100%;
+}
+figure {
+  margin: 0.5em 0;
+  padding: 0;
+  & blockquote {
+    margin: 0.8em 0.4em 0.4em;
+  }
+}
+figcaption, caption {
+  font-style: italic;
+  margin: 0.5em 1.5em;
+  text-align: left;
+  caption-side: bottom;
+}
+@media screen {
+  /* Auto-collapse boilerplate. */
+  :is(#status-of-memo, #copyright) {
+    & p {
+      margin: -2px 0;
+      max-height: 0;
+      transition: max-height 2s ease, margin 0.5s ease 0.5s;
+      overflow: hidden;
+    }
+    &:hover p,
+    & h2:target ~ p {
+      margin: 0.5em 0;
+      max-height: 500px;
+      overflow: auto;
+    }
+  }
+  pre, svg {
+    display: inline-block;
+    /* In the horizontal direction, sometimes people make over-sized figures.
+       Scrollbars for those is therefore necessary: auto adds them as necessary..
+       In the vertical direction, the line-height can combine with the font
+       asender/descender height to produce scrollbars: hidden avoids that. */
+    overflow: auto hidden;
+  }
+  pre {
+    max-width: 100%;
+    width: calc(100% - 22px - 1em);
+  }
+  svg {
+    max-width: calc(100% - 22px - 1em);
+  }
+  figure pre {
+    display: block;
+    width: calc(100% - 25px);
+  }
+  :is(pre, svg) + .pilcrow {
+    display: inline-block;
+    vertical-align: text-bottom;
+    padding-bottom: 8px;
+  }
+}
+
+/* aside, blockquote */
+aside, blockquote {
+  margin-left: 0;
+  padding: 0 2em;
+  font-style: italic;
+}
+blockquote {
+  margin: 1em 0;
+  border-left: 2px var(--pilcrow-strong) solid;
+}
+cite {
+  display: block;
+  text-align: right;
+  font-style: italic;
+}
+
+/* tables */
+table {
+  width: auto;
+  max-width: 100%;
+  margin: 0 0 1em;
+  border-collapse: collapse;
+  &.right { margin-left: auto; }
+  &.center { margin-left: auto; margin-right: auto; }
+  &.left { margin-right: auto; }
+  & .text-left { text-align: left; }
+  & .text-center { text-align: center; }
+  & .text-right { text-align: right; }
+  & caption {
+    margin: 0;
+    padding: 3px 0 3px 1em;
+  }
+  & p { margin: 0; }
+}
+
+thead, tbody {
+  border: 1px solid var(--line-color);
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 5px 10px;
+}
+th {
+  background-color: var(--line-color);
+}
+:is(tr:nth-child(2n), thead+tbody > tr:nth-child(2n+1)) > td {
+  background-color: var(--background-color);
+}
+:is(tr:nth-child(2n+1), thead+tbody > tr:nth-child(2n)) > td {
+  background-color: var(--highlight-color);
+}
+
+/* pilcrow */
+a.pilcrow {
+  margin-left: 3px;
+  opacity: 0.2;
+  user-select: none;
+  &[href] {
+    color: var(--pilcrow-weak);
+    &:hover { text-decoration: none; }
+  }
+  @media not print {
+    :hover > &, &:focus {
+      opacity: 1;
+    }
+    &[href]:hover {
+      color: var(--pilcrow-strong);
+      background-color: transparent;
+    }
+  }
+  @media print {
+    display: none;
+  }
+}
+
+/* misc */
+hr {
+  border: 0;
+  border-top: 1px solid var(--line-color);
+}
+.bcp14 {
+  font-variant: small-caps;
+  font-weight: 600;
+  font-size: var(--small-font-size);
+}
+.role {
+  font-variant: all-small-caps;
+}
+sub, sup {
+  line-height: 1;
+  font-size: 80%;
+}
+
+/* info block */
+#identifiers {
+  margin: 0;
+  font-size: var(--small-font-size);
+  line-height: 18px;
+  --identifier-width: 15ch;
+  & dt {
+    width: var(--identifier-width);
+    min-width: var(--identifier-width);
+    clear: left;
+    float: left;
+    text-align: right;
+    margin-right: 1ch;
+  }
+  & dd {
+    margin: 0;
+    margin-left: calc(1em + var(--identifier-width)) !important;
+    min-width: 5em;
+  }
+  & .authors {
+    & .author {
+      display: inline-block;
+      margin-right: 1.5em;
+    }
+    & .org {
+      font-style: italic;
+    }
+  }
+}
+
+/* The prepared/rendered info at the very bottom of the page */
+.docInfo {
+  color: #999;
+  font-size: 0.9em;
+  font-style: italic;
+  margin-top: 2em;
+  & .prepared {
+    float: right;
+  }
+}
+
+/* table of contents */
+#toc {
+  padding: 0.75em 0 2em 0;
+  margin-bottom: 1em;
+
+  & nav {
+    & ul {
+      margin: 0 0.5em 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    & li {
+      line-height: 1.3em;
+      margin: 2px 0;
+      padding-left: 1.2em;
+      text-indent: -1.2em;
+    }
+  }
+  & a.xref {
+    white-space: normal;
+  }
+}
+
+.references {
+  & > dt {
+    text-align: right;
+    font-weight: bold;
+    min-width: 10ch;
+    margin-right: 1.5ch;
+    &:target::before {
+      content: "⇒";
+      margin: 0 10px 0 -25px;
+    }
+  }
+  & > dd {
+    margin-left: 12ch !important;
+    overflow: visible;
+    & .refInstance {
+      margin-bottom: 0.8em;
+    }
+    & .ascii {
+      margin-bottom: 0.25em;
+    }
+  }
+}
+
+#rfc\.index\.index + ul {
+  margin-left: 0;
+}
+
+/* authors */
+address.vcard {
+  font-style: normal;
+  max-width: 20em;
+  margin: 1em auto 1em 0;
+
+  & .nameRole {
+    font-weight: 700;
+    margin-left: 0;
+  }
+  & .label {
+    margin: 0.5em 0;
+  }
+  & .type {
+    display: none;
+  }
+  & .alternative-contact {
+    margin: 0.5em 0 0.25em 0;
+  }
+  & .non-ascii {
+    margin: 0 0 0 2em;
+  }
+  & div.left {
+    text-align: left;
+  }
+  & div.right {
+    text-align: right;
+  }
+}
+
+hr.addr {
+  border-top: 1px dashed;
+  margin: 0;
+  color: #ddd;
+  max-width: calc(100% - 16px);
+}
+@media (min-width: 500px) {
+  #authors-addresses {
+    & > section {
+      column-count: 2;
+      column-gap: 20px;
+    }
+    & > section > h2 {
+      column-span: all;
+    }
+    /* hack for break-inside: avoid-column */
+    & address {
+      display: inline-block;
+      break-inside: avoid-column;
+    }
+  }
+}
+
+/* Comments */
+.rfcEditorRemove {
+  & p:first-of-type {
+    font-style: italic;
+  }
+}
+.cref {
+  background-color: rgba(249, 232, 105, 0.3);
+  padding: 2px 4px;
+}
+.crefSource {
+  font-style: italic;
+}
+
+@media screen {
+  #toc {
+    & nav {
+      font-family: var(--font-title);
+      font-weight: 360;
+      & > ul { margin-bottom: 2em; }
+      & ul {
+        margin: 0 0 0 4px;
+        & :is(p, li) {
+          margin: 2px 0;
+        }
+      }
+    }
+    & a.toplink {
+      float: right;
+    }
+  }
+}
+@media not screen {
+  #toc a.toplink {
+    display: none;
+  }
+}
+
+
+/* TOC layout for smaller screens */
+@media screen and (max-width: 929px) {
+  #toc {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    padding: 1px 0 0 0;
+    margin: 0;
+    border-bottom: 1px solid #ccc;
+    opacity: 0.6;
+    & h2 {
+      margin: 0;
+      padding: 2px 0 2px 6px;
+      padding-right: 1em;
+      font-size: 18px;
+      line-height: 24px;
+      min-width: 190px;
+      text-align: right;
+      background-color: #444;
+      color: white;
+      cursor: pointer;
+      &::before { /* css hamburger */
+        float: right;
+        position: relative;
+        width: 1em;
+        height: 1px;
+        left: -164px;
+        margin: 8px 0 0 0;
+        background: white none repeat scroll 0 0;
+        box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+        content: "";
+      }
+    }
+    & nav {
+      display: none;
+      background-color: var(--background-color);
+      padding: 0.5em 1em 1em;
+      overflow: auto;
+      overscroll-behavior: contain;
+      height: calc(100vh - 48px);
+      border-left: 1px solid #ddd;
+    }
+    &.active {
+      opacity: 1;
+      & nav { display: block; }
+    }
+    /* Make the collapsed ToC header render white on gray also when it's a link */
+    & h2 a,
+    & h2 a:is(:link, :focus, :hover),
+    & a.toplink,
+    & a.toplink:hover {
+      color: white;
+      background-color: #444;
+      text-decoration: none;
+    }
+    & a.toplink {
+      margin: 2px 0.5em 0;
+    }
+  }
+}
+
+/* TOC layout for wide screens */
+@media screen and (min-width: 930px) {
+  body {
+    padding-right: 360px;
+    padding-right: calc(min(180px + 20%, 500px));
+  }
+  #toc {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    right: calc(50vw - 480px);
+    width: 312px;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+    & h2 {
+      margin: 0;
+      padding: 0.25em 1em 1em 0;
+    }
+    & nav {
+      display: block;
+      height: calc(90vh - 84px);
+      bottom: 0;
+      padding: 0.5em 0 2em;
+      overflow: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+    }
+    & a.toplink {
+      margin: 8px 0.5em 0;
+    }
+  }
+  img { /* future proofing */
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* pagination */
+@media print {
+  body {
+    width: 100%;
+  }
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+  #n-copyright-notice {
+    border-bottom: none;
+  }
+  #toc {
+    page-break-before: always;
+    border-top: none;
+    padding-top: 0;
+  }
+  #n-introduction {
+    page-break-before: always;
+  }
+  figure, pre, .vcard {
+    page-break-inside: avoid;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  :is(h2, h3, h4, h5, h6)+*, dd {
+    page-break-before: avoid;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 10pt;
+  }
+  table {
+    border: 1px solid #ddd;
+  }
+  td {
+    border-top: 1px solid #ddd;
+  }
+}
+
+@page :first {
+  padding-top: 0;
+  @top-left {
+    content: normal;
+    border: none;
+  }
+  @top-center {
+    content: normal;
+    border: none;
+  }
+  @top-right {
+    content: normal;
+    border: none;
+  }
+}
+
+@page {
+  size: A4;
+  margin-bottom: 45mm;
+  padding-top: 20px;
+}
+
+/* Dark mode. */
+@media (prefers-color-scheme: dark) {
+:root {
+  --background-color: #121212;
+  --text-color: #f0f0f0;
+  --title-color: #fff;
+  --link-color: #4da4f0;
+  --highlight-color: #282828;
+  --line-color: #444;
+  --pilcrow-weak: #444;
+  --pilcrow-strong: #666;
+  scrollbar-color: #777 #333;
+}
+}
+
+/* SVG Trick: a prefix match works because only black and white are allowed */
+svg {
+  & :is([stroke="black"], [stroke^="#000"]) {
+    stroke: var(--text-color);
+  }
+  & :is([stroke="white"], [stroke^="#fff"]) {
+    stroke: var(--background-color);
+  }
+  & :is([fill="black"], [fill^="#000"], :not([fill])) {
+    fill: var(--text-color);
+  }
+  & :is([fill="white"], [fill^="#fff"]) {
+    fill: var(--background-color);
+  }
+}
+</style>
+
+</head>
+<body class="xml2rfc">
+<table class="ears">
+<thead><tr>
+<td class="left">Internet-Draft</td>
+<td class="center">YANG path format (ypath)</td>
+<td class="right">July 2026</td>
+</tr></thead>
+<tfoot><tr>
+<td class="left">Cumming</td>
+<td class="center">Expires 30 January 2027</td>
+<td class="right">[Page]</td>
+</tr></tfoot>
+</table>
+<div id="external-metadata" class="document-information"></div>
+<div id="internal-metadata" class="document-information">
+<dl id="identifiers">
+<dt class="label-workgroup">Workgroup:</dt>
+<dd class="workgroup">Network Modeling</dd>
+<dt class="label-internet-draft">Internet-Draft:</dt>
+<dd class="internet-draft">draft-jgc-netmod-yang-path-latest</dd>
+<dt class="label-published">Published:</dt>
+<dd class="published">
+<time datetime="2026-07-29" class="published">29 July 2026</time>
+    </dd>
+<dt class="label-intended-status">Intended Status:</dt>
+<dd class="intended-status">Standards Track</dd>
+<dt class="label-expires">Expires:</dt>
+<dd class="expires"><time datetime="2027-01-30">30 January 2027</time></dd>
+<dt class="label-authors">Author:</dt>
+<dd class="authors">
+<div class="author">
+      <div class="author-name">J. Cumming</div>
+<div class="org">Nokia</div>
+</div>
+</dd>
+</dl>
+</div>
+<h1 id="title">YANG path format (ypath)</h1>
+<section id="section-abstract">
+      <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
+<p id="section-abstract-1">This document defines ypath (YANG path), a single-line, self-describing path
+format for referencing nodes in YANG schema trees, YANG instance data, and
+data filters.  A ypath identifies YANG nodes using module-qualified names and
+list key predicates.  The format is closely related to the YANG
+<code>instance-identifier</code> built-in type but additionally supports schema paths,
+filter wildcards, regular expression key matching, key value sets, and path
+enumeration.  Ypath is intended for management APIs,
+path enumeration tools, and filtering specifications where a compact,
+human-readable representation of a YANG location is required.  This document
+specifies the ypath syntax, formal grammar, and conformance requirements.  It
+does not define a protocol, API, or encoding.  Selection based on the contents
+of node values (other than list keys) is out of scope.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+</section>
+<section class="note rfcEditorRemove" id="section-note.1">
+      <h2 id="name-about-this-document">
+<a href="#name-about-this-document" class="section-name selfRef">About This Document</a>
+      </h2>
+<p id="section-note.1-1">This note is to be removed before publishing as an RFC.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
+<p id="section-note.1-2">
+        The latest revision of this draft can be found at <span><a href="https://draft-jgc-netmod-yang-path.jgc.dev/draft-jgc-netmod-yang-path.html">https://draft-jgc-netmod-yang-path.jgc.dev/draft-jgc-netmod-yang-path.html</a></span>.
+        Status information for this document may be found at <span><a href="https://datatracker.ietf.org/doc/draft-jgc-netmod-yang-path/">https://datatracker.ietf.org/doc/draft-jgc-netmod-yang-path/</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
+<p id="section-note.1-3">
+        Discussion of this document takes place on the
+        Network Modeling Working Group mailing list (<span><a href="mailto:netmod@ietf.org">mailto:netmod@ietf.org</a></span>),
+        which is archived at <span><a href="https://mailarchive.ietf.org/arch/browse/netmod/">https://mailarchive.ietf.org/arch/browse/netmod/</a></span>.
+        Subscribe at <span><a href="https://www.ietf.org/mailman/listinfo/netmod/">https://www.ietf.org/mailman/listinfo/netmod/</a></span>.<a href="#section-note.1-3" class="pilcrow">¶</a></p>
+<p id="section-note.1-4">Source for this draft and an issue tracker can be found at
+        <span><a href="https://github.com/jgcumming/draft-jgc-netmod-yang-path">https://github.com/jgcumming/draft-jgc-netmod-yang-path</a></span>.<a href="#section-note.1-4" class="pilcrow">¶</a></p>
+</section>
+<div id="status-of-memo">
+<section id="section-boilerplate.1">
+        <h2 id="name-status-of-this-memo">
+<a href="#name-status-of-this-memo" class="section-name selfRef">Status of This Memo</a>
+        </h2>
+<p id="section-boilerplate.1-1">
+        This Internet-Draft is submitted in full conformance with the
+        provisions of BCP 78 and BCP 79.<a href="#section-boilerplate.1-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-2">
+        Internet-Drafts are working documents of the Internet Engineering Task
+        Force (IETF). Note that other groups may also distribute working
+        documents as Internet-Drafts. The list of current Internet-Drafts is
+        at <span><a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a></span>.<a href="#section-boilerplate.1-2" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-3">
+        Internet-Drafts are draft documents valid for a maximum of six months
+        and may be updated, replaced, or obsoleted by other documents at any
+        time. It is inappropriate to use Internet-Drafts as reference
+        material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-4">
+        This Internet-Draft will expire on 30 January 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="copyright">
+<section id="section-boilerplate.2">
+        <h2 id="name-copyright-notice">
+<a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
+        </h2>
+<p id="section-boilerplate.2-1">
+            Copyright (c) 2026 IETF Trust and the persons identified as the
+            document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.2-2">
+            This document is subject to BCP 78 and the IETF Trust's Legal
+            Provisions Relating to IETF Documents
+            (<span><a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a></span>) in effect on the date of
+            publication of this document. Please review these documents
+            carefully, as they describe your rights and restrictions with
+            respect to this document. Code Components extracted from this
+            document must include Revised BSD License text as described in
+            Section 4.e of the Trust Legal Provisions and are provided without
+            warranty as described in the Revised BSD License.<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="toc">
+<section id="section-toc.1">
+        <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
+<a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
+        </h2>
+<nav class="toc"><ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.1">
+                <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="auto internal xref">1.1</a>.  <a href="#name-applicability" class="internal xref">Applicability</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.2">
+                <p id="section-toc.1-1.1.2.2.1" class="keepWithNext"><a href="#section-1.2" class="auto internal xref">1.2</a>.  <a href="#name-out-of-scope" class="internal xref">Out of Scope</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.3">
+                <p id="section-toc.1-1.1.2.3.1" class="keepWithNext"><a href="#section-1.3" class="auto internal xref">1.3</a>.  <a href="#name-relationship-to-other-path-" class="internal xref">Relationship to Other Path Formats</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.4">
+                <p id="section-toc.1-1.1.2.4.1"><a href="#section-1.4" class="auto internal xref">1.4</a>.  <a href="#name-document-structure" class="internal xref">Document Structure</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-conventions-and-definitions" class="internal xref">Conventions and Definitions</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.1">
+                <p id="section-toc.1-1.2.2.1.1"><a href="#section-2.1" class="auto internal xref">2.1</a>.  <a href="#name-terminology" class="internal xref">Terminology</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-format-definition" class="internal xref">Format Definition</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
+                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-root-of-the-yang-path" class="internal xref">Root of the YANG Path</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-module-qualified-names" class="internal xref">Module-Qualified Names</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
+                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-augmentations" class="internal xref">Augmentations</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.4">
+                <p id="section-toc.1-1.3.2.4.1"><a href="#section-3.4" class="auto internal xref">3.4</a>.  <a href="#name-deviations" class="internal xref">Deviations</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.5">
+                <p id="section-toc.1-1.3.2.5.1"><a href="#section-3.5" class="auto internal xref">3.5</a>.  <a href="#name-import-include" class="internal xref">Import/Include</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6">
+                <p id="section-toc.1-1.3.2.6.1"><a href="#section-3.6" class="auto internal xref">3.6</a>.  <a href="#name-containers" class="internal xref">Containers</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6.2.1">
+                    <p id="section-toc.1-1.3.2.6.2.1.1"><a href="#section-3.6.1" class="auto internal xref">3.6.1</a>.  <a href="#name-presence-containers" class="internal xref">Presence Containers</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6.2.2">
+                    <p id="section-toc.1-1.3.2.6.2.2.1"><a href="#section-3.6.2" class="auto internal xref">3.6.2</a>.  <a href="#name-non-presence-containers" class="internal xref">Non-Presence Containers</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.7">
+                <p id="section-toc.1-1.3.2.7.1"><a href="#section-3.7" class="auto internal xref">3.7</a>.  <a href="#name-leaves" class="internal xref">Leaves</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.8">
+                <p id="section-toc.1-1.3.2.8.1"><a href="#section-3.8" class="auto internal xref">3.8</a>.  <a href="#name-choices" class="internal xref">Choices</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.9">
+                <p id="section-toc.1-1.3.2.9.1"><a href="#section-3.9" class="auto internal xref">3.9</a>.  <a href="#name-identities-and-identity-ref" class="internal xref">Identities and Identity References (identityref)</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.10">
+                <p id="section-toc.1-1.3.2.10.1"><a href="#section-3.10" class="auto internal xref">3.10</a>. <a href="#name-lists" class="internal xref">Lists</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.10.2.1">
+                    <p id="section-toc.1-1.3.2.10.2.1.1"><a href="#section-3.10.1" class="auto internal xref">3.10.1</a>.  <a href="#name-lists-in-schema" class="internal xref">Lists in Schema</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.10.2.2">
+                    <p id="section-toc.1-1.3.2.10.2.2.1"><a href="#section-3.10.2" class="auto internal xref">3.10.2</a>.  <a href="#name-lists-in-instance-data" class="internal xref">Lists in Instance Data</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.11">
+                <p id="section-toc.1-1.3.2.11.1"><a href="#section-3.11" class="auto internal xref">3.11</a>. <a href="#name-leaf-lists" class="internal xref">Leaf Lists</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.12">
+                <p id="section-toc.1-1.3.2.12.1"><a href="#section-3.12" class="auto internal xref">3.12</a>. <a href="#name-metadata-annotations" class="internal xref">Metadata Annotations</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.13">
+                <p id="section-toc.1-1.3.2.13.1"><a href="#section-3.13" class="auto internal xref">3.13</a>. <a href="#name-actions" class="internal xref">Actions</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.14">
+                <p id="section-toc.1-1.3.2.14.1"><a href="#section-3.14" class="auto internal xref">3.14</a>. <a href="#name-wildcards" class="internal xref">Wildcards</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.15">
+                <p id="section-toc.1-1.3.2.15.1"><a href="#section-3.15" class="auto internal xref">3.15</a>. <a href="#name-regular-expressions" class="internal xref">Regular Expressions</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.15.2.1">
+                    <p id="section-toc.1-1.3.2.15.2.1.1"><a href="#section-3.15.1" class="auto internal xref">3.15.1</a>.  <a href="#name-regular-expression-dialect" class="internal xref">Regular Expression Dialect</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.15.2.2">
+                    <p id="section-toc.1-1.3.2.15.2.2.1"><a href="#section-3.15.2" class="auto internal xref">3.15.2</a>.  <a href="#name-escaping" class="internal xref">Escaping</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.15.2.3">
+                    <p id="section-toc.1-1.3.2.15.2.3.1"><a href="#section-3.15.3" class="auto internal xref">3.15.3</a>.  <a href="#name-multi-key-lists" class="internal xref">Multi-Key Lists</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.15.2.4">
+                    <p id="section-toc.1-1.3.2.15.2.4.1"><a href="#section-3.15.4" class="auto internal xref">3.15.4</a>.  <a href="#name-leaf-lists-2" class="internal xref">Leaf Lists</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.16">
+                <p id="section-toc.1-1.3.2.16.1"><a href="#section-3.16" class="auto internal xref">3.16</a>. <a href="#name-key-value-sets" class="internal xref">Key Value Sets</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.16.2.1">
+                    <p id="section-toc.1-1.3.2.16.2.1.1"><a href="#section-3.16.1" class="auto internal xref">3.16.1</a>.  <a href="#name-set-member-values" class="internal xref">Set Member Values</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.16.2.2">
+                    <p id="section-toc.1-1.3.2.16.2.2.1"><a href="#section-3.16.2" class="auto internal xref">3.16.2</a>.  <a href="#name-multi-key-lists-2" class="internal xref">Multi-Key Lists</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.16.2.3">
+                    <p id="section-toc.1-1.3.2.16.2.3.1"><a href="#section-3.16.3" class="auto internal xref">3.16.3</a>.  <a href="#name-leaf-lists-3" class="internal xref">Leaf Lists</a></p>
+</li>
+                </ul>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.17">
+                <p id="section-toc.1-1.3.2.17.1"><a href="#section-3.17" class="auto internal xref">3.17</a>. <a href="#name-relationship-to-json-encodi" class="internal xref">Relationship to JSON Encoding</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-formal-syntax" class="internal xref">Formal Syntax</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-conformance" class="internal xref">Conformance</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-producers" class="internal xref">Producers</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-consumers" class="internal xref">Consumers</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
+                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-path-enumeration" class="internal xref">Path Enumeration</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-examples" class="internal xref">Examples</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
+                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-referencing-yang-paths-in-n" class="internal xref">Referencing YANG Paths in NETCONF Filters</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2">
+                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-filter-paths-with-regular-e" class="internal xref">Filter Paths with Regular Expressions</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.3">
+                <p id="section-toc.1-1.6.2.3.1"><a href="#section-6.3" class="auto internal xref">6.3</a>.  <a href="#name-filter-paths-with-key-value" class="internal xref">Filter Paths with Key Value Sets</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.4">
+                <p id="section-toc.1-1.6.2.4.1"><a href="#section-6.4" class="auto internal xref">6.4</a>.  <a href="#name-referencing-yang-paths-in-ne" class="internal xref">Referencing YANG Paths in NETCONF rpc-error Messages</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.5">
+                <p id="section-toc.1-1.6.2.5.1"><a href="#section-6.5" class="auto internal xref">6.5</a>.  <a href="#name-checking-existence" class="internal xref">Checking Existence</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-path-parsing-and-ambiguity" class="internal xref">Path Parsing and Ambiguity</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-wildcards-and-pattern-match" class="internal xref">Wildcards and Pattern Matching</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.3">
+                <p id="section-toc.1-1.7.2.3.1"><a href="#section-7.3" class="auto internal xref">7.3</a>.  <a href="#name-information-disclosure" class="internal xref">Information Disclosure</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.4">
+                <p id="section-toc.1-1.7.2.4.1"><a href="#section-7.4" class="auto internal xref">7.4</a>.  <a href="#name-use-in-authorization-polici" class="internal xref">Use in Authorization Policies</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.5">
+                <p id="section-toc.1-1.7.2.5.1"><a href="#section-7.5" class="auto internal xref">7.5</a>.  <a href="#name-privacy" class="internal xref">Privacy</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1">
+                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="auto internal xref">9.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2">
+                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="auto internal xref">9.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
+            <p id="section-toc.1-1.10.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
+            <p id="section-toc.1-1.11.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
+</li>
+        </ul>
+</nav>
+</section>
+</div>
+<div id="introduction">
+<section id="section-1">
+      <h2 id="name-introduction">
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
+      </h2>
+<p id="section-1-1">A number of path formats currently exist to describe YANG modeled information.
+XPath <span>[<a href="#XPATH" class="cite xref">XPATH</a>]</span> is used for constraints and derived values within YANG modules
+<span>[<a href="#RFC7950" class="cite xref">RFC7950</a>]</span>.  The YANG built-in type <code>instance-identifier</code> <span>[<a href="#RFC7950" class="cite xref">RFC7950</a>]</span> defines
+a path subset for referencing data tree nodes in instance encodings.  RESTCONF
+<span>[<a href="#RFC8040" class="cite xref">RFC8040</a>]</span> defines URI paths for accessing data resources.  JSONPath
+<span>[<a href="#RFC9535" class="cite xref">RFC9535</a>]</span> provides a query language for JSON documents, including those
+produced by the JSON encoding of YANG data <span>[<a href="#RFC7951" class="cite xref">RFC7951</a>]</span>.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">These path formats serve well for their initial use cases.  However, some have
+shortcomings for YANG module authors, tool implementers, and operators who need
+a single, generic, human-readable path format that can refer equally to schema
+locations, instance data, and filter expressions without the full expressiveness
+(and complexity) of XPath or JSONPath.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">There is a need for a self-describing path format that can be used to describe
+schema data, instance data, and filtering in a consistent manner.  Deployed
+implementations already use such a format (commonly referred to as a JSON
+instance path) in management interfaces; however, no IETF specification
+currently defines this format.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">This document defines ypath (short for YANG path), a self-describing, generic
+path format for referencing YANG schema, instance data, and filters.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<div id="applicability">
+<section id="section-1.1">
+        <h3 id="name-applicability">
+<a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-applicability" class="section-name selfRef">Applicability</a>
+        </h3>
+<p id="section-1.1-1">Ypath is a string syntax for identifying locations in a YANG data tree.  It is
+intended for use in specifications and implementations that need to:<a href="#section-1.1-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-1.1-2.1">
+            <p id="section-1.1-2.1.1">enumerate or display paths through a YANG schema;<a href="#section-1.1-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-1.1-2.2">
+            <p id="section-1.1-2.2.1">identify specific nodes in YANG instance data;<a href="#section-1.1-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-1.1-2.3">
+            <p id="section-1.1-2.3.1">express filter expressions that select data subsets; and<a href="#section-1.1-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-1.1-2.4">
+            <p id="section-1.1-2.4.1">convey path information in management protocol error reporting.<a href="#section-1.1-2.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-1.1-3">This document defines the ypath format only.  It does not specify how ypaths are
+carried on the wire, stored, or processed by a particular protocol such as
+NETCONF <span>[<a href="#RFC6241" class="cite xref">RFC6241</a>]</span> or RESTCONF <span>[<a href="#RFC8040" class="cite xref">RFC8040</a>]</span>.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="out-of-scope">
+<section id="section-1.2">
+        <h3 id="name-out-of-scope">
+<a href="#section-1.2" class="section-number selfRef">1.2. </a><a href="#name-out-of-scope" class="section-name selfRef">Out of Scope</a>
+        </h3>
+<p id="section-1.2-1">Ypath identifies nodes in a YANG schema or instance tree.  Predicates in filter
+paths apply only to list key values.  The following are out of scope for this
+document:<a href="#section-1.2-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-1.2-2.1">
+            <p id="section-1.2-2.1.1">selection or matching based on the value of any node other than a list key
+(for example, matching a <code>description</code> or <code>mtu</code> leaf value);<a href="#section-1.2-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-1.2-2.2">
+            <p id="section-1.2-2.2.1">comparison operators, ranges, or expressions over leaf or leaf-list values;<a href="#section-1.2-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-1.2-2.3">
+            <p id="section-1.2-2.3.1">content-based queries across the datastore (for example, "all interfaces
+where <code>enabled</code> is <code>true</code>"); and<a href="#section-1.2-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-1.2-2.4">
+            <p id="section-1.2-2.4.1">any form of value predicate attached to a non-key node in the path.<a href="#section-1.2-2.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-1.2-3">Such selection belongs in query languages (for example, XPath or JSONPath) or in
+protocol-specific filter mechanisms, not in ypath.  A ypath <span class="bcp14">MAY</span> identify a
+leaf node (for example, <code>/.../description</code>), but <span class="bcp14">MUST NOT</span> specify a condition on
+that leaf's value.<a href="#section-1.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="relationship-to-other-path-formats">
+<section id="section-1.3">
+        <h3 id="name-relationship-to-other-path-">
+<a href="#section-1.3" class="section-number selfRef">1.3. </a><a href="#name-relationship-to-other-path-" class="section-name selfRef">Relationship to Other Path Formats</a>
+        </h3>
+<p id="section-1.3-1">Ypath is closely related to, but not identical with, the lexical representation
+of the YANG <code>instance-identifier</code> built-in type defined in <span>[<a href="#RFC7950" class="cite xref">RFC7950</a>]</span>.
+Instance-identifiers are used to reference data tree nodes in instance
+encodings and require key values for list entries.  Ypath additionally defines
+a schema path form (with key names but not values) and filter forms (including
+wildcards) that are outside the scope of <code>instance-identifier</code>.<a href="#section-1.3-1" class="pilcrow">¶</a></p>
+<p id="section-1.3-2">Where ypath instance path syntax aligns with <code>instance-identifier</code>, the
+definitions in <span>[<a href="#RFC7950" class="cite xref">RFC7950</a>]</span> form the basis for interpretation unless this
+document explicitly specifies otherwise.  The principal differences for instance
+paths are:<a href="#section-1.3-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-1.3-3.1">
+            <p id="section-1.3-3.1.1">module names <span class="bcp14">MAY</span> be inherited along the path rather than repeated on every
+node (see <a href="#module-qualified-names" class="auto internal xref">Section 3.2</a>);<a href="#section-1.3-3.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-1.3-3.2">
+            <p id="section-1.3-3.2.1">numeric and boolean list key values <span class="bcp14">MAY</span> appear without quotes (see
+<a href="#lists-in-instance-data" class="auto internal xref">Section 3.10.2</a>); and<a href="#section-1.3-3.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-1.3-3.3">
+            <p id="section-1.3-3.3.1">filter paths <span class="bcp14">MAY</span> use the wildcard <code>*</code> in key values (see <a href="#wildcards" class="auto internal xref">Section 3.14</a>);<a href="#section-1.3-3.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-1.3-3.4">
+            <p id="section-1.3-3.4.1">filter paths <span class="bcp14">MAY</span> use regular expressions in key values (see
+<a href="#regular-expressions" class="auto internal xref">Section 3.15</a>); and<a href="#section-1.3-3.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-1.3-3.5">
+            <p id="section-1.3-3.5.1">filter paths <span class="bcp14">MAY</span> use key value sets to match multiple explicit key values
+(see <a href="#key-value-sets" class="auto internal xref">Section 3.16</a>).<a href="#section-1.3-3.5.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-1.3-4">Ypath is not a query language.  It does not provide the expression evaluation,
+node set operations, or document traversal capabilities of XPath or JSONPath.<a href="#section-1.3-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="document-structure">
+<section id="section-1.4">
+        <h3 id="name-document-structure">
+<a href="#section-1.4" class="section-number selfRef">1.4. </a><a href="#name-document-structure" class="section-name selfRef">Document Structure</a>
+        </h3>
+<p id="section-1.4-1"><a href="#conventions" class="auto internal xref">Section 2</a> describes terms used in this document.  <a href="#out-of-scope" class="auto internal xref">Section 1.2</a>
+states what ypath does not cover.  <a href="#format-definition" class="auto internal xref">Section 3</a> defines the ypath
+format.  <a href="#formal-syntax" class="auto internal xref">Section 4</a> provides an ABNF grammar.
+<a href="#conformance" class="auto internal xref">Section 5</a> defines conformance requirements.  <a href="#examples" class="auto internal xref">Section 6</a> gives worked
+examples.  <a href="#security-considerations" class="auto internal xref">Section 7</a> discusses security implications.
+<a href="#iana-considerations" class="auto internal xref">Section 8</a> specifies IANA actions.<a href="#section-1.4-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="conventions">
+<section id="section-2">
+      <h2 id="name-conventions-and-definitions">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-conventions-and-definitions" class="section-name selfRef">Conventions and Definitions</a>
+      </h2>
+<p id="section-2-1">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>", "<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>", "<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>",
+"<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
+described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
+appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<div id="terminology">
+<section id="section-2.1">
+        <h3 id="name-terminology">
+<a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-terminology" class="section-name selfRef">Terminology</a>
+        </h3>
+<p id="section-2.1-1">The following terms are used in this document:<a href="#section-2.1-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-2.1-2">
+          <dt id="section-2.1-2.1">ypath:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-2.2">
+            <p id="section-2.1-2.2.1">A path string conforming to the format defined in this document.  Short for
+YANG path.<a href="#section-2.1-2.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.1-2.3">schema path:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-2.4">
+            <p id="section-2.1-2.4.1">A ypath that identifies a location in a YANG schema tree.  List key names
+appear in square brackets without values (for example, <code>[name]</code>).<a href="#section-2.1-2.4.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.1-2.5">instance path:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-2.6">
+            <p id="section-2.1-2.6.1">A ypath that identifies a location in a YANG instance data tree.  List keys
+and their values appear in square brackets (for example,
+<code>[name="eth0"]</code>).<a href="#section-2.1-2.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.1-2.7">filter path:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-2.8">
+            <p id="section-2.1-2.8.1">A ypath used to select a set of instance data nodes.  Filter paths use
+wildcards, regular expressions, or key value sets in one or more list key
+values only.  Predicates on non-key node values are out of scope (see
+<a href="#out-of-scope" class="auto internal xref">Section 1.2</a>).  Filter paths are not used to identify a single known
+instance node.<a href="#section-2.1-2.8.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.1-2.9">module-qualified name:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-2.10">
+            <p id="section-2.1-2.10.1">A YANG node identifier prefixed with the defining module name and a colon
+(for example, <code>ietf-interfaces:interfaces</code>).<a href="#section-2.1-2.10.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-2.1-2.11">path segment:</dt>
+          <dd style="margin-left: 1.5em" id="section-2.1-2.12">
+            <p id="section-2.1-2.12.1">A single component of a ypath, consisting of a node name and optional key
+predicates, separated from adjacent segments by a <code>/</code> character.<a href="#section-2.1-2.12.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+<p id="section-2.1-3">The terminology for YANG data nodes (for example, leaf, list, container) is
+defined in <span>[<a href="#RFC7950" class="cite xref">RFC7950</a>]</span>.<a href="#section-2.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="format-definition">
+<section id="section-3">
+      <h2 id="name-format-definition">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-format-definition" class="section-name selfRef">Format Definition</a>
+      </h2>
+<p id="section-3-1">This section defines the ypath format.  The normative grammar is given in
+<a href="#formal-syntax" class="auto internal xref">Section 4</a>.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-2">The ypath format applies to YANG schema information, YANG instance data, and
+filter expressions.  Predicates in filter paths are limited to list key values;
+selection based on any other node value is out of scope (see <a href="#out-of-scope" class="auto internal xref">Section 1.2</a>).<a href="#section-3-2" class="pilcrow">¶</a></p>
+<div id="root-of-the-yang-path">
+<section id="section-3.1">
+        <h3 id="name-root-of-the-yang-path">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-root-of-the-yang-path" class="section-name selfRef">Root of the YANG Path</a>
+        </h3>
+<p id="section-3.1-1">A ypath is always expressed from the root of the YANG data tree.  A
+specification that splits a path into a prefix and a sub-path <span class="bcp14">MUST</span> evaluate
+both parts together from the root.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">Approach 1:<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1-3.1">
+            <p id="section-3.1-3.1.1">Path: <code>/item1/item2/item3/item4</code><a href="#section-3.1-3.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-3.1-4">Approach 2:<a href="#section-3.1-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1-5.1">
+            <p id="section-3.1-5.1.1">Prefix: <code>/item1/item2</code><a href="#section-3.1-5.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.1-5.2">
+            <p id="section-3.1-5.2.1">Sub-path: <code>/item3/item4</code><a href="#section-3.1-5.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.1-5.3">
+            <p id="section-3.1-5.3.1">(Yields) Path: <code>/item1/item2/item3/item4</code><a href="#section-3.1-5.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</section>
+</div>
+<div id="module-qualified-names">
+<section id="section-3.2">
+        <h3 id="name-module-qualified-names">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-module-qualified-names" class="section-name selfRef">Module-Qualified Names</a>
+        </h3>
+<p id="section-3.2-1">A ypath uses a <code>module:identifier</code> form where <code>module</code> is the name of the YANG
+module that defines the node.  For example:<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2-2"><code>
+/ietf-interfaces:interfaces
+</code><a href="#section-3.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.2-3">The module name is inherited along the path from left to right.  If the
+defining module does not change (as is typical within a single module, and
+unlike at augment boundaries) the module name does not need to be repeated.
+For example:<a href="#section-3.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.2-4"><code>
+/ietf-routing-policy:routing-policy/defined-sets/prefix-sets
+</code><a href="#section-3.2-4" class="pilcrow">¶</a></p>
+<p id="section-3.2-5">It is also valid to provide the module name on every path segment.  For example:<a href="#section-3.2-5" class="pilcrow">¶</a></p>
+<p id="section-3.2-6"><code>
+/ietf-routing-policy:routing-policy/ietf-routing-policy:defined-sets/ietf-routing-policy:prefix-sets
+</code><a href="#section-3.2-6" class="pilcrow">¶</a></p>
+<p id="section-3.2-7">The first path segment of a ypath <span class="bcp14">SHOULD</span> include a module name.  This ensures
+that the path is self-describing without external schema context.  A
+specification that allows omission of the module name on the first segment
+<span class="bcp14">MUST</span> state the default module to be assumed.<a href="#section-3.2-7" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="augmentations">
+<section id="section-3.3">
+        <h3 id="name-augmentations">
+<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-augmentations" class="section-name selfRef">Augmentations</a>
+        </h3>
+<p id="section-3.3-1">When a node is defined by an augmenting module, the module name in the path
+<span class="bcp14">MUST</span> change to the augmenting module at the augmented node.  For example:<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.3-2"><code>
+/ietf-routing:routing/control-plane-protocols/ietf-ospf:ospf/address-family
+</code><a href="#section-3.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.3-3">In this example, <code>control-plane-protocols</code> is defined in <code>ietf-routing</code> and
+<code>ospf</code> is defined in <code>ietf-ospf</code>, which augments <code>ietf-routing</code>.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.3-4">The following fully qualified form is equally valid:<a href="#section-3.3-4" class="pilcrow">¶</a></p>
+<p id="section-3.3-5"><code>
+/ietf-routing:routing/ietf-routing:control-plane-protocols/ietf-ospf:ospf/ietf-ospf:address-family
+</code><a href="#section-3.3-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="deviations">
+<section id="section-3.4">
+        <h3 id="name-deviations">
+<a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-deviations" class="section-name selfRef">Deviations</a>
+        </h3>
+<p id="section-3.4-1">Deviations do not change the namespace of YANG nodes.  The module portion of a
+ypath therefore does not change at a deviated node.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="importinclude">
+<section id="section-3.5">
+        <h3 id="name-import-include">
+<a href="#section-3.5" class="section-number selfRef">3.5. </a><a href="#name-import-include" class="section-name selfRef">Import/Include</a>
+        </h3>
+<p id="section-3.5-1">Imports and includes do not change the namespace of YANG nodes.  The module
+portion of a ypath therefore does not change solely because a node is accessed
+through an import or include relationship.<a href="#section-3.5-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="containers">
+<section id="section-3.6">
+        <h3 id="name-containers">
+<a href="#section-3.6" class="section-number selfRef">3.6. </a><a href="#name-containers" class="section-name selfRef">Containers</a>
+        </h3>
+<div id="presence-containers">
+<section id="section-3.6.1">
+          <h4 id="name-presence-containers">
+<a href="#section-3.6.1" class="section-number selfRef">3.6.1. </a><a href="#name-presence-containers" class="section-name selfRef">Presence Containers</a>
+          </h4>
+<p id="section-3.6.1-1">A ypath to a presence container references the container node directly:<a href="#section-3.6.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.6.1-2"><code>
+/module:node1/node2/container1/presence-container1
+</code><a href="#section-3.6.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.6.1-3">In instance data, the path exists only when the presence container has been
+instantiated.  In schema paths, the container is always addressable.<a href="#section-3.6.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="non-presence-containers">
+<section id="section-3.6.2">
+          <h4 id="name-non-presence-containers">
+<a href="#section-3.6.2" class="section-number selfRef">3.6.2. </a><a href="#name-non-presence-containers" class="section-name selfRef">Non-Presence Containers</a>
+          </h4>
+<p id="section-3.6.2-1">A ypath to a non-presence container references the container node directly:<a href="#section-3.6.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.6.2-2"><code>
+/module:node1/node2/container1/non-presence-container1
+</code><a href="#section-3.6.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.6.2-3">In instance data, the path exists when any child node has been instantiated.
+In schema paths, the container is always addressable.<a href="#section-3.6.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="leaves">
+<section id="section-3.7">
+        <h3 id="name-leaves">
+<a href="#section-3.7" class="section-number selfRef">3.7. </a><a href="#name-leaves" class="section-name selfRef">Leaves</a>
+        </h3>
+<p id="section-3.7-1">A path to a leaf uses the same final segment in schema and instance paths.  The
+parent path segments differ between schema and instance forms when lists appear
+above the leaf.<a href="#section-3.7-1" class="pilcrow">¶</a></p>
+<p id="section-3.7-2">Schema example:<a href="#section-3.7-2" class="pilcrow">¶</a></p>
+<p id="section-3.7-3"><code>
+/ietf-interfaces:interfaces[name]/description
+</code><a href="#section-3.7-3" class="pilcrow">¶</a></p>
+<p id="section-3.7-4">Instance example:<a href="#section-3.7-4" class="pilcrow">¶</a></p>
+<p id="section-3.7-5"><code>
+/ietf-interfaces:interfaces[name="my_interface"]/description
+</code><a href="#section-3.7-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="choices">
+<section id="section-3.8">
+        <h3 id="name-choices">
+<a href="#section-3.8" class="section-number selfRef">3.8. </a><a href="#name-choices" class="section-name selfRef">Choices</a>
+        </h3>
+<p id="section-3.8-1">YANG choice nodes are not instantiated in the data tree.  A ypath therefore does
+not include a segment for the choice node itself.  The path proceeds directly
+to the node within the selected case.<a href="#section-3.8-1" class="pilcrow">¶</a></p>
+<p id="section-3.8-2">For example, if <code>protocol</code> is a choice under <code>server</code> and the <code>tcp</code> case is
+active, the path to the <code>port</code> leaf is:<a href="#section-3.8-2" class="pilcrow">¶</a></p>
+<p id="section-3.8-3">Schema path:<a href="#section-3.8-3" class="pilcrow">¶</a></p>
+<p id="section-3.8-4"><code>
+/example:server/tcp/port
+</code><a href="#section-3.8-4" class="pilcrow">¶</a></p>
+<p id="section-3.8-5">Instance path:<a href="#section-3.8-5" class="pilcrow">¶</a></p>
+<p id="section-3.8-6"><code>
+/example:server/tcp/port
+</code><a href="#section-3.8-6" class="pilcrow">¶</a></p>
+<p id="section-3.8-7">When walking a schema tree to enumerate paths, implementations <span class="bcp14">MUST NOT</span> emit a
+path segment for the choice node.<a href="#section-3.8-7" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="identities-and-identity-references-identityref">
+<section id="section-3.9">
+        <h3 id="name-identities-and-identity-ref">
+<a href="#section-3.9" class="section-number selfRef">3.9. </a><a href="#name-identities-and-identity-ref" class="section-name selfRef">Identities and Identity References (identityref)</a>
+        </h3>
+<p id="section-3.9-1">An <code>identityref</code> leaf is referenced by a path to the leaf itself.  The identity
+value is not encoded in the path; it appears in the instance data value.<a href="#section-3.9-1" class="pilcrow">¶</a></p>
+<p id="section-3.9-2">Schema path:<a href="#section-3.9-2" class="pilcrow">¶</a></p>
+<p id="section-3.9-3"><code>
+/ietf-routing:routing/control-plane-protocols/control-plane-protocol[type]/type
+</code><a href="#section-3.9-3" class="pilcrow">¶</a></p>
+<p id="section-3.9-4">Instance path:<a href="#section-3.9-4" class="pilcrow">¶</a></p>
+<p id="section-3.9-5"><code>
+/ietf-routing:routing/control-plane-protocols/control-plane-protocol[name="main"]/type
+</code><a href="#section-3.9-5" class="pilcrow">¶</a></p>
+<p id="section-3.9-6">Where the leaf value uses the module-qualified identity name (for example,
+<code>ietf-ospf:ospf</code>) in the data encoding, that value is not duplicated in the
+ypath.<a href="#section-3.9-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="lists">
+<section id="section-3.10">
+        <h3 id="name-lists">
+<a href="#section-3.10" class="section-number selfRef">3.10. </a><a href="#name-lists" class="section-name selfRef">Lists</a>
+        </h3>
+<p id="section-3.10-1">List handling differs between schema paths and instance paths.<a href="#section-3.10-1" class="pilcrow">¶</a></p>
+<div id="lists-in-schema">
+<section id="section-3.10.1">
+          <h4 id="name-lists-in-schema">
+<a href="#section-3.10.1" class="section-number selfRef">3.10.1. </a><a href="#name-lists-in-schema" class="section-name selfRef">Lists in Schema</a>
+          </h4>
+<p id="section-3.10.1-1">A schema path to a list names the list node.  To address the list keys, each key
+name appears in its own bracket pair without a value.  For example:<a href="#section-3.10.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.10.1-2"><code>
+/ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set
+/ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set[name]
+</code><a href="#section-3.10.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.10.1-3">For multi-key lists:<a href="#section-3.10.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.10.1-4"><code>
+/module:node1/node2/list[key1][key2]
+</code><a href="#section-3.10.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.10.1-5">When enumerating schema paths, a path to a list entry <span class="bcp14">MUST</span> include all key
+names in brackets.  A path that uses the key name as a child segment is
+invalid.  For example, the following is not a valid schema path:<a href="#section-3.10.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.10.1-6"><code>
+/ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set/name
+</code><a href="#section-3.10.1-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="lists-in-instance-data">
+<section id="section-3.10.2">
+          <h4 id="name-lists-in-instance-data">
+<a href="#section-3.10.2" class="section-number selfRef">3.10.2. </a><a href="#name-lists-in-instance-data" class="section-name selfRef">Lists in Instance Data</a>
+          </h4>
+<p id="section-3.10.2-1">An instance path to a list entry includes each key and its value in square
+brackets.  For example:<a href="#section-3.10.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.10.2-2"><code>
+/ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set[name="loopbacks"]
+</code><a href="#section-3.10.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.10.2-3">A leaf under that list entry:<a href="#section-3.10.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.10.2-4"><code>
+/ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set[name="loopbacks"]/mode
+</code><a href="#section-3.10.2-4" class="pilcrow">¶</a></p>
+<p id="section-3.10.2-5">For multi-key lists, each key appears in a separate bracket pair:<a href="#section-3.10.2-5" class="pilcrow">¶</a></p>
+<p id="section-3.10.2-6"><code>
+/module:node1/node2/list[key1="value1"][key2="value2"]
+</code><a href="#section-3.10.2-6" class="pilcrow">¶</a></p>
+<p id="section-3.10.2-7">Key values that are strings <span class="bcp14">MUST</span> be enclosed in double quotes.  Key values
+that are numeric or boolean <span class="bcp14">MAY</span> appear without quotes, provided that the
+unquoted form is unambiguous.  For example:<a href="#section-3.10.2-7" class="pilcrow">¶</a></p>
+<p id="section-3.10.2-8"><code>
+/openconfig-interfaces:interfaces/interface[name="1/1/1"]/subinterfaces/subinterface[index=0]
+</code><a href="#section-3.10.2-8" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="leaf-lists">
+<section id="section-3.11">
+        <h3 id="name-leaf-lists">
+<a href="#section-3.11" class="section-number selfRef">3.11. </a><a href="#name-leaf-lists" class="section-name selfRef">Leaf Lists</a>
+        </h3>
+<p id="section-3.11-1">A schema path to a leaf-list names the leaf-list node:<a href="#section-3.11-1" class="pilcrow">¶</a></p>
+<p id="section-3.11-2"><code>
+/ietf-system:system/dns/servers
+</code><a href="#section-3.11-2" class="pilcrow">¶</a></p>
+<p id="section-3.11-3">An instance path to a specific leaf-list entry uses the same predicate form as
+<code>instance-identifier</code> <span>[<a href="#RFC7950" class="cite xref">RFC7950</a>]</span>:<a href="#section-3.11-3" class="pilcrow">¶</a></p>
+<p id="section-3.11-4"><code>
+/ietf-system:system/dns/servers[.="192.0.2.1"]
+</code><a href="#section-3.11-4" class="pilcrow">¶</a></p>
+<p id="section-3.11-5">An instance path that references the leaf-list node without selecting a
+particular entry names the leaf-list node without a predicate.<a href="#section-3.11-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="metadata-annotations">
+<section id="section-3.12">
+        <h3 id="name-metadata-annotations">
+<a href="#section-3.12" class="section-number selfRef">3.12. </a><a href="#name-metadata-annotations" class="section-name selfRef">Metadata Annotations</a>
+        </h3>
+<p id="section-3.12-1">Metadata annotations defined in <span>[<a href="#RFC7952" class="cite xref">RFC7952</a>]</span> are not part of the ypath syntax.
+A ypath identifies a data tree node only; it does not reference metadata
+annotations attached to nodes.<a href="#section-3.12-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="actions">
+<section id="section-3.13">
+        <h3 id="name-actions">
+<a href="#section-3.13" class="section-number selfRef">3.13. </a><a href="#name-actions" class="section-name selfRef">Actions</a>
+        </h3>
+<p id="section-3.13-1">A ypath to a YANG action names the action node.  For example:<a href="#section-3.13-1" class="pilcrow">¶</a></p>
+<p id="section-3.13-2"><code>
+/example:mycontainer/do-something
+</code><a href="#section-3.13-2" class="pilcrow">¶</a></p>
+<p id="section-3.13-3">The action <code>input</code> and <code>output</code> nodes are not included in the path used to
+invoke the action.  Input parameters are supplied separately in the protocol or
+API operation that invokes the action.<a href="#section-3.13-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="wildcards">
+<section id="section-3.14">
+        <h3 id="name-wildcards">
+<a href="#section-3.14" class="section-number selfRef">3.14. </a><a href="#name-wildcards" class="section-name selfRef">Wildcards</a>
+        </h3>
+<p id="section-3.14-1">Filter paths <span class="bcp14">MAY</span> use a wildcard, a regular expression (see
+<a href="#regular-expressions" class="auto internal xref">Section 3.15</a>), or a key value set (see <a href="#key-value-sets" class="auto internal xref">Section 3.16</a>) in list
+key predicates.  These forms apply only to filter paths; they are not used in
+schema paths.<a href="#section-3.14-1" class="pilcrow">¶</a></p>
+<p id="section-3.14-2">For string-typed keys, the wildcard <span class="bcp14">MUST</span> appear inside double quotes:<a href="#section-3.14-2" class="pilcrow">¶</a></p>
+<p id="section-3.14-3"><code>
+/ietf-interfaces:interfaces[name="*"]
+</code><a href="#section-3.14-3" class="pilcrow">¶</a></p>
+<p id="section-3.14-4">For numeric or boolean keys, the unquoted form <span class="bcp14">MAY</span> be used:<a href="#section-3.14-4" class="pilcrow">¶</a></p>
+<p id="section-3.14-5"><code>
+/example:items/item[index=*]
+</code><a href="#section-3.14-5" class="pilcrow">¶</a></p>
+<p id="section-3.14-6">If any key in a multi-key list uses a wildcard, all keys in that list entry
+<span class="bcp14">MUST</span> use wildcards.  Mixing wildcards and specific values for different keys of
+the same list entry is not permitted.  For example:<a href="#section-3.14-6" class="pilcrow">¶</a></p>
+<p id="section-3.14-7">Valid:<a href="#section-3.14-7" class="pilcrow">¶</a></p>
+<p id="section-3.14-8"><code>
+/module:list[key1="*"][key2="*"]
+</code><a href="#section-3.14-8" class="pilcrow">¶</a></p>
+<p id="section-3.14-9">Not valid:<a href="#section-3.14-9" class="pilcrow">¶</a></p>
+<p id="section-3.14-10"><code>
+/module:list[key1="foo"][key2="*"]
+</code><a href="#section-3.14-10" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="regular-expressions">
+<section id="section-3.15">
+        <h3 id="name-regular-expressions">
+<a href="#section-3.15" class="section-number selfRef">3.15. </a><a href="#name-regular-expressions" class="section-name selfRef">Regular Expressions</a>
+        </h3>
+<p id="section-3.15-1">Filter paths <span class="bcp14">MAY</span> use a regular expression as a list key value to match multiple
+list entries.  Regular expressions apply only to list key predicates in filter
+paths.  They <span class="bcp14">MUST NOT</span> be used in schema paths or in instance paths that identify
+a single known node.<a href="#section-3.15-1" class="pilcrow">¶</a></p>
+<p id="section-3.15-2">A regular expression key value uses the form <code>r'pattern'</code>, where <code>pattern</code> is
+the regular expression body enclosed in single quotes.  For example, to select
+the <code>description</code> leaf on all interfaces whose name begins with <code>a</code> or <code>A</code>:<a href="#section-3.15-2" class="pilcrow">¶</a></p>
+<p id="section-3.15-3"><code>
+/ietf-interfaces:interfaces/interface[name=r'^[aA].*']/description
+</code><a href="#section-3.15-3" class="pilcrow">¶</a></p>
+<p id="section-3.15-4">The <code>r</code> prefix distinguishes a regular expression from a literal string value.
+The pattern is matched against the string representation of the list key value
+in the data encoding used by the implementation (for example, the JSON
+encoding defined in <span>[<a href="#RFC7951" class="cite xref">RFC7951</a>]</span>).<a href="#section-3.15-4" class="pilcrow">¶</a></p>
+<p id="section-3.15-5">Regular expression key values <span class="bcp14">MUST</span> use the <code>r'...'</code> form.  Double-quoted
+strings <span class="bcp14">MUST NOT</span> be used to encode regular expressions.<a href="#section-3.15-5" class="pilcrow">¶</a></p>
+<div id="regular-expression-dialect">
+<section id="section-3.15.1">
+          <h4 id="name-regular-expression-dialect">
+<a href="#section-3.15.1" class="section-number selfRef">3.15.1. </a><a href="#name-regular-expression-dialect" class="section-name selfRef">Regular Expression Dialect</a>
+          </h4>
+<p id="section-3.15.1-1">The regular expression dialect <span class="bcp14">MUST</span> be POSIX Extended Regular Expressions (ERE)
+as defined in Section 9.3.6 of IEEE Std 1003.1-2008.  Implementations <span class="bcp14">MAY</span>
+support additional regular expression dialects only if the enclosing
+specification or API documents the dialect in use.<a href="#section-3.15.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="escaping">
+<section id="section-3.15.2">
+          <h4 id="name-escaping">
+<a href="#section-3.15.2" class="section-number selfRef">3.15.2. </a><a href="#name-escaping" class="section-name selfRef">Escaping</a>
+          </h4>
+<p id="section-3.15.2-1">Within the single-quoted pattern, a single quote character is escaped as <code>\'</code>
+and a backslash is escaped as <code>\\</code>.  All other characters are treated
+literally.<a href="#section-3.15.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="multi-key-lists">
+<section id="section-3.15.3">
+          <h4 id="name-multi-key-lists">
+<a href="#section-3.15.3" class="section-number selfRef">3.15.3. </a><a href="#name-multi-key-lists" class="section-name selfRef">Multi-Key Lists</a>
+          </h4>
+<p id="section-3.15.3-1">Unlike wildcards, regular expressions <span class="bcp14">MAY</span> be combined with literal key values
+or other regular expressions in different key predicates of the same list entry.
+For example:<a href="#section-3.15.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.15.3-2"><code>
+/module:routes/route[ip-prefix=r'^192\.0\.2\.'][route-type="unicast"]
+</code><a href="#section-3.15.3-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="leaf-lists-1">
+<section id="section-3.15.4">
+          <h4 id="name-leaf-lists-2">
+<a href="#section-3.15.4" class="section-number selfRef">3.15.4. </a><a href="#name-leaf-lists-2" class="section-name selfRef">Leaf Lists</a>
+          </h4>
+<p id="section-3.15.4-1">Regular expression matching is defined for list keys only.  Leaf-list entry
+selection continues to use literal values with the <code>instance-identifier</code> form
+(for example, <code>[.="value"]</code>) or wildcards if supported by the enclosing
+specification.<a href="#section-3.15.4-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="key-value-sets">
+<section id="section-3.16">
+        <h3 id="name-key-value-sets">
+<a href="#section-3.16" class="section-number selfRef">3.16. </a><a href="#name-key-value-sets" class="section-name selfRef">Key Value Sets</a>
+        </h3>
+<p id="section-3.16-1">Filter paths <span class="bcp14">MAY</span> use a key value set to match a list entry when the key value
+equals any one of a given set of explicit values.  Key value sets apply only to
+list key predicates in filter paths.  They <span class="bcp14">MUST NOT</span> be used in schema paths or
+in instance paths that identify a single known node.<a href="#section-3.16-1" class="pilcrow">¶</a></p>
+<p id="section-3.16-2">A key value set uses curly braces enclosing a comma-separated list of key
+values.  For example, to select the <code>description</code> leaf on interfaces named
+<code>ethernet1</code> or <code>ethernet3</code>:<a href="#section-3.16-2" class="pilcrow">¶</a></p>
+<p id="section-3.16-3"><code>
+/ietf-interfaces:interfaces/interface[name={"ethernet1", "ethernet3"}]/description
+</code><a href="#section-3.16-3" class="pilcrow">¶</a></p>
+<p id="section-3.16-4">An implementation matches the list entry if the key value is equal to any
+member of the set.  The comparison uses the same string representation of key
+values as instance paths (see <a href="#lists-in-instance-data" class="auto internal xref">Section 3.10.2</a>).<a href="#section-3.16-4" class="pilcrow">¶</a></p>
+<div id="set-member-values">
+<section id="section-3.16.1">
+          <h4 id="name-set-member-values">
+<a href="#section-3.16.1" class="section-number selfRef">3.16.1. </a><a href="#name-set-member-values" class="section-name selfRef">Set Member Values</a>
+          </h4>
+<p id="section-3.16.1-1">Each member of a key value set is a literal key value.  Members <span class="bcp14">MAY</span> be
+expressed as a double-quoted string or, if the value contains only characters
+valid for an unquoted value, without quotes.  For example:<a href="#section-3.16.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.16.1-2"><code>
+/ietf-interfaces:interfaces/interface[name={"ethernet1", "ethernet3"}]/description
+/module:items/item[id={1, 2, 3}]
+/module:items/item[name={"foo", "bar"}]
+</code><a href="#section-3.16.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.16.1-3">Wildcards, regular expressions, and nested key value sets <span class="bcp14">MUST NOT</span> appear as
+set members.<a href="#section-3.16.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="multi-key-lists-1">
+<section id="section-3.16.2">
+          <h4 id="name-multi-key-lists-2">
+<a href="#section-3.16.2" class="section-number selfRef">3.16.2. </a><a href="#name-multi-key-lists-2" class="section-name selfRef">Multi-Key Lists</a>
+          </h4>
+<p id="section-3.16.2-1">A key value set applies to a single key predicate.  Different keys in a
+multi-key list <span class="bcp14">MAY</span> each use their own literal value, regular expression,
+wildcard, or key value set independently.  For example:<a href="#section-3.16.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.16.2-2"><code>
+/module:routes/route[ip-prefix={"192.0.2.1/32", "192.0.2.2/32"}][route-type="unicast"]
+</code><a href="#section-3.16.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="leaf-lists-2">
+<section id="section-3.16.3">
+          <h4 id="name-leaf-lists-3">
+<a href="#section-3.16.3" class="section-number selfRef">3.16.3. </a><a href="#name-leaf-lists-3" class="section-name selfRef">Leaf Lists</a>
+          </h4>
+<p id="section-3.16.3-1">Key value sets are defined for list keys only.  Leaf-list entry selection is
+not defined for key value sets in this document.<a href="#section-3.16.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="relationship-to-json-encoding">
+<section id="section-3.17">
+        <h3 id="name-relationship-to-json-encodi">
+<a href="#section-3.17" class="section-number selfRef">3.17. </a><a href="#name-relationship-to-json-encodi" class="section-name selfRef">Relationship to JSON Encoding</a>
+        </h3>
+<p id="section-3.17-1">Considering the instance path
+<code>/ietf-routing:routing/control-plane-protocols/ietf-ospf:ospf/address-family</code>
+with a value of <code>ipv4</code>, the corresponding JSON based on <span>[<a href="#RFC7951" class="cite xref">RFC7951</a>]</span> is:<a href="#section-3.17-1" class="pilcrow">¶</a></p>
+<p id="section-3.17-2"><code>
+{
+  "ietf-routing:routing": {
+    "control-plane-protocols": {
+      "ietf-ospf:ospf": {
+        "address-family": "ipv4"
+      }
+    }
+  }
+}
+</code><a href="#section-3.17-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="formal-syntax">
+<section id="section-4">
+      <h2 id="name-formal-syntax">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-formal-syntax" class="section-name selfRef">Formal Syntax</a>
+      </h2>
+<p id="section-4-1">The grammar below uses ABNF as defined in <span>[<a href="#RFC7950" class="cite xref">RFC7950</a>]</span>, Section 14.  The rules
+<code>identifier</code>, <code>identifier-ref-arg</code>, and <code>quoted-string</code> are used as defined
+there.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<div class="breakable lang-abnf sourcecode" id="section-4-2">
+<pre>
+ypath = absolute-path
+
+absolute-path = 1*("/" path-step)
+
+path-step = node-name *predicate
+
+node-name = [identifier ":"] identifier
+
+predicate = schema-predicate
+          / instance-predicate
+          / filter-predicate
+          / leaf-list-predicate
+
+schema-predicate = "[" *WSP key-name *WSP "]"
+
+instance-predicate = "[" *WSP key-predicate-expr *WSP "]"
+
+filter-predicate = "[" *WSP key-predicate-expr *WSP "]"
+                 ; key-value is literal, wildcard, regex-value,
+                 ; or key-value-set
+
+key-name = identifier
+
+key-predicate-expr = key-name *WSP "=" *WSP key-value
+
+key-value = quoted-string
+          / unquoted-value
+          / wildcard
+          / regex-value
+          / key-value-set
+
+key-value-set = "{" *WSP set-member *(set-separator set-member) *WSP "}"
+
+set-separator = *WSP "," *WSP
+
+set-member = quoted-string / unquoted-value
+
+unquoted-value = 1*(DIGIT / (ALPHA / "_" / "-"))
+
+wildcard = "*"
+
+regex-value = "r" SQUOTE *regex-char SQUOTE
+
+regex-char = escaped-quote / escaped-backslash / unescaped-char
+
+escaped-quote = "\" SQUOTE
+
+escaped-backslash = "\" "\"
+
+unescaped-char = %x00-26 / %x28-5B / %x5D-FF
+                 ; any character except SQUOTE (0x27) and backslash (0x5C)
+
+leaf-list-predicate = "[" *WSP "." *WSP "=" *WSP key-value *WSP "]"
+</pre><a href="#section-4-2" class="pilcrow">¶</a>
+</div>
+<p id="section-4-3">A <code>filter-predicate</code> is an <code>instance-predicate</code> in which one or more
+<code>key-value</code> elements are a <code>wildcard</code>, a <code>quoted-string</code> containing only <code>*</code>,
+a <code>regex-value</code>, or a <code>key-value-set</code>.<a href="#section-4-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="conformance">
+<section id="section-5">
+      <h2 id="name-conformance">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-conformance" class="section-name selfRef">Conformance</a>
+      </h2>
+<p id="section-5-1">This section defines conformance requirements for specifications and
+implementations that use ypath.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<div id="producers">
+<section id="section-5.1">
+        <h3 id="name-producers">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-producers" class="section-name selfRef">Producers</a>
+        </h3>
+<p id="section-5.1-1">A ypath producer (for example, a tool that emits schema paths or an interface
+that returns the current context path) <span class="bcp14">MUST</span>:<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.1-2.1">
+            <p id="section-5.1-2.1.1">generate paths that conform to the grammar in <a href="#formal-syntax" class="auto internal xref">Section 4</a>;<a href="#section-5.1-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-2.2">
+            <p id="section-5.1-2.2.1">use a leading <code>/</code> on every path;<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-2.3">
+            <p id="section-5.1-2.3.1">include a module name on the first path segment unless a specification
+defines a default module for the context; and<a href="#section-5.1-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-2.4">
+            <p id="section-5.1-2.4.1">use schema predicates for schema paths and value predicates for instance
+paths.<a href="#section-5.1-2.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.1-3">A producer generating filter paths <span class="bcp14">MUST</span> use <code>*</code> only as specified in
+<a href="#wildcards" class="auto internal xref">Section 3.14</a>, regular expressions only as specified in
+<a href="#regular-expressions" class="auto internal xref">Section 3.15</a>, and key value sets only as specified in
+<a href="#key-value-sets" class="auto internal xref">Section 3.16</a>.<a href="#section-5.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="consumers">
+<section id="section-5.2">
+        <h3 id="name-consumers">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-consumers" class="section-name selfRef">Consumers</a>
+        </h3>
+<p id="section-5.2-1">A ypath consumer (for example, a management API or path parser) <span class="bcp14">MUST</span>:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.2-2.1">
+            <p id="section-5.2-2.1.1">reject paths that do not conform to the grammar in <a href="#formal-syntax" class="auto internal xref">Section 4</a>;<a href="#section-5.2-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.2-2.2">
+            <p id="section-5.2-2.2.1">resolve module inheritance from left to right along the path; and<a href="#section-5.2-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.2-2.3">
+            <p id="section-5.2-2.3.1">apply module name changes at augment boundaries.<a href="#section-5.2-2.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.2-3">A consumer that does not support filter paths <span class="bcp14">MUST</span> reject paths containing the
+wildcard <code>*</code>, a <code>regex-value</code>, or a <code>key-value-set</code> in key predicates.<a href="#section-5.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="path-enumeration">
+<section id="section-5.3">
+        <h3 id="name-path-enumeration">
+<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-path-enumeration" class="section-name selfRef">Path Enumeration</a>
+        </h3>
+<p id="section-5.3-1">An implementation that walks a YANG schema and returns ypaths <span class="bcp14">MUST</span> return
+schema paths with list key names in bracket pairs and <span class="bcp14">MUST NOT</span> return paths
+that address list keys as child node segments.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="examples">
+<section id="section-6">
+      <h2 id="name-examples">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-examples" class="section-name selfRef">Examples</a>
+      </h2>
+<p id="section-6-1">This section provides non-normative examples of ypath usage.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<div id="referencing-yang-paths-in-netconf-filters">
+<section id="section-6.1">
+        <h3 id="name-referencing-yang-paths-in-n">
+<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-referencing-yang-paths-in-n" class="section-name selfRef">Referencing YANG Paths in NETCONF Filters</a>
+        </h3>
+<p id="section-6.1-1">NETCONF subtree filters <span>[<a href="#RFC6241" class="cite xref">RFC6241</a>]</span> select data by structure rather than by a
+single path string.  A ypath can nonetheless identify the subtree root that a
+filter targets.  For example, to retrieve all interfaces, a client might use
+the filter path:<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+<p id="section-6.1-2"><code>
+/ietf-interfaces:interfaces[name="*"]
+</code><a href="#section-6.1-2" class="pilcrow">¶</a></p>
+<p id="section-6.1-3">The enclosing specification or implementation maps this ypath to the
+appropriate NETCONF filter payload.<a href="#section-6.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="filter-paths-with-regular-expressions">
+<section id="section-6.2">
+        <h3 id="name-filter-paths-with-regular-e">
+<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-filter-paths-with-regular-e" class="section-name selfRef">Filter Paths with Regular Expressions</a>
+        </h3>
+<p id="section-6.2-1">A filter path can use a regular expression in a key predicate to match a
+subset of list entries.  For example, to retrieve the <code>description</code> leaf for
+all interfaces whose name starts with <code>a</code> or <code>A</code>:<a href="#section-6.2-1" class="pilcrow">¶</a></p>
+<p id="section-6.2-2"><code>
+/ietf-interfaces:interfaces/interface[name=r'^[aA].*']/description
+</code><a href="#section-6.2-2" class="pilcrow">¶</a></p>
+<p id="section-6.2-3">An implementation evaluates the regular expression against each candidate list
+key value and includes matching entries in the result set.<a href="#section-6.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="filter-paths-with-key-value-sets">
+<section id="section-6.3">
+        <h3 id="name-filter-paths-with-key-value">
+<a href="#section-6.3" class="section-number selfRef">6.3. </a><a href="#name-filter-paths-with-key-value" class="section-name selfRef">Filter Paths with Key Value Sets</a>
+        </h3>
+<p id="section-6.3-1">A filter path can use a key value set to match multiple list entries with
+explicit key values.  For example, to retrieve the <code>description</code> leaf for
+interfaces <code>ethernet1</code> and <code>ethernet3</code>:<a href="#section-6.3-1" class="pilcrow">¶</a></p>
+<p id="section-6.3-2"><code>
+/ietf-interfaces:interfaces/interface[name={"ethernet1", "ethernet3"}]/description
+</code><a href="#section-6.3-2" class="pilcrow">¶</a></p>
+<p id="section-6.3-3">An implementation includes each list entry whose key value equals any member
+of the set.<a href="#section-6.3-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="referencing-yang-paths-in-netconf-rpc-error-messages">
+<section id="section-6.4">
+        <h3 id="name-referencing-yang-paths-in-ne">
+<a href="#section-6.4" class="section-number selfRef">6.4. </a><a href="#name-referencing-yang-paths-in-ne" class="section-name selfRef">Referencing YANG Paths in NETCONF rpc-error Messages</a>
+        </h3>
+<p id="section-6.4-1">NETCONF <code>rpc-error</code> replies include an <code>error-path</code> element <span>[<a href="#RFC6241" class="cite xref">RFC6241</a>]</span> that
+identifies the node associated with the error.  An implementation may
+populate <code>error-path</code> using ypath instance syntax.  For example:<a href="#section-6.4-1" class="pilcrow">¶</a></p>
+<p id="section-6.4-2"><code>
+/ietf-interfaces:interfaces[name="eth0"]/mtu
+</code><a href="#section-6.4-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="checking-existence">
+<section id="section-6.5">
+        <h3 id="name-checking-existence">
+<a href="#section-6.5" class="section-number selfRef">6.5. </a><a href="#name-checking-existence" class="section-name selfRef">Checking Existence</a>
+        </h3>
+<p id="section-6.5-1">An implementation can test whether a node exists in a datastore by resolving an
+instance path.  For example, the path:<a href="#section-6.5-1" class="pilcrow">¶</a></p>
+<p id="section-6.5-2"><code>
+/ietf-interfaces:interfaces[name="eth0"]
+</code><a href="#section-6.5-2" class="pilcrow">¶</a></p>
+<p id="section-6.5-3">identifies a specific list entry.  If the path resolves to an existing node,
+the entry is present; if resolution fails, the entry is absent.  The mechanism
+by which resolution is performed is defined by the enclosing API or protocol.<a href="#section-6.5-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="security-considerations">
+<section id="section-7">
+      <h2 id="name-security-considerations">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+      </h2>
+<p id="section-7-1">This section discusses security considerations for implementations and
+specifications that use ypath strings.  Ypath itself is a path syntax and does
+not define authentication, authorization, or transport security; those
+properties depend on the enclosing protocol or API.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<div id="path-parsing-and-ambiguity">
+<section id="section-7.1">
+        <h3 id="name-path-parsing-and-ambiguity">
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-path-parsing-and-ambiguity" class="section-name selfRef">Path Parsing and Ambiguity</a>
+        </h3>
+<p id="section-7.1-1">Implementations that parse ypath strings <span class="bcp14">MUST</span> treat parsing as security
+sensitive when the resulting path is used to access or modify managed data.
+Ambiguous, malformed, or unexpectedly complex paths could cause an
+implementation to resolve a different node than the operator or application
+intended.  Specifications that use ypath <span class="bcp14">SHOULD</span> define error handling for
+invalid paths and <span class="bcp14">SHOULD NOT</span> silently accept ambiguous forms (for example,
+inconsistent module prefix usage that could identify more than one schema
+node).<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="wildcards-and-pattern-matching">
+<section id="section-7.2">
+        <h3 id="name-wildcards-and-pattern-match">
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-wildcards-and-pattern-match" class="section-name selfRef">Wildcards and Pattern Matching</a>
+        </h3>
+<p id="section-7.2-1">Filter paths that use wildcards, regular expressions, or key value sets in key
+predicates can match large sets of instance data.  An implementation that
+expands such a path into concrete instance paths or data retrieval operations
+<span class="bcp14">MUST</span> consider the cost of expansion and <span class="bcp14">SHOULD</span> enforce limits on the number of
+matched nodes.  Implementations <span class="bcp14">SHOULD</span> enforce a reasonable upper bound on the
+number of members in a key value set.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+<p id="section-7.2-2">Regular expression evaluation can be subject to excessive resource consumption
+(including regular expression denial of service) if arbitrary patterns are
+accepted from untrusted input.  Implementations <span class="bcp14">SHOULD</span> enforce limits on
+evaluation time and <span class="bcp14">SHOULD</span> reject patterns that are not valid POSIX ERE
+expressions.  Specifications that expose regular expression filter paths to
+untrusted clients <span class="bcp14">SHOULD</span> document these limits.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="information-disclosure">
+<section id="section-7.3">
+        <h3 id="name-information-disclosure">
+<a href="#section-7.3" class="section-number selfRef">7.3. </a><a href="#name-information-disclosure" class="section-name selfRef">Information Disclosure</a>
+        </h3>
+<p id="section-7.3-1">Path enumeration (for example, listing all valid ypaths for a schema or
+datastore) can reveal the structure of deployed models and, for instance paths,
+the values of list keys.  Interfaces that expose path lists <span class="bcp14">SHOULD</span> apply the
+same access controls as the underlying data access mechanism so that a client
+cannot use path enumeration to discover information it is not authorized to
+retrieve directly.<a href="#section-7.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="use-in-authorization-policies">
+<section id="section-7.4">
+        <h3 id="name-use-in-authorization-polici">
+<a href="#section-7.4" class="section-number selfRef">7.4. </a><a href="#name-use-in-authorization-polici" class="section-name selfRef">Use in Authorization Policies</a>
+        </h3>
+<p id="section-7.4-1">If ypaths are used to express authorization rules (for example, permitting
+access only to a given subtree), care is required to ensure that equivalent
+paths using different but valid module prefix forms receive consistent
+treatment.  Authorization systems <span class="bcp14">SHOULD</span> define a canonical comparison rule or
+<span class="bcp14">SHOULD</span> normalize paths before evaluation.<a href="#section-7.4-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="privacy">
+<section id="section-7.5">
+        <h3 id="name-privacy">
+<a href="#section-7.5" class="section-number selfRef">7.5. </a><a href="#name-privacy" class="section-name selfRef">Privacy</a>
+        </h3>
+<p id="section-7.5-1">Instance paths embed key values that may identify subscribers, endpoints, or
+other privacy-sensitive entities.  Logs, error messages, and telemetry that
+include ypath strings <span class="bcp14">SHOULD</span> be protected commensurate with the sensitivity of
+the referenced data.<a href="#section-7.5-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="iana-considerations">
+<section id="section-8">
+      <h2 id="name-iana-considerations">
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+      </h2>
+<p id="section-8-1">This document has no IANA actions.  Ypath is a string syntax for identifying
+YANG schema and instance locations.  It does not define a URI scheme, XML
+namespace, YANG module, media type, or other protocol element requiring IANA
+registration.<a href="#section-8-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sec-combined-references">
+<section id="section-9">
+      <h2 id="name-references">
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-references" class="section-name selfRef">References</a>
+      </h2>
+<div id="sec-normative-references">
+<section id="section-9.1">
+        <h3 id="name-normative-references">
+<a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+        </h3>
+<dl class="references">
+<dt id="RFC2119">[RFC2119]</dt>
+        <dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7950">[RFC7950]</dt>
+        <dd>
+<span class="refAuthor">Bjorklund, M., Ed.</span>, <span class="refTitle">"The YANG 1.1 Data Modeling Language"</span>, <span class="seriesInfo">RFC 7950</span>, <span class="seriesInfo">DOI 10.17487/RFC7950</span>, <time datetime="2016-08" class="refDate">August 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7950">https://www.rfc-editor.org/rfc/rfc7950</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8174">[RFC8174]</dt>
+      <dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="sec-informative-references">
+<section id="section-9.2">
+        <h3 id="name-informative-references">
+<a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
+<dl class="references">
+<dt id="RFC6241">[RFC6241]</dt>
+        <dd>
+<span class="refAuthor">Enns, R., Ed.</span>, <span class="refAuthor">Bjorklund, M., Ed.</span>, <span class="refAuthor">Schoenwaelder, J., Ed.</span>, and <span class="refAuthor">A. Bierman, Ed.</span>, <span class="refTitle">"Network Configuration Protocol (NETCONF)"</span>, <span class="seriesInfo">RFC 6241</span>, <span class="seriesInfo">DOI 10.17487/RFC6241</span>, <time datetime="2011-06" class="refDate">June 2011</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6241">https://www.rfc-editor.org/rfc/rfc6241</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7951">[RFC7951]</dt>
+        <dd>
+<span class="refAuthor">Lhotka, L.</span>, <span class="refTitle">"JSON Encoding of Data Modeled with YANG"</span>, <span class="seriesInfo">RFC 7951</span>, <span class="seriesInfo">DOI 10.17487/RFC7951</span>, <time datetime="2016-08" class="refDate">August 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7951">https://www.rfc-editor.org/rfc/rfc7951</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7952">[RFC7952]</dt>
+        <dd>
+<span class="refAuthor">Lhotka, L.</span>, <span class="refTitle">"Defining and Using Metadata with YANG"</span>, <span class="seriesInfo">RFC 7952</span>, <span class="seriesInfo">DOI 10.17487/RFC7952</span>, <time datetime="2016-08" class="refDate">August 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7952">https://www.rfc-editor.org/rfc/rfc7952</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8040">[RFC8040]</dt>
+        <dd>
+<span class="refAuthor">Bierman, A.</span>, <span class="refAuthor">Bjorklund, M.</span>, and <span class="refAuthor">K. Watsen</span>, <span class="refTitle">"RESTCONF Protocol"</span>, <span class="seriesInfo">RFC 8040</span>, <span class="seriesInfo">DOI 10.17487/RFC8040</span>, <time datetime="2017-01" class="refDate">January 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8040">https://www.rfc-editor.org/rfc/rfc8040</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC9535">[RFC9535]</dt>
+        <dd>
+<span class="refAuthor">Gössner, S., Ed.</span>, <span class="refAuthor">Normington, G., Ed.</span>, and <span class="refAuthor">C. Bormann, Ed.</span>, <span class="refTitle">"JSONPath: Query Expressions for JSON"</span>, <span class="seriesInfo">RFC 9535</span>, <span class="seriesInfo">DOI 10.17487/RFC9535</span>, <time datetime="2024-02" class="refDate">February 2024</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9535">https://www.rfc-editor.org/rfc/rfc9535</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="XPATH">[XPATH]</dt>
+      <dd>
+<span class="refAuthor">W3C</span>, <span class="refTitle">"XML Path Language (XPath) Version 1.0"</span>, <span>&lt;<a href="https://www.w3.org/TR/1999/REC-xpath-19991116/">https://www.w3.org/TR/1999/REC-xpath-19991116/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+</section>
+</div>
+<div id="acknowledgments">
+<section id="appendix-A">
+      <h2 id="name-acknowledgments">
+<a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
+      </h2>
+<p id="appendix-A-1">The author would like to thank the Network Modeling (NETMOD) working
+group for its discussion of YANG path formats.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="authors-addresses">
+<section id="appendix-B">
+      <h2 id="name-authors-address">
+<a href="#name-authors-address" class="section-name selfRef">Author's Address</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">James Cumming</span></div>
+<div dir="auto" class="left"><span class="org">Nokia</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:james.cumming@nokia.com" class="email">james.cumming@nokia.com</a>
+</div>
+</address>
+</section>
+</div>
+<script>const toc = document.getElementById("toc");
+toc.querySelector("h2").addEventListener("click", e => {
+  toc.classList.toggle("active");
+});
+toc.querySelector("nav").addEventListener("click", e => {
+  toc.classList.remove("active");
+});
+</script>
+</body>
+</html>
