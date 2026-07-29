@@ -131,7 +131,7 @@ that leaf's value.
 **TODO: Whilst this section is the initial position, there are use-cases such as a
 short-form subtree-filter representation for NETCONF that may be useful to include,
 for example, all interfaces in a YANG list where the `enabled` child field is
-set to `True`.**
+set to `True`.
 
 ## Relationship to Other Path Formats {#relationship-to-other-path-formats}
 
@@ -194,8 +194,7 @@ filter path:
 : A ypath used to select a set of instance data nodes.  Filter paths use
   wildcards, regular expressions, or key value sets in one or more list key
   values only.  Predicates on non-key node values are out of scope (see
-  {{out-of-scope}}).  Filter paths are not used to identify a single known
-  instance node.
+  {{out-of-scope}}).
 
 module-qualified name:
 : A YANG node identifier prefixed with the defining module name and a colon
@@ -244,6 +243,8 @@ module that defines the node.  For example:
 /ietf-interfaces:interfaces
 ```
 
+**TODO: Do we need to handle different module versions/semantic versions in the path?**
+
 The module name is inherited along the path from left to right.  If the
 defining module does not change (as is typical within a single module, and
 unlike at augment boundaries) the module name does not need to be repeated.
@@ -263,6 +264,8 @@ The first path segment of a ypath SHOULD include a module name.  This ensures
 that the path is self-describing without external schema context.  A
 specification that allows omission of the module name on the first segment
 MUST state the default module to be assumed.
+
+**TODO: Is the SHOULD correct here or should it be a MUST?**
 
 ## Augmentations
 
