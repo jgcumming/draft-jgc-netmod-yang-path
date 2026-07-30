@@ -2,9 +2,7 @@ ypath = absolute-path
 
 absolute-path = 1*("/" path-step)
 
-path-step = node-name *predicate
-
-node-name = [identifier ":"] identifier
+path-step = node-identifier *predicate
 
 predicate = schema-predicate
           / instance-predicate
@@ -15,11 +13,12 @@ schema-predicate = "[" *WSP key-name *WSP "]"
 
 instance-predicate = "[" *WSP key-predicate-expr *WSP "]"
 
-filter-predicate = "[" *WSP key-predicate-expr *WSP "]"
-                 ; key-value is literal, wildcard, regex-value,
-                 ; or key-value-set
+filter-predicate = instance-predicate
+                 ; syntactically identical; filter-specific
+                 ; key-value restrictions apply only in
+                 ; filter paths (see prose)
 
-key-name = identifier
+key-name = node-identifier
 
 key-predicate-expr = key-name *WSP "=" *WSP key-value
 
@@ -36,7 +35,11 @@ set-separator = *WSP "," *WSP
 
 set-member = quoted-string / unquoted-value
 
-unquoted-value = 1*(DIGIT / (ALPHA / "_" / "-"))
+boolean-value = %s"true" / %s"false"
+
+numeric-value = ["-"] 1*DIGIT [ "." 1*DIGIT ]
+
+unquoted-value = boolean-value / numeric-value
 
 wildcard = "*"
 
@@ -52,4 +55,7 @@ unescaped-char = %x00-26 / %x28-5B / %x5D-FF
                  ; any character except SQUOTE (0x27) and
                    backslash (0x5C)
 
-leaf-list-predicate = "[" *WSP "." *WSP "=" *WSP key-value *WSP "]"
+leaf-list-key-value = quoted-string / unquoted-value
+
+leaf-list-predicate = "[" *WSP "." *WSP "=" *WSP leaf-list-key-value
+                      *WSP "]"

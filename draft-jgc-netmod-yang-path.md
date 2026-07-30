@@ -444,7 +444,19 @@ unquoted form is unambiguous.  For example:
 /openconfig-interfaces:interfaces/interface[name="1/1/1"]/subinterfaces/subinterface[index=0]
 ```
 
+### Keyless lists
 
+A keyless list in schema may be referenced without providing a key in square branckets:
+
+```
+/ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set
+```
+
+In this example, `prefix-set` is the keyless list.
+
+A keyless list in instance data is refered to the same way.
+
+The ability to reference a specific numeric item in a keyless list is not supported in ypath.
 
 ## Leaf Lists
 
@@ -463,6 +475,10 @@ An instance path to a specific leaf-list entry uses the same predicate form as
 
 An instance path that references the leaf-list node without selecting a
 particular entry names the leaf-list node without a predicate.
+
+A `leaf-list-predicate` accepts a literal value only (`quoted-string` or
+`unquoted-value`).  Wildcards, regular expressions, and key value sets MUST
+NOT be used in leaf-list predicates.
 
 **TODO: This is a first approach to this issue.  It could be considered out-of-scope
 to identify specific leaf-list entries or this same approach could be used to allow for
@@ -594,9 +610,8 @@ For example:
 ### Leaf Lists
 
 Regular expression matching is defined for list keys only.  Leaf-list entry
-selection continues to use literal values with the `instance-identifier` form
-(for example, `[.="value"]`) or wildcards if supported by the enclosing
-specification.
+selection uses literal values with the `instance-identifier` form (for
+example, `[.="value"]`).
 
 ## Key Value Sets {#key-value-sets}
 
@@ -670,16 +685,26 @@ with a value of `ipv4`, the corresponding JSON based on {{RFC7951}} is:
 # Formal Syntax {#formal-syntax}
 
 The grammar below uses ABNF as defined in {{RFC7950}}, Section 14.  The rules
-`identifier`, `identifier-ref-arg`, and `quoted-string` are used as defined
-there.
+`identifier`, `node-identifier`, `quoted-string`, `WSP`, `SQUOTE`, and
+`DIGIT` are used as defined there.  Path segments and key names in
+predicates use `node-identifier`, as in the `instance-identifier` type in
+{{RFC7950}}, and MAY include a module prefix (for example,
+`/prefix:node` or `[prefix:key="value"]`).  An `unquoted-value` is a numeric
+or boolean key value (see {{lists-in-instance-data}}); all other key values
+use `quoted-string`.
 
 ~~~~ abnf
 {::include formal-syntax.abnf}
 ~~~~
 
-A `filter-predicate` is an `instance-predicate` in which one or more
-`key-value` elements are a `wildcard`, a `quoted-string` containing only `*`,
-a `regex-value`, or a `key-value-set`.
+A `filter-predicate` is syntactically identical to an `instance-predicate`.
+Filter-specific `key-value` forms (wildcards, regular expressions, and key
+value sets) are defined in {{wildcards}}, {{regular-expressions}}, and
+{{key-value-sets}}.  Literal key values remain valid in filter paths unless a
+rule in those sections forbids them (for example, wildcard mixing in
+{{wildcards}}).  A `leaf-list-predicate` uses `leaf-list-key-value`, which
+permits only `quoted-string` or `unquoted-value`; filter extensions MUST NOT
+be used in leaf-list predicates.
 
 # Conformance {#conformance}
 
