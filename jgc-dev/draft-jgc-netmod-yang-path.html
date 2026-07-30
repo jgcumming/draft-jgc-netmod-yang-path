@@ -1245,6 +1245,9 @@ of node values (other than list keys) is out of scope.<a href="#section-abstract
                   <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.10.2.2">
                     <p id="section-toc.1-1.3.2.10.2.2.1"><a href="#section-3.10.2" class="auto internal xref">3.10.2</a>.  <a href="#name-lists-in-instance-data" class="internal xref">Lists in Instance Data</a></p>
 </li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.10.2.3">
+                    <p id="section-toc.1-1.3.2.10.2.3.1"><a href="#section-3.10.3" class="auto internal xref">3.10.3</a>.  <a href="#name-keyless-lists" class="internal xref">Keyless lists</a></p>
+</li>
                 </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.11">
@@ -1829,6 +1832,20 @@ unquoted form is unambiguous.  For example:<a href="#section-3.10.2-7" class="pi
 </code><a href="#section-3.10.2-8" class="pilcrow">¶</a></p>
 </section>
 </div>
+<div id="keyless-lists">
+<section id="section-3.10.3">
+          <h4 id="name-keyless-lists">
+<a href="#section-3.10.3" class="section-number selfRef">3.10.3. </a><a href="#name-keyless-lists" class="section-name selfRef">Keyless lists</a>
+          </h4>
+<p id="section-3.10.3-1">A keyless list in schema may be referenced without providing a key in square branckets:<a href="#section-3.10.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.10.3-2"><code>
+/ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set
+</code><a href="#section-3.10.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.10.3-3">In this example, <code>prefix-set</code> is the keyless list.<a href="#section-3.10.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.10.3-4">A keyless list in instance data is refered to the same way.<a href="#section-3.10.3-4" class="pilcrow">¶</a></p>
+<p id="section-3.10.3-5">The ability to reference a specific numeric item in a keyless list is not supported in ypath.<a href="#section-3.10.3-5" class="pilcrow">¶</a></p>
+</section>
+</div>
 </section>
 </div>
 <div id="leaf-lists">
@@ -1847,9 +1864,11 @@ unquoted form is unambiguous.  For example:<a href="#section-3.10.2-7" class="pi
 </code><a href="#section-3.11-4" class="pilcrow">¶</a></p>
 <p id="section-3.11-5">An instance path that references the leaf-list node without selecting a
 particular entry names the leaf-list node without a predicate.<a href="#section-3.11-5" class="pilcrow">¶</a></p>
-<p id="section-3.11-6"><strong>TODO: This is a first approach to this issue.  It could be considered out-of-scope
+<p id="section-3.11-6">A <code>leaf-list-predicate</code> accepts a literal value only (<code>quoted-string</code> or
+<code>unquoted-value</code>).  Wildcards, regular expressions, and key value sets <span class="bcp14">MUST NOT</span> be used in leaf-list predicates.<a href="#section-3.11-6" class="pilcrow">¶</a></p>
+<p id="section-3.11-7"><strong>TODO: This is a first approach to this issue.  It could be considered out-of-scope
 to identify specific leaf-list entries or this same approach could be used to allow for
-matching of other specific values (such as leafs) as a solution to that problem</strong><a href="#section-3.11-6" class="pilcrow">¶</a></p>
+matching of other specific values (such as leafs) as a solution to that problem</strong><a href="#section-3.11-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="metadata-annotations">
@@ -1987,9 +2006,8 @@ For example:<a href="#section-3.15.3-1" class="pilcrow">¶</a></p>
 <a href="#section-3.15.4" class="section-number selfRef">3.15.4. </a><a href="#name-leaf-lists-2" class="section-name selfRef">Leaf Lists</a>
           </h4>
 <p id="section-3.15.4-1">Regular expression matching is defined for list keys only.  Leaf-list entry
-selection continues to use literal values with the <code>instance-identifier</code> form
-(for example, <code>[.="value"]</code>) or wildcards if supported by the enclosing
-specification.<a href="#section-3.15.4-1" class="pilcrow">¶</a></p>
+selection uses literal values with the <code>instance-identifier</code> form (for
+example, <code>[.="value"]</code>).<a href="#section-3.15.4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2082,17 +2100,20 @@ with a value of <code>ipv4</code>, the corresponding JSON based on <span>[<a hre
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-formal-syntax" class="section-name selfRef">Formal Syntax</a>
       </h2>
 <p id="section-4-1">The grammar below uses ABNF as defined in <span>[<a href="#RFC7950" class="cite xref">RFC7950</a>]</span>, Section 14.  The rules
-<code>identifier</code>, <code>identifier-ref-arg</code>, and <code>quoted-string</code> are used as defined
-there.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<code>identifier</code>, <code>node-identifier</code>, <code>quoted-string</code>, <code>WSP</code>, <code>SQUOTE</code>, and
+<code>DIGIT</code> are used as defined there.  Path segments and key names in
+predicates use <code>node-identifier</code>, as in the <code>instance-identifier</code> type in
+<span>[<a href="#RFC7950" class="cite xref">RFC7950</a>]</span>, and <span class="bcp14">MAY</span> include a module prefix (for example,
+<code>/prefix:node</code> or <code>[prefix:key="value"]</code>).  An <code>unquoted-value</code> is a numeric
+or boolean key value (see <a href="#lists-in-instance-data" class="auto internal xref">Section 3.10.2</a>); all other key values
+use <code>quoted-string</code>.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <div class="breakable lang-abnf sourcecode" id="section-4-2">
 <pre>
 ypath = absolute-path
 
 absolute-path = 1*("/" path-step)
 
-path-step = node-name *predicate
-
-node-name = [identifier ":"] identifier
+path-step = node-identifier *predicate
 
 predicate = schema-predicate
           / instance-predicate
@@ -2103,11 +2124,12 @@ schema-predicate = "[" *WSP key-name *WSP "]"
 
 instance-predicate = "[" *WSP key-predicate-expr *WSP "]"
 
-filter-predicate = "[" *WSP key-predicate-expr *WSP "]"
-                 ; key-value is literal, wildcard, regex-value,
-                 ; or key-value-set
+filter-predicate = instance-predicate
+                 ; syntactically identical; filter-specific
+                 ; key-value restrictions apply only in
+                 ; filter paths (see prose)
 
-key-name = identifier
+key-name = node-identifier
 
 key-predicate-expr = key-name *WSP "=" *WSP key-value
 
@@ -2124,7 +2146,11 @@ set-separator = *WSP "," *WSP
 
 set-member = quoted-string / unquoted-value
 
-unquoted-value = 1*(DIGIT / (ALPHA / "_" / "-"))
+boolean-value = %s"true" / %s"false"
+
+numeric-value = ["-"] 1*DIGIT [ "." 1*DIGIT ]
+
+unquoted-value = boolean-value / numeric-value
 
 wildcard = "*"
 
@@ -2140,12 +2166,20 @@ unescaped-char = %x00-26 / %x28-5B / %x5D-FF
                  ; any character except SQUOTE (0x27) and
                    backslash (0x5C)
 
-leaf-list-predicate = "[" *WSP "." *WSP "=" *WSP key-value *WSP "]"
+leaf-list-key-value = quoted-string / unquoted-value
+
+leaf-list-predicate = "[" *WSP "." *WSP "=" *WSP leaf-list-key-value
+                      *WSP "]"
 </pre><a href="#section-4-2" class="pilcrow">¶</a>
 </div>
-<p id="section-4-3">A <code>filter-predicate</code> is an <code>instance-predicate</code> in which one or more
-<code>key-value</code> elements are a <code>wildcard</code>, a <code>quoted-string</code> containing only <code>*</code>,
-a <code>regex-value</code>, or a <code>key-value-set</code>.<a href="#section-4-3" class="pilcrow">¶</a></p>
+<p id="section-4-3">A <code>filter-predicate</code> is syntactically identical to an <code>instance-predicate</code>.
+Filter-specific <code>key-value</code> forms (wildcards, regular expressions, and key
+value sets) are defined in <a href="#wildcards" class="auto internal xref">Section 3.14</a>, <a href="#regular-expressions" class="auto internal xref">Section 3.15</a>, and
+<a href="#key-value-sets" class="auto internal xref">Section 3.16</a>.  Literal key values remain valid in filter paths unless a
+rule in those sections forbids them (for example, wildcard mixing in
+<a href="#wildcards" class="auto internal xref">Section 3.14</a>).  A <code>leaf-list-predicate</code> uses <code>leaf-list-key-value</code>, which
+permits only <code>quoted-string</code> or <code>unquoted-value</code>; filter extensions <span class="bcp14">MUST NOT</span>
+be used in leaf-list predicates.<a href="#section-4-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conformance">
