@@ -464,6 +464,10 @@ An instance path to a specific leaf-list entry uses the same predicate form as
 An instance path that references the leaf-list node without selecting a
 particular entry names the leaf-list node without a predicate.
 
+**TODO: This is a first approach to this issue.  It could be considered out-of-scope
+to identify specific leaf-list entries or this same approach could be used to allow for
+matching of other specific values (such as leafs) as a solution to that problem**
+
 ## Metadata Annotations
 
 Metadata annotations defined in {{RFC7952}} are not part of the ypath syntax.
@@ -481,6 +485,22 @@ A ypath to a YANG action names the action node.  For example:
 The action `input` and `output` nodes are not included in the path used to
 invoke the action.  Input parameters are supplied separately in the protocol or
 API operation that invokes the action.
+
+**TODO: Consider how input/output paths should be displayed.  One solution is to
+add a new notation to show input and output.  This is needed as `input` and `output`
+fields to an `action` may have name collisions, for example, the `input` `name` and the
+`output` `name` which would appear as `/example:mycontainer/do-something/name` for both
+despite being distinctly separate fields.  A proposal might be the `::` notation
+to signify that the name before it specifies whether it is `input` or `output` with
+these being the only supported options, for example,
+
+```
+/example:mycontainer/do-something/input::name
+```
+and
+```
+/example:mycontainer/do-something/output::name
+```
 
 ## Wildcards {#wildcards}
 
