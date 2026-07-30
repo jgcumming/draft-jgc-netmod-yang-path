@@ -521,9 +521,9 @@ For numeric or boolean keys, the unquoted form MAY be used:
 /example:items/item[index=*]
 ```
 
-**TODO: Need to rethink whether `*` alone is sufficient or whether it needs to 
-be inside double-quotes for string types, or whether it would be better inside 
-single quotes in case `*` is a string value that might be confused with 
+**TODO: Need to rethink whether `*` alone is sufficient or whether it needs to
+be inside double-quotes for string types, or whether it would be better inside
+single quotes in case `*` is a string value that might be confused with
 a wildcard**
 
 If any key in a multi-key list uses a wildcard, all keys in that list entry
