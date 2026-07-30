@@ -492,12 +492,12 @@ fields to an `action` may have name collisions, for example, the `input` `name` 
 `output` `name` which would appear as `/example:mycontainer/do-something/name` for both
 despite being distinctly separate fields.  A proposal might be the `::` notation
 to signify that the name before it specifies whether it is `input` or `output` with
-these being the only supported options, for example,
+these being the only supported options, for example,**
 
 ```
 /example:mycontainer/do-something/input::name
 ```
-and
+**and**
 ```
 /example:mycontainer/do-something/output::name
 ```
