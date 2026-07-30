@@ -573,6 +573,11 @@ Table of Contents
 
    /example:items/item[index=*]
 
+   *TODO: Need to rethink whether * alone is sufficient or whether it
+   needs to be inside double-quotes for string types, or whether it
+   would be better inside single quotes in case * is a string value that
+   might be confused with a wildcard*
+
    If any key in a multi-key list uses a wildcard, all keys in that list
    entry MUST use wildcards.  Mixing wildcards and specific values for
    different keys of the same list entry is not permitted.  For example:

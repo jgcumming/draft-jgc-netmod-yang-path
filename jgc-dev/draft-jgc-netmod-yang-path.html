@@ -1907,17 +1907,21 @@ schema paths.<a href="#section-3.14-1" class="pilcrow">¶</a></p>
 <p id="section-3.14-5"><code>
 /example:items/item[index=*]
 </code><a href="#section-3.14-5" class="pilcrow">¶</a></p>
-<p id="section-3.14-6">If any key in a multi-key list uses a wildcard, all keys in that list entry
+<p id="section-3.14-6"><strong>TODO: Need to rethink whether <code>*</code> alone is sufficient or whether it needs to
+be inside double-quotes for string types, or whether it would be better inside
+single quotes in case <code>*</code> is a string value that might be confused with
+a wildcard</strong><a href="#section-3.14-6" class="pilcrow">¶</a></p>
+<p id="section-3.14-7">If any key in a multi-key list uses a wildcard, all keys in that list entry
 <span class="bcp14">MUST</span> use wildcards.  Mixing wildcards and specific values for different keys of
-the same list entry is not permitted.  For example:<a href="#section-3.14-6" class="pilcrow">¶</a></p>
-<p id="section-3.14-7">Valid:<a href="#section-3.14-7" class="pilcrow">¶</a></p>
-<p id="section-3.14-8"><code>
+the same list entry is not permitted.  For example:<a href="#section-3.14-7" class="pilcrow">¶</a></p>
+<p id="section-3.14-8">Valid:<a href="#section-3.14-8" class="pilcrow">¶</a></p>
+<p id="section-3.14-9"><code>
 /module:list[key1="*"][key2="*"]
-</code><a href="#section-3.14-8" class="pilcrow">¶</a></p>
-<p id="section-3.14-9">Not valid:<a href="#section-3.14-9" class="pilcrow">¶</a></p>
-<p id="section-3.14-10"><code>
+</code><a href="#section-3.14-9" class="pilcrow">¶</a></p>
+<p id="section-3.14-10">Not valid:<a href="#section-3.14-10" class="pilcrow">¶</a></p>
+<p id="section-3.14-11"><code>
 /module:list[key1="foo"][key2="*"]
-</code><a href="#section-3.14-10" class="pilcrow">¶</a></p>
+</code><a href="#section-3.14-11" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="regular-expressions">
