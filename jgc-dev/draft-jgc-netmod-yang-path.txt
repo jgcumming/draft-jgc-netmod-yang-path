@@ -545,7 +545,7 @@ Table of Contents
    to invoke the action.  Input parameters are supplied separately in
    the protocol or API operation that invokes the action.
 
-   **TODO: Consider how input/output paths should be displayed.  One
+   *TODO: Consider how input/output paths should be displayed.  One
    solution is to add a new notation to show input and output.  This is
    needed as input and output fields to an action may have name
    collisions, for example, the input name and the output name which
@@ -553,9 +553,9 @@ Table of Contents
    despite being distinctly separate fields.  A proposal might be the ::
    notation to signify that the name before it specifies whether it is
    input or output with these being the only supported options, for
-   example,
+   example,*
 
-   /example:mycontainer/do-something/input::name and
+   /example:mycontainer/do-something/input::name *and*
    /example:mycontainer/do-something/output::name
 
 3.14.  Wildcards

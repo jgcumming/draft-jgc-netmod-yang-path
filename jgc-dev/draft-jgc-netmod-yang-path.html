@@ -1874,18 +1874,18 @@ annotations attached to nodes.<a href="#section-3.12-1" class="pilcrow">¶</a></
 <p id="section-3.13-3">The action <code>input</code> and <code>output</code> nodes are not included in the path used to
 invoke the action.  Input parameters are supplied separately in the protocol or
 API operation that invokes the action.<a href="#section-3.13-3" class="pilcrow">¶</a></p>
-<p id="section-3.13-4">**TODO: Consider how input/output paths should be displayed.  One solution is to
+<p id="section-3.13-4"><strong>TODO: Consider how input/output paths should be displayed.  One solution is to
 add a new notation to show input and output.  This is needed as <code>input</code> and <code>output</code>
 fields to an <code>action</code> may have name collisions, for example, the <code>input</code> <code>name</code> and the
 <code>output</code> <code>name</code> which would appear as <code>/example:mycontainer/do-something/name</code> for both
 despite being distinctly separate fields.  A proposal might be the <code>::</code> notation
 to signify that the name before it specifies whether it is <code>input</code> or <code>output</code> with
-these being the only supported options, for example,<a href="#section-3.13-4" class="pilcrow">¶</a></p>
+these being the only supported options, for example,</strong><a href="#section-3.13-4" class="pilcrow">¶</a></p>
 <p id="section-3.13-5"><code>
 /example:mycontainer/do-something/input::name
 </code>
-and
-<code>
+          <strong>and</strong>
+          <code>
 /example:mycontainer/do-something/output::name
 </code><a href="#section-3.13-5" class="pilcrow">¶</a></p>
 </section>
