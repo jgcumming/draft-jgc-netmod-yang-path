@@ -4,8 +4,8 @@
 
 Network Modeling                                              J. Cumming
 Internet-Draft                                                     Nokia
-Intended status: Standards Track                            29 July 2026
-Expires: 30 January 2027
+Intended status: Standards Track                            30 July 2026
+Expires: 31 January 2027
 
 
                         YANG path format (ypath)
@@ -63,7 +63,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 January 2027.
+   This Internet-Draft will expire on 31 January 2027.
 
 Copyright Notice
 
@@ -524,6 +524,11 @@ Table of Contents
    An instance path that references the leaf-list node without selecting
    a particular entry names the leaf-list node without a predicate.
 
+   *TODO: This is a first approach to this issue.  It could be
+   considered out-of-scope to identify specific leaf-list entries or
+   this same approach could be used to allow for matching of other
+   specific values (such as leafs) as a solution to that problem*
+
 3.12.  Metadata Annotations
 
    Metadata annotations defined in [RFC7952] are not part of the ypath
@@ -539,6 +544,19 @@ Table of Contents
    The action input and output nodes are not included in the path used
    to invoke the action.  Input parameters are supplied separately in
    the protocol or API operation that invokes the action.
+
+   **TODO: Consider how input/output paths should be displayed.  One
+   solution is to add a new notation to show input and output.  This is
+   needed as input and output fields to an action may have name
+   collisions, for example, the input name and the output name which
+   would appear as /example:mycontainer/do-something/name for both
+   despite being distinctly separate fields.  A proposal might be the ::
+   notation to signify that the name before it specifies whether it is
+   input or output with these being the only supported options, for
+   example,
+
+   /example:mycontainer/do-something/input::name and
+   /example:mycontainer/do-something/output::name
 
 3.14.  Wildcards
 
