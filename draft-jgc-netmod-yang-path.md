@@ -578,6 +578,9 @@ Within the single-quoted pattern, a single quote character is escaped as `\'`
 and a backslash is escaped as `\\`.  All other characters are treated
 literally.
 
+**TODO: Consider UTF-8 characters and if they need a special mention or special
+handling**
+
 ### Multi-Key Lists
 
 Unlike wildcards, regular expressions MAY be combined with literal key values
