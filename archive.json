@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-07-28T02:25:55.076729+00:00",
+  "timestamp": "2026-07-30T02:12:28.310691+00:00",
   "repo": "jgcumming/draft-jgc-netmod-yang-path",
   "labels": [
     {
@@ -87,5 +87,36 @@
       "comments": []
     }
   ],
-  "pulls": []
+  "pulls": [
+    {
+      "number": 3,
+      "id": "PR_kwDOPQ7g8M74N9nc",
+      "title": "Updated refreshed version",
+      "url": "https://github.com/jgcumming/draft-jgc-netmod-yang-path/pull/3",
+      "state": "MERGED",
+      "author": "jgcumming",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "jgcumming"
+      ],
+      "labels": [],
+      "body": "",
+      "createdAt": "2026-07-29T21:53:13Z",
+      "updatedAt": "2026-07-30T01:23:40Z",
+      "baseRepository": "jgcumming/draft-jgc-netmod-yang-path",
+      "baseRefName": "main",
+      "baseRefOid": "d7587b2ee1ba2fef56f855b60e92b7081c4b7f1e",
+      "headRepository": "jgcumming/draft-jgc-netmod-yang-path",
+      "headRefName": "jgc-dev",
+      "headRefOid": "b7d56c0733fd6a3cefe6aa3433e51e28203d00df",
+      "closedAt": "2026-07-30T01:23:36Z",
+      "mergedAt": "2026-07-30T01:23:36Z",
+      "mergedBy": "jgcumming",
+      "mergeCommit": {
+        "oid": "9130624b9464c2caf83c4de29be33f8961f08459"
+      },
+      "comments": [],
+      "reviews": []
+    }
+  ]
 }
