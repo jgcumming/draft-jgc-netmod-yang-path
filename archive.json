@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2026-07-30T02:12:28.310691+00:00",
+  "timestamp": "2026-08-13T01:50:40.579170+00:00",
   "repo": "jgcumming/draft-jgc-netmod-yang-path",
   "labels": [
     {
@@ -83,6 +83,24 @@
       "body": "",
       "createdAt": "2026-03-20T03:00:48Z",
       "updatedAt": "2026-03-20T03:00:48Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 4,
+      "id": "I_kwDOPQ7g8M8AAAABMinq-g",
+      "title": "Is a section on escaping characters required?",
+      "url": "https://github.com/jgcumming/draft-jgc-netmod-yang-path/issues/4",
+      "state": "OPEN",
+      "author": "jgcumming",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [
+        "question"
+      ],
+      "body": "",
+      "createdAt": "2026-08-13T00:36:10Z",
+      "updatedAt": "2026-08-13T00:36:26Z",
       "closedAt": null,
       "comments": []
     }
