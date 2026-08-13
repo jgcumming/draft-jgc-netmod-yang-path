@@ -130,7 +130,7 @@ protocol-specific filter mechanisms, not in ypath.  A ypath MAY identify a
 leaf node (for example, `/.../description`), but MUST NOT specify a condition on
 that leaf's value.
 
-**TODO: Whilst this section is the initial position, there are use-cases such as a
+**TODO**: Whilst this section is the initial position, there are use-cases such as a
 short-form subtree-filter representation for NETCONF that may be useful to include,
 for example, all interfaces in a YANG list where the `enabled` child field is
 set to `True`.
