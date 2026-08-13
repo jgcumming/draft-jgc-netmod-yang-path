@@ -59,15 +59,7 @@ data filters.  A ypath identifies YANG nodes using module-qualified names and
 list key predicates.  The format is closely related to the YANG
 `instance-identifier` built-in type but additionally supports schema paths,
 filter wildcards, regular expression key matching, key value sets, and path
-enumeration.  Ypath is intended for management APIs,
-path enumeration tools, and filtering specifications where a compact,
-human-readable representation of a YANG location is required.  Additional uses
-for this path format can easily been forseen as path selection for streaming
-telemetry and for YANG reference statements, such as `when` and `must` statements,
-in future YANG versions.  This document
-specifies the ypath syntax, formal grammar, and conformance requirements.  It
-does not define a protocol, API, or encoding.  Selection based on the contents
-of node values (other than list keys) is out of scope.
+enumeration.
 
 --- middle
 
@@ -96,12 +88,22 @@ currently defines this format.
 This document defines ypath (short for YANG path), a self-describing, generic
 path format for referencing YANG schema, instance data, and filters.
 
+Ypath is intended for management APIs, path enumeration tools, and 
+filtering specifications where a compact,
+human-readable representation of a YANG element is required.  Additional uses
+for this path format can easily been forseen as path selection for streaming
+telemetry and for YANG reference statements, such as `when` and `must` statements,
+in future YANG versions.  This document specifies the ypath syntax, formal 
+grammar, and conformance requirements.  It does not define a protocol, 
+API, or encoding.  Selection based on the contents of node values 
+(other than list keys) is out of scope.
+
 ## Applicability
 
 Ypath is a string syntax for identifying locations in a YANG data tree.  It is
 intended for use in specifications and implementations that need to:
 
-- enumerate or display paths through a YANG schema;
+- enumerate or display paths in a YANG schema;
 - identify specific nodes in YANG instance data;
 - express filter expressions that select data subsets; and
 - convey path information in management protocol error reporting.
@@ -147,8 +149,8 @@ definitions in {{RFC7950}} form the basis for interpretation unless this
 document explicitly specifies otherwise.  The principal differences for instance
 paths are:
 
-- module names MAY be inherited along the path rather than repeated on every
-node (see {{module-qualified-names}});
+- module names are inherited along the path rather than repeated on every
+node (see {{module-qualified-names}}), although they MAY be provided is desired;
 - numeric and boolean list key values MAY appear without quotes (see
 {{lists-in-instance-data}}); and
 - filter paths MAY use the wildcard `*` in key values (see {{wildcards}});
@@ -342,27 +344,55 @@ Instance example:
 
 ## Choices
 
-YANG choice nodes are not instantiated in the data tree.  A ypath therefore does
-not include a segment for the choice node itself.  The path proceeds directly
-to the node within the selected case.
+YANG choice and case nodes are not instantiated in the data tree.  A ypath
+therefore does not include a segment for the choice or case node when considering
+instance-data.  The path proceeds directly to the node within the selected case.
 
-For example, if `protocol` is a choice under `server` and the `tcp` case is
-active, the path to the `port` leaf is:
+When walking a schema tree to enumerate paths, implementations MUST emit a
+path segment for both the `choice` and `case` nodes.
 
-Schema path:
+For example, consider the following YANG model:
+
+```
+module example {
+  yang-version 1.1;
+  namespace "urn:example:example";
+  prefix "ex";
+  revision "2026-08-12";
+  container server {
+    choice protocol {
+      case tcp {
+        container tcp {
+          leaf port {
+            type uint8;
+          }
+        }
+      }
+      case udp {
+        container udp {
+          leaf port {
+            type uint8;
+          }
+        }
+      }
+    }
+  }
+}
+```
+
+Instance paths:
 
 ```
 /example:server/tcp/port
+/example:server/udp/port
 ```
 
-Instance path:
+Schema paths:
 
 ```
-/example:server/tcp/port
+/example:server/protocol/tcp/tcp/port
+/example:server/protocol/udp/udp/port
 ```
-
-When walking a schema tree to enumerate paths, implementations MUST NOT emit a
-path segment for the choice node.
 
 ## Identities and Identity References (identityref)
 
@@ -448,13 +478,39 @@ unquoted form is unambiguous.  For example:
 
 A keyless list in schema may be referenced without providing a key in square branckets:
 
+Consider the `ietf-isis@2022-10-19.yang` model and the `adjacency-state` grouping:
+
 ```
-/ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set
+container adjacencies {
+  config false;
+  list adjacency {
+    leaf neighbor-sys-type {
+      type level;
+      ...
+    }
+    leaf neighbor-sysid {
+      type system-id;
+      ...
+    }
+    ...
+    description
+      "List of operational adjacencies.";
+  }
+}
 ```
 
-In this example, `prefix-set` is the keyless list.
+In this model, `adjacency` is a keyless list.  Therefore, the ypath to the
+`neighbor-sys-type` is:
 
-A keyless list in instance data is refered to the same way.
+```
+/ietf-routing:routing/control-plane-protocols/control-plane-protocol[name]/ietf-isis:isis/interfaces/interface[name]/adjacencies/adjacency/neighbor-sys-type
+```
+
+A keyless list in instance data is refered to the same way:
+
+```
+/ietf-routing:routing/control-plane-protocols/control-plane-protocol[name="isis1"]/ietf-isis:isis/interfaces/interface[name="ethernet1"]/adjacencies/adjacency/neighbor-sys-type
+```
 
 The ability to reference a specific numeric item in a keyless list is not supported in ypath.
 
@@ -886,7 +942,8 @@ registration.
 # Acknowledgments
 
 The author would like to thank the Network Modeling (NETMOD) working
-group for its discussion of YANG path formats.
+group for its discussion of YANG path formats and Robert Wilton for their
+early review.
 
 
 
