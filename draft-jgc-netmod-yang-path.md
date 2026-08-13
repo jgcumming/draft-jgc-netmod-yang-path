@@ -88,14 +88,14 @@ currently defines this format.
 This document defines ypath (short for YANG path), a self-describing, generic
 path format for referencing YANG schema, instance data, and filters.
 
-Ypath is intended for management APIs, path enumeration tools, and 
+Ypath is intended for management APIs, path enumeration tools, and
 filtering specifications where a compact,
 human-readable representation of a YANG element is required.  Additional uses
 for this path format can easily been forseen as path selection for streaming
 telemetry and for YANG reference statements, such as `when` and `must` statements,
-in future YANG versions.  This document specifies the ypath syntax, formal 
-grammar, and conformance requirements.  It does not define a protocol, 
-API, or encoding.  Selection based on the contents of node values 
+in future YANG versions.  This document specifies the ypath syntax, formal
+grammar, and conformance requirements.  It does not define a protocol,
+API, or encoding.  Selection based on the contents of node values
 (other than list keys) is out of scope.
 
 ## Applicability
