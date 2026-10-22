@@ -31,6 +31,11 @@ author:
     organization: Nokia
     email: "james.cumming@nokia.com"
 
+ -
+    fullname: "Robert Wilton"
+    organization: Cisco
+    email: "rwilton@cisco.com"
+
 normative:
 
   RFC7950:
@@ -65,111 +70,75 @@ enumeration.
 
 # Introduction
 
-A number of path formats currently exist to describe YANG modeled information.
-XPath {{XPATH}} is used for constraints and derived values within YANG modules
-{{RFC7950}}.  The YANG built-in type `instance-identifier` {{RFC7950}} defines
-a path subset for referencing data tree nodes in instance encodings.  RESTCONF
-{{RFC8040}} defines URI paths for accessing data resources.  JSONPath
-{{RFC9535}} provides a query language for JSON documents, including those
-produced by the JSON encoding of YANG data {{RFC7951}}.
+A number of path formats are used with YANG.  The YANG built-in type
+`instance-identifier` {{RFC7950}} identifies data nodes, while XPath is used by
+YANG constraint statements.  These formats have different purposes and
+semantics.  This document defines a concise, self-describing syntax for naming
+nodes in a YANG schema tree or instance data tree.  It is intended to make
+paths clear and consistent.  A path still needs to be resolved against a YANG
+schema.
 
-These path formats serve well for their initial use cases.  However, some have
-shortcomings for YANG module authors, tool implementers, and operators who need
-a single, generic, human-readable path format that can refer equally to schema
-locations, instance data, and filter expressions without the full expressiveness
-(and complexity) of XPath or JSONPath.
-
-There is a need for a self-describing path format that can be used to describe
-schema data, instance data, and filtering in a consistent manner.  Deployed
-implementations already use such a format (commonly referred to as a JSON
-instance path) in management interfaces; however, no IETF specification
-currently defines this format.
-
-This document defines ypath (short for YANG path), a self-describing, generic
-path format for referencing YANG schema, instance data, and filters.
-
-Ypath is intended for management APIs, path enumeration tools, and
-filtering specifications where a compact,
-human-readable representation of a YANG element is required.  Additional uses
-for this path format can easily been forseen as path selection for streaming
-telemetry and for YANG reference statements, such as `when` and `must` statements,
-in future YANG versions.  This document specifies the ypath syntax, formal
-grammar, and conformance requirements.  It does not define a protocol,
-API, or encoding.  Selection based on the contents of node values
-(other than list keys) is out of scope.
+This document defines ypath (short for YANG path).  It specifies absolute and
+relative paths to schema and instance nodes.  It also defines a limited filter
+path extension for selecting list entries by their keys.  This extension is
+optional and does not define a general query language.  Ypath does not replace
+XPath in YANG 1.1 `must` and `when` statements, and this document does not
+define an expression language for those statements.  A future YANG revision
+could define an expression language that uses ypath paths; doing so would need
+to specify expression semantics separately.
 
 ## Applicability
 
-Ypath is a string syntax for identifying locations in a YANG data tree.  It is
-intended for use in specifications and implementations that need to:
-
-- enumerate or display paths in a YANG schema;
-- identify specific nodes in YANG instance data;
-- express filter expressions that select data subsets; and
-- convey path information in management protocol error reporting.
-
-This document defines the ypath format only.  It does not specify how ypaths are
-carried on the wire, stored, or processed by a particular protocol such as
-NETCONF {{RFC6241}} or RESTCONF {{RFC8040}}.
+This document defines the ypath syntax for locations in a YANG schema tree or
+instance data tree, including an optional filter path extension.  It does not
+specify how ypaths are carried, stored, or processed by a protocol or API.
+Appendix {{potential-uses}} describes possible applications; any protocol
+binding must be defined by the relevant specification.
 
 ## Out of Scope {#out-of-scope}
 
-Ypath identifies nodes in a YANG schema or instance tree.  Predicates in filter
-paths apply only to list key values.  The following are out of scope for this
-document:
+Ypath identifies nodes in a YANG schema or instance tree.  Predicates in
+filter paths apply only to list key values.  An instance path MAY identify an
+individual leaf-list entry by its exact value (see {{leaf-lists}}); no other
+non-key node value is used as a predicate.  The following are out of scope for
+this document:
 
-* selection or matching based on the value of any node other than a list key
-  (for example, matching a `description` or `mtu` leaf value);
+* selection or matching based on the value of any non-key leaf (for example,
+  matching a `description` or `mtu` leaf value);
 * comparison operators, ranges, or expressions over leaf or leaf-list values;
 * content-based queries across the datastore (for example, "all interfaces
   where `enabled` is `true`"); and
 * any form of value predicate attached to a non-key node in the path.
 
-Such selection belongs in query languages (for example, XPath or JSONPath) or in
-protocol-specific filter mechanisms, not in ypath.  A ypath MAY identify a
-leaf node (for example, `/.../description`), but MUST NOT specify a condition on
-that leaf's value.
+Such selection belongs in expression or query languages, not in ypath.  A
+ypath MAY identify a leaf node (for example, `/.../description`), but MUST NOT
+specify a condition on that leaf's value.  This restriction concerns what a
+path predicate may test; it does not prevent a `must` or `when` expression
+from referring to other leaf nodes.
 
-**TODO**: Whilst this section is the initial position, there are use-cases such as a
-short-form subtree-filter representation for NETCONF that may be useful to include,
-for example, all interfaces in a YANG list where the `enabled` child field is
-set to `True`.
+Ypath does not select nodes based on values of non-key nodes.  This restriction
+keeps ypath a path syntax; selecting nodes based on arbitrary data values
+requires an expression language.  Whether a future version should add such an
+expression language is left for separate work.
 
 ## Relationship to Other Path Formats {#relationship-to-other-path-formats}
 
-Ypath is closely related to, but not identical with, the lexical representation
-of the YANG `instance-identifier` built-in type defined in {{RFC7950}}.
-Instance-identifiers are used to reference data tree nodes in instance
-encodings and require key values for list entries.  Ypath additionally defines
-a schema path form (with key names but not values) and filter forms (including
-wildcards) that are outside the scope of `instance-identifier`.
-
-Where ypath instance path syntax aligns with `instance-identifier`, the
-definitions in {{RFC7950}} form the basis for interpretation unless this
-document explicitly specifies otherwise.  The principal differences for instance
-paths are:
-
-- module names are inherited along the path rather than repeated on every
-node (see {{module-qualified-names}}), although they MAY be provided is desired;
-- numeric and boolean list key values MAY appear without quotes (see
-{{lists-in-instance-data}}); and
-- filter paths MAY use the wildcard `*` in key values (see {{wildcards}});
-- filter paths MAY use regular expressions in key values (see
-  {{regular-expressions}}); and
-- filter paths MAY use key value sets to match multiple explicit key values
-  (see {{key-value-sets}}).
-
-Ypath is not a query language.  It does not provide the expression evaluation,
-node set operations, or document traversal capabilities of XPath or JSONPath.
+Ypath instance paths identify YANG data nodes and share concepts with the YANG
+`instance-identifier` built-in type defined in {{RFC7950}}.  Unlike
+`instance-identifier`, ypath also defines paths to schema nodes and relative
+paths.  Filter path extensions are described in {{filter-paths}}.  Appendix
+{{potential-uses}} records possible applications of ypath.
 
 ## Document Structure
 
 {{conventions}} describes terms used in this document.  {{out-of-scope}}
 states what ypath does not cover.  {{format-definition}} defines the ypath
-format.  {{formal-syntax}} provides an ABNF grammar.
+format, including relative paths and the optional filter path extension.
+{{formal-syntax}} provides an ABNF grammar.
 {{conformance}} defines conformance requirements.  {{examples}} gives worked
 examples.  {{security-considerations}} discusses security implications.
-{{iana-considerations}} specifies IANA actions.
+{{iana-considerations}} specifies IANA actions.  Appendix {{potential-uses}}
+describes potential applications of ypath.
 
 # Conventions and Definitions {#conventions}
 
@@ -220,32 +189,42 @@ selection based on any other node value is out of scope (see {{out-of-scope}}).
 
 ## Root of the YANG Path
 
-A ypath is always expressed from the root of the YANG data tree.  A
-specification that splits a path into a prefix and a sub-path MUST evaluate
-both parts together from the root.
+A ypath MAY be absolute or relative.  An absolute path begins at the root and
+starts with `/`.  A relative path is interpreted from the context node defined
+by the specification or application using it.  A relative path MUST NOT be
+interpreted without such a context.  A consumer that supports only absolute
+paths MUST reject relative paths.
 
-Approach 1:
+When a specification splits a path into a prefix and a sub-path, it MUST define
+the context for the sub-path and how the two parts are combined.  If the
+sub-path is defined relative to the prefix, the consumer MUST resolve the
+resulting path as if it had been evaluated from the root.  This rule ensures
+that splitting a path does not change the node it identifies.
 
-- Path: `/item1/item2/item3/item4`
+## YPath Expressions {#ypath-expressions}
 
-Approach 2:
-
-- Prefix: `/item1/item2`
-- Sub-path: `/item3/item4`
-- (Yields) Path: `/item1/item2/item3/item4`
+This document defines path references, not expressions.  In YANG 1.1,
+`must` and `when` continue to use XPath as specified by {{RFC7950}}.  A ypath
+MUST NOT be substituted for an XPath expression in those statements.  A future
+YANG revision could define expressions that use ypath as a path-reference
+syntax, but it would also need to define relative context, navigation,
+operators, type conversion, and evaluation semantics.  Those expression
+semantics are outside the scope of this document.  Relative ypaths defined
+here provide a possible path-reference building block; by themselves, they do
+not define such an expression language.
 
 
 
 ## Module-Qualified Names {#module-qualified-names}
 
-A ypath uses a `module:identifier` form where `module` is the name of the YANG
-module that defines the node.  For example:
+A ypath uses a `module-name:identifier` form where `module-name` is the name of
+the YANG module that defines the node.  This follows the module-qualified
+identifier terminology in {{RFC7950}}; the separator is a colon, not a hyphen.
+For example:
 
 ```
 /ietf-interfaces:interfaces
 ```
-
-**TODO: Do we need to handle different module versions/semantic versions in the path?**
 
 The module name is inherited along the path from left to right.  If the
 defining module does not change (as is typical within a single module, and
@@ -256,18 +235,18 @@ For example:
 /ietf-routing-policy:routing-policy/defined-sets/prefix-sets
 ```
 
-It is also valid to provide the module name on every path segment.  For example:
+It is valid to provide the module name on every path segment.  For example:
 
 ```
 /ietf-routing-policy:routing-policy/ietf-routing-policy:defined-sets/ietf-routing-policy:prefix-sets
 ```
 
-The first path segment of a ypath SHOULD include a module name.  This ensures
-that the path is self-describing without external schema context.  A
-specification that allows omission of the module name on the first segment
-MUST state the default module to be assumed.
-
-**TODO: Is the SHOULD correct here or should it be a MUST?**
+An absolute path MUST include a module name on its first segment.  A relative
+path MAY omit the module name on its first segment when the context node
+provides an unambiguous module.  A specification that permits another default
+module MUST define it.  A producer SHOULD include a module name at the first
+segment and at each subsequent module change; it MAY include the module name on
+every segment.
 
 ## Augmentations
 
@@ -295,8 +274,11 @@ ypath therefore does not change at a deviated node.
 ## Import/Include
 
 Imports and includes do not change the namespace of YANG nodes.  The module
-portion of a ypath therefore does not change solely because a node is accessed
-through an import or include relationship.
+portion of a ypath therefore remains the module that defines the node.  An
+identityref value is different: the identity name in the value is qualified by
+the module that defines that identity, even when the identity is used through
+an import.  That value qualification does not change the namespace of the
+leaf node identified by the ypath.
 
 ## Containers
 
@@ -349,7 +331,9 @@ therefore does not include a segment for the choice or case node when considerin
 instance-data.  The path proceeds directly to the node within the selected case.
 
 When walking a schema tree to enumerate paths, implementations MUST emit a
-path segment for both the `choice` and `case` nodes.
+path segment for each explicitly declared `choice` and `case` node.  A
+shorthand case as described in Section 7.9.2 of {{RFC7950}} is implicit and
+does not add a path segment; the child node is named directly.
 
 For example, consider the following YANG model:
 
@@ -435,13 +419,17 @@ For multi-key lists:
 /module:node1/node2/list[key1][key2]
 ```
 
-When enumerating schema paths, a path to a list entry MUST include all key
-names in brackets.  A path that uses the key name as a child segment is
-invalid.  For example, the following is not a valid schema path:
+Schema paths identify schema nodes, not list entries.  A list key is an
+ordinary child schema node and is addressed by its child segment, just like
+other leaves.  For example, the following are valid schema paths:
 
 ```
+/ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set
 /ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set/name
 ```
+
+Square-bracket key predicates MUST NOT be used in schema paths.  They are used
+only to identify or select list entries in instance and filter paths.
 
 
 
@@ -467,16 +455,18 @@ For multi-key lists, each key appears in a separate bracket pair:
 ```
 
 Key values that are strings MUST be enclosed in double quotes.  Key values
-that are numeric or boolean MAY appear without quotes, provided that the
-unquoted form is unambiguous.  For example:
+whose YANG type is numeric (including `decimal64`) or boolean MAY appear
+without quotes, provided that the unquoted form is unambiguous.  A consumer
+uses the schema to determine the key type.  For example:
 
 ```
 /openconfig-interfaces:interfaces/interface[name="1/1/1"]/subinterfaces/subinterface[index=0]
 ```
 
-### Keyless lists
+### Keyless lists {#keyless-lists}
 
-A keyless list in schema may be referenced without providing a key in square branckets:
+A keyless list in a schema path is addressed by its node name, without a key
+predicate:
 
 Consider the `ietf-isis@2022-10-19.yang` model and the `adjacency-state` grouping:
 
@@ -506,13 +496,19 @@ In this model, `adjacency` is a keyless list.  Therefore, the ypath to the
 /ietf-routing:routing/control-plane-protocols/control-plane-protocol[name]/ietf-isis:isis/interfaces/interface[name]/adjacencies/adjacency/neighbor-sys-type
 ```
 
-A keyless list in instance data is refered to the same way:
+A keyless list in instance data may be addressed by its node name alone when
+the path identifies the list node as a whole.  To identify a particular entry,
+a positional predicate MAY be used.  The position is a positive integer, as in
+the keyless-list form of `instance-identifier` defined in Section 9.13 of
+{{RFC7950}}:
 
 ```
-/ietf-routing:routing/control-plane-protocols/control-plane-protocol[name="isis1"]/ietf-isis:isis/interfaces/interface[name="ethernet1"]/adjacencies/adjacency/neighbor-sys-type
+/ietf-routing:routing/control-plane-protocols/control-plane-protocol[name="isis1"]/ietf-isis:isis/interfaces/interface[name="ethernet1"]/adjacencies/adjacency[1]/neighbor-sys-type
 ```
 
-The ability to reference a specific numeric item in a keyless list is not supported in ypath.
+The position is one-based and refers to the order of the list entries in the
+instance data.  A filter path MUST NOT use a positional predicate because its
+selection semantics could change when entries are inserted or removed.
 
 ## Leaf Lists
 
@@ -548,31 +544,29 @@ annotations attached to nodes.
 
 ## Actions
 
-A ypath to a YANG action names the action node.  For example:
+A schema path MAY identify an `action`, `rpc`, or `notification` node, in
+addition to data nodes.  These are schema nodes and do not appear as
+instantiated nodes in the data tree.  An instance path MUST NOT address an
+`rpc` or `notification`.  An instance path to an `action` identifies the
+action node to invoke; the protocol operation still defines how to invoke it.
+For example:
 
 ```
 /example:mycontainer/do-something
 ```
 
-The action `input` and `output` nodes are not included in the path used to
-invoke the action.  Input parameters are supplied separately in the protocol or
-API operation that invokes the action.
+For a schema path that continues below an `action` or `rpc`, its `input` and
+`output` nodes are explicit path segments.  For example,
+`/example:mycontainer/do-something/input/name` and
+`/example:mycontainer/do-something/output/name` identify distinct schema
+nodes.
 
-**TODO: Consider how input/output paths should be displayed.  One solution is to
-add a new notation to show input and output.  This is needed as `input` and `output`
-fields to an `action` may have name collisions, for example, the `input` `name` and the
-`output` `name` which would appear as `/example:mycontainer/do-something/name` for both
-despite being distinctly separate fields.  A proposal might be the `::` notation
-to signify that the name before it specifies whether it is `input` or `output` with
-these being the only supported options, for example,**
+## Filter Paths {#filter-paths}
 
-```
-/example:mycontainer/do-something/input::name
-```
-**and**
-```
-/example:mycontainer/do-something/output::name
-```
+Filter paths are an optional extension to instance paths.  They select
+instance data nodes by matching list key values.  A specification that uses
+filter paths MUST define how selected nodes are returned or acted upon.  This
+document defines no transport or filter payload.
 
 ## Wildcards {#wildcards}
 
@@ -593,26 +587,9 @@ For numeric or boolean keys, the unquoted form MAY be used:
 /example:items/item[index=*]
 ```
 
-**TODO: Need to rethink whether `*` alone is sufficient or whether it needs to
-be inside double-quotes for string types, or whether it would be better inside
-single quotes in case `*` is a string value that might be confused with
-a wildcard**
-
-If any key in a multi-key list uses a wildcard, all keys in that list entry
-MUST use wildcards.  Mixing wildcards and specific values for different keys of
-the same list entry is not permitted.  For example:
-
-Valid:
-
-```
-/module:list[key1="*"][key2="*"]
-```
-
-Not valid:
-
-```
-/module:list[key1="foo"][key2="*"]
-```
+Each key in a multi-key list is matched independently.  A wildcard MAY be
+combined with a literal, regular expression, or key value set in another key
+predicate.  For example, `/module:list[key1="foo"][key2="*"]` is valid.
 
 ## Regular Expressions {#regular-expressions}
 
@@ -718,29 +695,12 @@ wildcard, or key value set independently.  For example:
 Key value sets are defined for list keys only.  Leaf-list entry selection is
 not defined for key value sets in this document.
 
-## Relationship to JSON Encoding
-
-Considering the instance path
-`/ietf-routing:routing/control-plane-protocols/ietf-ospf:ospf/address-family`
-with a value of `ipv4`, the corresponding JSON based on {{RFC7951}} is:
-
-```
-{
-  "ietf-routing:routing": {
-    "control-plane-protocols": {
-      "ietf-ospf:ospf": {
-        "address-family": "ipv4"
-      }
-    }
-  }
-}
-```
-
-
-
 # Formal Syntax {#formal-syntax}
 
-The grammar below uses ABNF as defined in {{RFC7950}}, Section 14.  The rules
+The grammar below uses ABNF as defined in {{RFC7950}}, Section 14.  A ypath is
+either an absolute path or a relative path.  Relative paths use `.` for the
+context node and `..` for its parent; their resolution context is defined by
+the specification or application using them (see {{ypath-expressions}}).  The rules
 `identifier`, `node-identifier`, `quoted-string`, `WSP`, `SQUOTE`, and
 `DIGIT` are used as defined there.  Path segments and key names in
 predicates use `node-identifier`, as in the `instance-identifier` type in
@@ -760,7 +720,9 @@ value sets) are defined in {{wildcards}}, {{regular-expressions}}, and
 rule in those sections forbids them (for example, wildcard mixing in
 {{wildcards}}).  A `leaf-list-predicate` uses `leaf-list-key-value`, which
 permits only `quoted-string` or `unquoted-value`; filter extensions MUST NOT
-be used in leaf-list predicates.
+be used in leaf-list predicates.  A positional predicate contains a one-based
+list entry position and MUST be used only with a keyless list in an instance
+path (see {{keyless-lists}}).
 
 # Conformance {#conformance}
 
@@ -773,11 +735,12 @@ A ypath producer (for example, a tool that emits schema paths or an interface
 that returns the current context path) MUST:
 
 - generate paths that conform to the grammar in {{formal-syntax}};
-- use a leading `/` on every path;
-- include a module name on the first path segment unless a specification
-defines a default module for the context; and
-- use schema predicates for schema paths and value predicates for instance
-paths.
+- use an absolute path unless the specification defines a relative path
+context;
+- include a module name on the first segment of an absolute path and at module
+changes; and
+- use child node segments for schema paths and key or position predicates only
+on instance and filter paths.
 
 A producer generating filter paths MUST use `*` only as specified in
 {{wildcards}}, regular expressions only as specified in
@@ -790,7 +753,8 @@ A ypath consumer (for example, a management API or path parser) MUST:
 
 - reject paths that do not conform to the grammar in {{formal-syntax}};
 - resolve module inheritance from left to right along the path; and
-- apply module name changes at augment boundaries.
+- apply module name changes at augment boundaries; and
+- resolve relative paths only when the applicable context is defined.
 
 A consumer that does not support filter paths MUST reject paths containing the
 wildcard `*`, a `regex-value`, or a `key-value-set` in key predicates.
@@ -798,32 +762,17 @@ wildcard `*`, a `regex-value`, or a `key-value-set` in key predicates.
 ## Path Enumeration
 
 An implementation that walks a YANG schema and returns ypaths MUST return
-schema paths with list key names in bracket pairs and MUST NOT return paths
-that address list keys as child node segments.
+schema paths with list keys as child node segments and MUST NOT return schema
+paths with key predicates.
 
 # Examples {#examples}
 
-This section provides non-normative examples of ypath usage.
-
-## Referencing YANG Paths in NETCONF Filters
-
-NETCONF subtree filters {{RFC6241}} select data by structure rather than by a
-single path string.  A ypath can nonetheless identify the subtree root that a
-filter targets.  For example, to retrieve all interfaces, a client might use
-the filter path:
-
-```
-/ietf-interfaces:interfaces[name="*"]
-```
-
-The enclosing specification or implementation maps this ypath to the
-appropriate NETCONF filter payload.
+This section provides non-normative examples of ypath syntax.
 
 ## Filter Paths with Regular Expressions
 
 A filter path can use a regular expression in a key predicate to match a
-subset of list entries.  For example, to retrieve the `description` leaf for
-all interfaces whose name starts with `a` or `A`:
+subset of list entries.  For example:
 
 ```
 /ietf-interfaces:interfaces/interface[name=r'^[aA].*']/description
@@ -835,8 +784,7 @@ key value and includes matching entries in the result set.
 ## Filter Paths with Key Value Sets
 
 A filter path can use a key value set to match multiple list entries with
-explicit key values.  For example, to retrieve the `description` leaf for
-interfaces `ethernet1` and `ethernet3`:
+explicit key values.  For example:
 
 ```
 /ietf-interfaces:interfaces/interface[name={"ethernet1", "ethernet3"}]/description
@@ -844,31 +792,6 @@ interfaces `ethernet1` and `ethernet3`:
 
 An implementation includes each list entry whose key value equals any member
 of the set.
-
-## Referencing YANG Paths in NETCONF rpc-error Messages
-
-NETCONF `rpc-error` replies include an `error-path` element {{RFC6241}} that
-identifies the node associated with the error.  An implementation may
-populate `error-path` using ypath instance syntax.  For example:
-
-```
-/ietf-interfaces:interfaces[name="eth0"]/mtu
-```
-
-
-
-## Checking Existence
-
-An implementation can test whether a node exists in a datastore by resolving an
-instance path.  For example, the path:
-
-```
-/ietf-interfaces:interfaces[name="eth0"]
-```
-
-identifies a specific list entry.  If the path resolves to an existing node,
-the entry is present; if resolution fails, the entry is absent.  The mechanism
-by which resolution is performed is defined by the enclosing API or protocol.
 
 # Security Considerations {#security-considerations}
 
@@ -935,6 +858,74 @@ YANG schema and instance locations.  It does not define a URI scheme, XML
 namespace, YANG module, media type, or other protocol element requiring IANA
 registration.
 
+# Appendix A. Potential Uses of Ypath {#potential-uses}
+
+**RFC Editor:** Please remove this appendix before publication.
+
+This appendix records possible applications of ypath to guide discussion of
+future work.  It is non-normative.  Listing an application here does not define
+its protocol binding, processing model, or conformance requirements.
+
+## Identifying a Specific Instance-Data Node
+
+An instance path can identify one node in YANG instance data.  For a path to
+identify one specific list entry, every list in the path MUST have all of its
+keys specified with valid values for the corresponding YANG types.  Filter
+predicates such as wildcards, regular expressions, and key value sets select
+sets of entries and therefore do not identify a single entry.
+
+One possible use is for a YANG Push notification to identify the data node
+object being returned.  Another use already illustrated in this document is
+identifying the node associated with a NETCONF `rpc-error` `error-path`
+({{RFC6241}}), for example:
+
+```
+/ietf-interfaces:interfaces/interface[name="eth0"]/mtu
+```
+
+An API can also use an instance path to check whether a node exists by
+resolving the path against a datastore.  The API defines the resolution
+mechanism and how it reports whether a node is present.
+
+## Identifying a Set of Instance-Data Nodes
+
+A filter path can identify a set of entries by matching list keys.  A possible
+use is a YANG Push version 2 subscription filter.  YANG Packages could use
+ypath to identify schema mount points or to express a `parent-reference`.
+Specifications defining these uses would need to specify the expected path
+form and how matching nodes are used.
+
+The document's NETCONF filter example illustrates a related use: a ypath can
+name the root targeted by a NETCONF subtree filter {{RFC6241}}, while the
+NETCONF specification or implementation defines the filter payload and
+processing:
+
+```
+/ietf-interfaces:interfaces[name="*"]
+```
+
+## Schema-Path Enumeration and Display
+
+Implementations can enumerate or display schema paths for tools, diagnostics,
+or operator interfaces.  The conformance requirements for schema-path
+enumeration are specified in {{conformance}}.
+
+## Future YANG Expressions
+
+A future YANG revision might use ypath as the node-reference syntax within
+`must2` or `when2` expressions.  Such a feature would require a more complete
+expression language, including rules for navigation, operators, type
+conversion, and evaluation.  This document defines no such language; YANG 1.1
+`must` and `when` continue to use XPath (see {{ypath-expressions}}).
+
+## Other Possible Uses
+
+Ypaths could be used in authorization policies to identify the nodes to which
+a rule applies.  The security considerations in {{security-considerations}}
+discuss path normalization for this use.  These and the other applications
+listed above are examples for discussion, not endorsements or protocol
+specifications.
+
 --- back
 
 {:numbered="false"}
@@ -942,8 +933,7 @@ registration.
 # Acknowledgments
 
 The author would like to thank the Network Modeling (NETMOD) working
-group for its discussion of YANG path formats and Robert Wilton for their
-early review.
+group for its discussion of YANG path formats.
 
 
 
