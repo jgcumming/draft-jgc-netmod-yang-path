@@ -6,6 +6,7 @@
 <meta content="initial-scale=1.0" name="viewport">
 <title>YANG path format (ypath)</title>
 <meta content="James Cumming" name="author">
+<meta content="Robert Wilton" name="author">
 <meta content="
        This document defines ypath (YANG path), a single-line, self-describing path
 format for referencing nodes in YANG schema trees, YANG instance data, and
@@ -15,26 +16,26 @@ list key predicates.  The format is closely related to the YANG
 filter wildcards, regular expression key matching, key value sets, and path
 enumeration. 
     " name="description">
-<meta content="xml2rfc 3.34.0" name="generator">
+<meta content="xml2rfc 3.34.1" name="generator">
 <meta content="YANG" name="keyword">
 <meta content="path" name="keyword">
 <meta content="YANG path" name="keyword">
 <meta content="JSON instance path" name="keyword">
 <meta content="draft-jgc-netmod-yang-path-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.34.0
-    Python 3.14.5
-    ConfigArgParse 1.7.5
+  xml2rfc 3.34.1
+    Python 3.14.8
+    ConfigArgParse 1.8.0
     google-i18n-address 3.1.1
     intervaltree 3.2.1
     Jinja2 3.1.6
     lxml 6.1.1
     natsort 8.4.0
-    platformdirs 4.11.0
+    platformdirs 4.13.4
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.33.1
-    wcwidth 0.8.2
+    wcwidth 0.9.2
 -->
 <link href="draft-jgc-netmod-yang-path.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1050,11 +1051,11 @@ svg {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">YANG path format (ypath)</td>
-<td class="right">August 2026</td>
+<td class="right">October 2026</td>
 </tr></thead>
 <tfoot><tr>
-<td class="left">Cumming</td>
-<td class="center">Expires 14 February 2027</td>
+<td class="left">Cumming &amp; Wilton</td>
+<td class="center">Expires 25 April 2027</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1067,17 +1068,21 @@ svg {
 <dd class="internet-draft">draft-jgc-netmod-yang-path-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-08-13" class="published">13 August 2026</time>
+<time datetime="2026-10-22" class="published">22 October 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2027-02-14">14 February 2027</time></dd>
-<dt class="label-authors">Author:</dt>
+<dd class="expires"><time datetime="2027-04-25">25 April 2027</time></dd>
+<dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
       <div class="author-name">J. Cumming</div>
 <div class="org">Nokia</div>
+</div>
+<div class="author">
+      <div class="author-name">R. Wilton</div>
+<div class="org">Cisco</div>
 </div>
 </dd>
 </dl>
@@ -1128,7 +1133,7 @@ enumeration.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 14 February 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 25 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1189,96 +1194,99 @@ enumeration.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
                 <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-root-of-the-yang-path" class="internal xref">Root of the YANG Path</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
-                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-module-qualified-names" class="internal xref">Module-Qualified Names</a></p>
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-ypath-expressions" class="internal xref">YPath Expressions</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
-                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-augmentations" class="internal xref">Augmentations</a></p>
+                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-module-qualified-names" class="internal xref">Module-Qualified Names</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.4">
-                <p id="section-toc.1-1.3.2.4.1"><a href="#section-3.4" class="auto internal xref">3.4</a>.  <a href="#name-deviations" class="internal xref">Deviations</a></p>
+                <p id="section-toc.1-1.3.2.4.1"><a href="#section-3.4" class="auto internal xref">3.4</a>.  <a href="#name-augmentations" class="internal xref">Augmentations</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.5">
-                <p id="section-toc.1-1.3.2.5.1"><a href="#section-3.5" class="auto internal xref">3.5</a>.  <a href="#name-import-include" class="internal xref">Import/Include</a></p>
+                <p id="section-toc.1-1.3.2.5.1"><a href="#section-3.5" class="auto internal xref">3.5</a>.  <a href="#name-deviations" class="internal xref">Deviations</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6">
-                <p id="section-toc.1-1.3.2.6.1"><a href="#section-3.6" class="auto internal xref">3.6</a>.  <a href="#name-containers" class="internal xref">Containers</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6.2.1">
-                    <p id="section-toc.1-1.3.2.6.2.1.1"><a href="#section-3.6.1" class="auto internal xref">3.6.1</a>.  <a href="#name-presence-containers" class="internal xref">Presence Containers</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.6.2.2">
-                    <p id="section-toc.1-1.3.2.6.2.2.1"><a href="#section-3.6.2" class="auto internal xref">3.6.2</a>.  <a href="#name-non-presence-containers" class="internal xref">Non-Presence Containers</a></p>
-</li>
-                </ul>
+                <p id="section-toc.1-1.3.2.6.1"><a href="#section-3.6" class="auto internal xref">3.6</a>.  <a href="#name-import-include" class="internal xref">Import/Include</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.7">
-                <p id="section-toc.1-1.3.2.7.1"><a href="#section-3.7" class="auto internal xref">3.7</a>.  <a href="#name-leaves" class="internal xref">Leaves</a></p>
+                <p id="section-toc.1-1.3.2.7.1"><a href="#section-3.7" class="auto internal xref">3.7</a>.  <a href="#name-containers" class="internal xref">Containers</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.7.2.1">
+                    <p id="section-toc.1-1.3.2.7.2.1.1"><a href="#section-3.7.1" class="auto internal xref">3.7.1</a>.  <a href="#name-presence-containers" class="internal xref">Presence Containers</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.7.2.2">
+                    <p id="section-toc.1-1.3.2.7.2.2.1"><a href="#section-3.7.2" class="auto internal xref">3.7.2</a>.  <a href="#name-non-presence-containers" class="internal xref">Non-Presence Containers</a></p>
+</li>
+                </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.8">
-                <p id="section-toc.1-1.3.2.8.1"><a href="#section-3.8" class="auto internal xref">3.8</a>.  <a href="#name-choices" class="internal xref">Choices</a></p>
+                <p id="section-toc.1-1.3.2.8.1"><a href="#section-3.8" class="auto internal xref">3.8</a>.  <a href="#name-leaves" class="internal xref">Leaves</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.9">
-                <p id="section-toc.1-1.3.2.9.1"><a href="#section-3.9" class="auto internal xref">3.9</a>.  <a href="#name-identities-and-identity-ref" class="internal xref">Identities and Identity References (identityref)</a></p>
+                <p id="section-toc.1-1.3.2.9.1"><a href="#section-3.9" class="auto internal xref">3.9</a>.  <a href="#name-choices" class="internal xref">Choices</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.10">
-                <p id="section-toc.1-1.3.2.10.1"><a href="#section-3.10" class="auto internal xref">3.10</a>. <a href="#name-lists" class="internal xref">Lists</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.10.2.1">
-                    <p id="section-toc.1-1.3.2.10.2.1.1"><a href="#section-3.10.1" class="auto internal xref">3.10.1</a>.  <a href="#name-lists-in-schema" class="internal xref">Lists in Schema</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.10.2.2">
-                    <p id="section-toc.1-1.3.2.10.2.2.1"><a href="#section-3.10.2" class="auto internal xref">3.10.2</a>.  <a href="#name-lists-in-instance-data" class="internal xref">Lists in Instance Data</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.10.2.3">
-                    <p id="section-toc.1-1.3.2.10.2.3.1"><a href="#section-3.10.3" class="auto internal xref">3.10.3</a>.  <a href="#name-keyless-lists" class="internal xref">Keyless lists</a></p>
-</li>
-                </ul>
+                <p id="section-toc.1-1.3.2.10.1"><a href="#section-3.10" class="auto internal xref">3.10</a>. <a href="#name-identities-and-identity-ref" class="internal xref">Identities and Identity References (identityref)</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.11">
-                <p id="section-toc.1-1.3.2.11.1"><a href="#section-3.11" class="auto internal xref">3.11</a>. <a href="#name-leaf-lists" class="internal xref">Leaf Lists</a></p>
+                <p id="section-toc.1-1.3.2.11.1"><a href="#section-3.11" class="auto internal xref">3.11</a>. <a href="#name-lists" class="internal xref">Lists</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.11.2.1">
+                    <p id="section-toc.1-1.3.2.11.2.1.1"><a href="#section-3.11.1" class="auto internal xref">3.11.1</a>.  <a href="#name-lists-in-schema" class="internal xref">Lists in Schema</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.11.2.2">
+                    <p id="section-toc.1-1.3.2.11.2.2.1"><a href="#section-3.11.2" class="auto internal xref">3.11.2</a>.  <a href="#name-lists-in-instance-data" class="internal xref">Lists in Instance Data</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.11.2.3">
+                    <p id="section-toc.1-1.3.2.11.2.3.1"><a href="#section-3.11.3" class="auto internal xref">3.11.3</a>.  <a href="#name-keyless-lists" class="internal xref">Keyless lists</a></p>
+</li>
+                </ul>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.12">
-                <p id="section-toc.1-1.3.2.12.1"><a href="#section-3.12" class="auto internal xref">3.12</a>. <a href="#name-metadata-annotations" class="internal xref">Metadata Annotations</a></p>
+                <p id="section-toc.1-1.3.2.12.1"><a href="#section-3.12" class="auto internal xref">3.12</a>. <a href="#name-leaf-lists" class="internal xref">Leaf Lists</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.13">
-                <p id="section-toc.1-1.3.2.13.1"><a href="#section-3.13" class="auto internal xref">3.13</a>. <a href="#name-actions" class="internal xref">Actions</a></p>
+                <p id="section-toc.1-1.3.2.13.1"><a href="#section-3.13" class="auto internal xref">3.13</a>. <a href="#name-metadata-annotations" class="internal xref">Metadata Annotations</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.14">
-                <p id="section-toc.1-1.3.2.14.1"><a href="#section-3.14" class="auto internal xref">3.14</a>. <a href="#name-wildcards" class="internal xref">Wildcards</a></p>
+                <p id="section-toc.1-1.3.2.14.1"><a href="#section-3.14" class="auto internal xref">3.14</a>. <a href="#name-actions" class="internal xref">Actions</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.15">
-                <p id="section-toc.1-1.3.2.15.1"><a href="#section-3.15" class="auto internal xref">3.15</a>. <a href="#name-regular-expressions" class="internal xref">Regular Expressions</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.15.2.1">
-                    <p id="section-toc.1-1.3.2.15.2.1.1"><a href="#section-3.15.1" class="auto internal xref">3.15.1</a>.  <a href="#name-regular-expression-dialect" class="internal xref">Regular Expression Dialect</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.15.2.2">
-                    <p id="section-toc.1-1.3.2.15.2.2.1"><a href="#section-3.15.2" class="auto internal xref">3.15.2</a>.  <a href="#name-escaping" class="internal xref">Escaping</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.15.2.3">
-                    <p id="section-toc.1-1.3.2.15.2.3.1"><a href="#section-3.15.3" class="auto internal xref">3.15.3</a>.  <a href="#name-multi-key-lists" class="internal xref">Multi-Key Lists</a></p>
-</li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.15.2.4">
-                    <p id="section-toc.1-1.3.2.15.2.4.1"><a href="#section-3.15.4" class="auto internal xref">3.15.4</a>.  <a href="#name-leaf-lists-2" class="internal xref">Leaf Lists</a></p>
-</li>
-                </ul>
+                <p id="section-toc.1-1.3.2.15.1"><a href="#section-3.15" class="auto internal xref">3.15</a>. <a href="#name-filter-paths" class="internal xref">Filter Paths</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.16">
-                <p id="section-toc.1-1.3.2.16.1"><a href="#section-3.16" class="auto internal xref">3.16</a>. <a href="#name-key-value-sets" class="internal xref">Key Value Sets</a></p>
+                <p id="section-toc.1-1.3.2.16.1"><a href="#section-3.16" class="auto internal xref">3.16</a>. <a href="#name-wildcards" class="internal xref">Wildcards</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.17">
+                <p id="section-toc.1-1.3.2.17.1"><a href="#section-3.17" class="auto internal xref">3.17</a>. <a href="#name-regular-expressions" class="internal xref">Regular Expressions</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.16.2.1">
-                    <p id="section-toc.1-1.3.2.16.2.1.1"><a href="#section-3.16.1" class="auto internal xref">3.16.1</a>.  <a href="#name-set-member-values" class="internal xref">Set Member Values</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.17.2.1">
+                    <p id="section-toc.1-1.3.2.17.2.1.1"><a href="#section-3.17.1" class="auto internal xref">3.17.1</a>.  <a href="#name-regular-expression-dialect" class="internal xref">Regular Expression Dialect</a></p>
 </li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.16.2.2">
-                    <p id="section-toc.1-1.3.2.16.2.2.1"><a href="#section-3.16.2" class="auto internal xref">3.16.2</a>.  <a href="#name-multi-key-lists-2" class="internal xref">Multi-Key Lists</a></p>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.17.2.2">
+                    <p id="section-toc.1-1.3.2.17.2.2.1"><a href="#section-3.17.2" class="auto internal xref">3.17.2</a>.  <a href="#name-escaping" class="internal xref">Escaping</a></p>
 </li>
-                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.16.2.3">
-                    <p id="section-toc.1-1.3.2.16.2.3.1"><a href="#section-3.16.3" class="auto internal xref">3.16.3</a>.  <a href="#name-leaf-lists-3" class="internal xref">Leaf Lists</a></p>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.17.2.3">
+                    <p id="section-toc.1-1.3.2.17.2.3.1"><a href="#section-3.17.3" class="auto internal xref">3.17.3</a>.  <a href="#name-multi-key-lists" class="internal xref">Multi-Key Lists</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.17.2.4">
+                    <p id="section-toc.1-1.3.2.17.2.4.1"><a href="#section-3.17.4" class="auto internal xref">3.17.4</a>.  <a href="#name-leaf-lists-2" class="internal xref">Leaf Lists</a></p>
 </li>
                 </ul>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.17">
-                <p id="section-toc.1-1.3.2.17.1"><a href="#section-3.17" class="auto internal xref">3.17</a>. <a href="#name-relationship-to-json-encodi" class="internal xref">Relationship to JSON Encoding</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.18">
+                <p id="section-toc.1-1.3.2.18.1"><a href="#section-3.18" class="auto internal xref">3.18</a>. <a href="#name-key-value-sets" class="internal xref">Key Value Sets</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.18.2.1">
+                    <p id="section-toc.1-1.3.2.18.2.1.1"><a href="#section-3.18.1" class="auto internal xref">3.18.1</a>.  <a href="#name-set-member-values" class="internal xref">Set Member Values</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.18.2.2">
+                    <p id="section-toc.1-1.3.2.18.2.2.1"><a href="#section-3.18.2" class="auto internal xref">3.18.2</a>.  <a href="#name-multi-key-lists-2" class="internal xref">Multi-Key Lists</a></p>
+</li>
+                  <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.18.2.3">
+                    <p id="section-toc.1-1.3.2.18.2.3.1"><a href="#section-3.18.3" class="auto internal xref">3.18.3</a>.  <a href="#name-leaf-lists-3" class="internal xref">Leaf Lists</a></p>
+</li>
+                </ul>
 </li>
             </ul>
 </li>
@@ -1303,19 +1311,10 @@ enumeration.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
             <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-examples" class="internal xref">Examples</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
-                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-referencing-yang-paths-in-n" class="internal xref">Referencing YANG Paths in NETCONF Filters</a></p>
+                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-filter-paths-with-regular-e" class="internal xref">Filter Paths with Regular Expressions</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2">
-                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-filter-paths-with-regular-e" class="internal xref">Filter Paths with Regular Expressions</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.3">
-                <p id="section-toc.1-1.6.2.3.1"><a href="#section-6.3" class="auto internal xref">6.3</a>.  <a href="#name-filter-paths-with-key-value" class="internal xref">Filter Paths with Key Value Sets</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.4">
-                <p id="section-toc.1-1.6.2.4.1"><a href="#section-6.4" class="auto internal xref">6.4</a>.  <a href="#name-referencing-yang-paths-in-ne" class="internal xref">Referencing YANG Paths in NETCONF rpc-error Messages</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.5">
-                <p id="section-toc.1-1.6.2.5.1"><a href="#section-6.5" class="auto internal xref">6.5</a>.  <a href="#name-checking-existence" class="internal xref">Checking Existence</a></p>
+                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-filter-paths-with-key-value" class="internal xref">Filter Paths with Key Value Sets</a></p>
 </li>
             </ul>
 </li>
@@ -1343,21 +1342,41 @@ enumeration.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
             <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
-            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-references" class="internal xref">References</a></p>
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-appendix-a-potential-uses-o" class="internal xref">Appendix A. Potential Uses of Ypath</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1">
-                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="auto internal xref">9.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="auto internal xref">9.1</a>.  <a href="#name-identifying-a-specific-inst" class="internal xref">Identifying a Specific Instance-Data Node</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2">
-                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="auto internal xref">9.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="auto internal xref">9.2</a>.  <a href="#name-identifying-a-set-of-instan" class="internal xref">Identifying a Set of Instance-Data Nodes</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.3">
+                <p id="section-toc.1-1.9.2.3.1"><a href="#section-9.3" class="auto internal xref">9.3</a>.  <a href="#name-schema-path-enumeration-and" class="internal xref">Schema-Path Enumeration and Display</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.4">
+                <p id="section-toc.1-1.9.2.4.1"><a href="#section-9.4" class="auto internal xref">9.4</a>.  <a href="#name-future-yang-expressions" class="internal xref">Future YANG Expressions</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.5">
+                <p id="section-toc.1-1.9.2.5.1"><a href="#section-9.5" class="auto internal xref">9.5</a>.  <a href="#name-other-possible-uses" class="internal xref">Other Possible Uses</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.1">
+                <p id="section-toc.1-1.10.2.1.1"><a href="#section-10.1" class="auto internal xref">10.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10.2.2">
+                <p id="section-toc.1-1.10.2.2.1"><a href="#section-10.2" class="auto internal xref">10.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-address" class="internal xref">Author's Address</a></p>
+            <p id="section-toc.1-1.11.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-acknowledgments" class="internal xref">Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
+            <p id="section-toc.1-1.12.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1368,58 +1387,31 @@ enumeration.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
       <h2 id="name-introduction">
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
-<p id="section-1-1">A number of path formats currently exist to describe YANG modeled information.
-XPath <span>[<a href="#XPATH" class="cite xref">XPATH</a>]</span> is used for constraints and derived values within YANG modules
-<span>[<a href="#RFC7950" class="cite xref">RFC7950</a>]</span>.  The YANG built-in type <code>instance-identifier</code> <span>[<a href="#RFC7950" class="cite xref">RFC7950</a>]</span> defines
-a path subset for referencing data tree nodes in instance encodings.  RESTCONF
-<span>[<a href="#RFC8040" class="cite xref">RFC8040</a>]</span> defines URI paths for accessing data resources.  JSONPath
-<span>[<a href="#RFC9535" class="cite xref">RFC9535</a>]</span> provides a query language for JSON documents, including those
-produced by the JSON encoding of YANG data <span>[<a href="#RFC7951" class="cite xref">RFC7951</a>]</span>.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">These path formats serve well for their initial use cases.  However, some have
-shortcomings for YANG module authors, tool implementers, and operators who need
-a single, generic, human-readable path format that can refer equally to schema
-locations, instance data, and filter expressions without the full expressiveness
-(and complexity) of XPath or JSONPath.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">There is a need for a self-describing path format that can be used to describe
-schema data, instance data, and filtering in a consistent manner.  Deployed
-implementations already use such a format (commonly referred to as a JSON
-instance path) in management interfaces; however, no IETF specification
-currently defines this format.<a href="#section-1-3" class="pilcrow">¶</a></p>
-<p id="section-1-4">This document defines ypath (short for YANG path), a self-describing, generic
-path format for referencing YANG schema, instance data, and filters.<a href="#section-1-4" class="pilcrow">¶</a></p>
-<p id="section-1-5">Ypath is intended for management APIs, path enumeration tools, and
-filtering specifications where a compact,
-human-readable representation of a YANG element is required.  Additional uses
-for this path format can easily been forseen as path selection for streaming
-telemetry and for YANG reference statements, such as <code>when</code> and <code>must</code> statements,
-in future YANG versions.  This document specifies the ypath syntax, formal
-grammar, and conformance requirements.  It does not define a protocol,
-API, or encoding.  Selection based on the contents of node values
-(other than list keys) is out of scope.<a href="#section-1-5" class="pilcrow">¶</a></p>
+<p id="section-1-1">A number of path formats are used with YANG.  The YANG built-in type
+<code>instance-identifier</code> <span>[<a href="#RFC7950" class="cite xref">RFC7950</a>]</span> identifies data nodes, while XPath is used by
+YANG constraint statements.  These formats have different purposes and
+semantics.  This document defines a concise, self-describing syntax for naming
+nodes in a YANG schema tree or instance data tree.  It is intended to make
+paths clear and consistent.  A path still needs to be resolved against a YANG
+schema.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">This document defines ypath (short for YANG path).  It specifies absolute and
+relative paths to schema and instance nodes.  It also defines a limited filter
+path extension for selecting list entries by their keys.  This extension is
+optional and does not define a general query language.  Ypath does not replace
+XPath in YANG 1.1 <code>must</code> and <code>when</code> statements, and this document does not
+define an expression language for those statements.  A future YANG revision
+could define an expression language that uses ypath paths; doing so would need
+to specify expression semantics separately.<a href="#section-1-2" class="pilcrow">¶</a></p>
 <div id="applicability">
 <section id="section-1.1">
         <h3 id="name-applicability">
 <a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-applicability" class="section-name selfRef">Applicability</a>
         </h3>
-<p id="section-1.1-1">Ypath is a string syntax for identifying locations in a YANG data tree.  It is
-intended for use in specifications and implementations that need to:<a href="#section-1.1-1" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-1.1-2.1">
-            <p id="section-1.1-2.1.1">enumerate or display paths in a YANG schema;<a href="#section-1.1-2.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-1.1-2.2">
-            <p id="section-1.1-2.2.1">identify specific nodes in YANG instance data;<a href="#section-1.1-2.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-1.1-2.3">
-            <p id="section-1.1-2.3.1">express filter expressions that select data subsets; and<a href="#section-1.1-2.3.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-1.1-2.4">
-            <p id="section-1.1-2.4.1">convey path information in management protocol error reporting.<a href="#section-1.1-2.4.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-1.1-3">This document defines the ypath format only.  It does not specify how ypaths are
-carried on the wire, stored, or processed by a particular protocol such as
-NETCONF <span>[<a href="#RFC6241" class="cite xref">RFC6241</a>]</span> or RESTCONF <span>[<a href="#RFC8040" class="cite xref">RFC8040</a>]</span>.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
+<p id="section-1.1-1">This document defines the ypath syntax for locations in a YANG schema tree or
+instance data tree, including an optional filter path extension.  It does not
+specify how ypaths are carried, stored, or processed by a protocol or API.
+Appendix <a href="#potential-uses" class="auto internal xref">Section 9</a> describes possible applications; any protocol
+binding must be defined by the relevant specification.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="out-of-scope">
@@ -1427,13 +1419,15 @@ NETCONF <span>[<a href="#RFC6241" class="cite xref">RFC6241</a>]</span> or RESTC
         <h3 id="name-out-of-scope">
 <a href="#section-1.2" class="section-number selfRef">1.2. </a><a href="#name-out-of-scope" class="section-name selfRef">Out of Scope</a>
         </h3>
-<p id="section-1.2-1">Ypath identifies nodes in a YANG schema or instance tree.  Predicates in filter
-paths apply only to list key values.  The following are out of scope for this
-document:<a href="#section-1.2-1" class="pilcrow">¶</a></p>
+<p id="section-1.2-1">Ypath identifies nodes in a YANG schema or instance tree.  Predicates in
+filter paths apply only to list key values.  An instance path <span class="bcp14">MAY</span> identify an
+individual leaf-list entry by its exact value (see <a href="#leaf-lists" class="auto internal xref">Section 3.12</a>); no other
+non-key node value is used as a predicate.  The following are out of scope for
+this document:<a href="#section-1.2-1" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-1.2-2.1">
-            <p id="section-1.2-2.1.1">selection or matching based on the value of any node other than a list key
-(for example, matching a <code>description</code> or <code>mtu</code> leaf value);<a href="#section-1.2-2.1.1" class="pilcrow">¶</a></p>
+            <p id="section-1.2-2.1.1">selection or matching based on the value of any non-key leaf (for example,
+matching a <code>description</code> or <code>mtu</code> leaf value);<a href="#section-1.2-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-1.2-2.2">
             <p id="section-1.2-2.2.1">comparison operators, ranges, or expressions over leaf or leaf-list values;<a href="#section-1.2-2.2.1" class="pilcrow">¶</a></p>
@@ -1446,14 +1440,15 @@ where <code>enabled</code> is <code>true</code>"); and<a href="#section-1.2-2.3.
             <p id="section-1.2-2.4.1">any form of value predicate attached to a non-key node in the path.<a href="#section-1.2-2.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-1.2-3">Such selection belongs in query languages (for example, XPath or JSONPath) or in
-protocol-specific filter mechanisms, not in ypath.  A ypath <span class="bcp14">MAY</span> identify a
-leaf node (for example, <code>/.../description</code>), but <span class="bcp14">MUST NOT</span> specify a condition on
-that leaf's value.<a href="#section-1.2-3" class="pilcrow">¶</a></p>
-<p id="section-1.2-4">**TODO: Whilst this section is the initial position, there are use-cases such as a
-short-form subtree-filter representation for NETCONF that may be useful to include,
-for example, all interfaces in a YANG list where the <code>enabled</code> child field is
-set to <code>True</code>.<a href="#section-1.2-4" class="pilcrow">¶</a></p>
+<p id="section-1.2-3">Such selection belongs in expression or query languages, not in ypath.  A
+ypath <span class="bcp14">MAY</span> identify a leaf node (for example, <code>/.../description</code>), but <span class="bcp14">MUST NOT</span>
+specify a condition on that leaf's value.  This restriction concerns what a
+path predicate may test; it does not prevent a <code>must</code> or <code>when</code> expression
+from referring to other leaf nodes.<a href="#section-1.2-3" class="pilcrow">¶</a></p>
+<p id="section-1.2-4">Ypath does not select nodes based on values of non-key nodes.  This restriction
+keeps ypath a path syntax; selecting nodes based on arbitrary data values
+requires an expression language.  Whether a future version should add such an
+expression language is left for separate work.<a href="#section-1.2-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="relationship-to-other-path-formats">
@@ -1461,39 +1456,11 @@ set to <code>True</code>.<a href="#section-1.2-4" class="pilcrow">¶</a></p>
         <h3 id="name-relationship-to-other-path-">
 <a href="#section-1.3" class="section-number selfRef">1.3. </a><a href="#name-relationship-to-other-path-" class="section-name selfRef">Relationship to Other Path Formats</a>
         </h3>
-<p id="section-1.3-1">Ypath is closely related to, but not identical with, the lexical representation
-of the YANG <code>instance-identifier</code> built-in type defined in <span>[<a href="#RFC7950" class="cite xref">RFC7950</a>]</span>.
-Instance-identifiers are used to reference data tree nodes in instance
-encodings and require key values for list entries.  Ypath additionally defines
-a schema path form (with key names but not values) and filter forms (including
-wildcards) that are outside the scope of <code>instance-identifier</code>.<a href="#section-1.3-1" class="pilcrow">¶</a></p>
-<p id="section-1.3-2">Where ypath instance path syntax aligns with <code>instance-identifier</code>, the
-definitions in <span>[<a href="#RFC7950" class="cite xref">RFC7950</a>]</span> form the basis for interpretation unless this
-document explicitly specifies otherwise.  The principal differences for instance
-paths are:<a href="#section-1.3-2" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-1.3-3.1">
-            <p id="section-1.3-3.1.1">module names are inherited along the path rather than repeated on every
-node (see <a href="#module-qualified-names" class="auto internal xref">Section 3.2</a>), although they <span class="bcp14">MAY</span> be provided is desired;<a href="#section-1.3-3.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-1.3-3.2">
-            <p id="section-1.3-3.2.1">numeric and boolean list key values <span class="bcp14">MAY</span> appear without quotes (see
-<a href="#lists-in-instance-data" class="auto internal xref">Section 3.10.2</a>); and<a href="#section-1.3-3.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-1.3-3.3">
-            <p id="section-1.3-3.3.1">filter paths <span class="bcp14">MAY</span> use the wildcard <code>*</code> in key values (see <a href="#wildcards" class="auto internal xref">Section 3.14</a>);<a href="#section-1.3-3.3.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-1.3-3.4">
-            <p id="section-1.3-3.4.1">filter paths <span class="bcp14">MAY</span> use regular expressions in key values (see
-<a href="#regular-expressions" class="auto internal xref">Section 3.15</a>); and<a href="#section-1.3-3.4.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-1.3-3.5">
-            <p id="section-1.3-3.5.1">filter paths <span class="bcp14">MAY</span> use key value sets to match multiple explicit key values
-(see <a href="#key-value-sets" class="auto internal xref">Section 3.16</a>).<a href="#section-1.3-3.5.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-1.3-4">Ypath is not a query language.  It does not provide the expression evaluation,
-node set operations, or document traversal capabilities of XPath or JSONPath.<a href="#section-1.3-4" class="pilcrow">¶</a></p>
+<p id="section-1.3-1">Ypath instance paths identify YANG data nodes and share concepts with the YANG
+<code>instance-identifier</code> built-in type defined in <span>[<a href="#RFC7950" class="cite xref">RFC7950</a>]</span>.  Unlike
+<code>instance-identifier</code>, ypath also defines paths to schema nodes and relative
+paths.  Filter path extensions are described in <a href="#filter-paths" class="auto internal xref">Section 3.15</a>.  Appendix
+<a href="#potential-uses" class="auto internal xref">Section 9</a> records possible applications of ypath.<a href="#section-1.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="document-structure">
@@ -1503,10 +1470,12 @@ node set operations, or document traversal capabilities of XPath or JSONPath.<a 
         </h3>
 <p id="section-1.4-1"><a href="#conventions" class="auto internal xref">Section 2</a> describes terms used in this document.  <a href="#out-of-scope" class="auto internal xref">Section 1.2</a>
 states what ypath does not cover.  <a href="#format-definition" class="auto internal xref">Section 3</a> defines the ypath
-format.  <a href="#formal-syntax" class="auto internal xref">Section 4</a> provides an ABNF grammar.
+format, including relative paths and the optional filter path extension.
+<a href="#formal-syntax" class="auto internal xref">Section 4</a> provides an ABNF grammar.
 <a href="#conformance" class="auto internal xref">Section 5</a> defines conformance requirements.  <a href="#examples" class="auto internal xref">Section 6</a> gives worked
 examples.  <a href="#security-considerations" class="auto internal xref">Section 7</a> discusses security implications.
-<a href="#iana-considerations" class="auto internal xref">Section 8</a> specifies IANA actions.<a href="#section-1.4-1" class="pilcrow">¶</a></p>
+<a href="#iana-considerations" class="auto internal xref">Section 8</a> specifies IANA actions.  Appendix <a href="#potential-uses" class="auto internal xref">Section 9</a>
+describes potential applications of ypath.<a href="#section-1.4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1588,158 +1557,170 @@ selection based on any other node value is out of scope (see <a href="#out-of-sc
         <h3 id="name-root-of-the-yang-path">
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-root-of-the-yang-path" class="section-name selfRef">Root of the YANG Path</a>
         </h3>
-<p id="section-3.1-1">A ypath is always expressed from the root of the YANG data tree.  A
-specification that splits a path into a prefix and a sub-path <span class="bcp14">MUST</span> evaluate
-both parts together from the root.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.1-2">Approach 1:<a href="#section-3.1-2" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-3.1-3.1">
-            <p id="section-3.1-3.1.1">Path: <code>/item1/item2/item3/item4</code><a href="#section-3.1-3.1.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
-<p id="section-3.1-4">Approach 2:<a href="#section-3.1-4" class="pilcrow">¶</a></p>
-<ul class="normal">
-<li class="normal" id="section-3.1-5.1">
-            <p id="section-3.1-5.1.1">Prefix: <code>/item1/item2</code><a href="#section-3.1-5.1.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-3.1-5.2">
-            <p id="section-3.1-5.2.1">Sub-path: <code>/item3/item4</code><a href="#section-3.1-5.2.1" class="pilcrow">¶</a></p>
-</li>
-          <li class="normal" id="section-3.1-5.3">
-            <p id="section-3.1-5.3.1">(Yields) Path: <code>/item1/item2/item3/item4</code><a href="#section-3.1-5.3.1" class="pilcrow">¶</a></p>
-</li>
-        </ul>
+<p id="section-3.1-1">A ypath <span class="bcp14">MAY</span> be absolute or relative.  An absolute path begins at the root and
+starts with <code>/</code>.  A relative path is interpreted from the context node defined
+by the specification or application using it.  A relative path <span class="bcp14">MUST NOT</span> be
+interpreted without such a context.  A consumer that supports only absolute
+paths <span class="bcp14">MUST</span> reject relative paths.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">When a specification splits a path into a prefix and a sub-path, it <span class="bcp14">MUST</span> define
+the context for the sub-path and how the two parts are combined.  If the
+sub-path is defined relative to the prefix, the consumer <span class="bcp14">MUST</span> resolve the
+resulting path as if it had been evaluated from the root.  This rule ensures
+that splitting a path does not change the node it identifies.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="ypath-expressions">
+<section id="section-3.2">
+        <h3 id="name-ypath-expressions">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-ypath-expressions" class="section-name selfRef">YPath Expressions</a>
+        </h3>
+<p id="section-3.2-1">This document defines path references, not expressions.  In YANG 1.1,
+<code>must</code> and <code>when</code> continue to use XPath as specified by <span>[<a href="#RFC7950" class="cite xref">RFC7950</a>]</span>.  A ypath
+<span class="bcp14">MUST NOT</span> be substituted for an XPath expression in those statements.  A future
+YANG revision could define expressions that use ypath as a path-reference
+syntax, but it would also need to define relative context, navigation,
+operators, type conversion, and evaluation semantics.  Those expression
+semantics are outside the scope of this document.  Relative ypaths defined
+here provide a possible path-reference building block; by themselves, they do
+not define such an expression language.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="module-qualified-names">
-<section id="section-3.2">
+<section id="section-3.3">
         <h3 id="name-module-qualified-names">
-<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-module-qualified-names" class="section-name selfRef">Module-Qualified Names</a>
+<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-module-qualified-names" class="section-name selfRef">Module-Qualified Names</a>
         </h3>
-<p id="section-3.2-1">A ypath uses a <code>module:identifier</code> form where <code>module</code> is the name of the YANG
-module that defines the node.  For example:<a href="#section-3.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.2-2"><code>
+<p id="section-3.3-1">A ypath uses a <code>module-name:identifier</code> form where <code>module-name</code> is the name of
+the YANG module that defines the node.  This follows the module-qualified
+identifier terminology in <span>[<a href="#RFC7950" class="cite xref">RFC7950</a>]</span>; the separator is a colon, not a hyphen.
+For example:<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.3-2"><code>
 /ietf-interfaces:interfaces
-</code><a href="#section-3.2-2" class="pilcrow">¶</a></p>
-<p id="section-3.2-3"><strong>TODO: Do we need to handle different module versions/semantic versions in the path?</strong><a href="#section-3.2-3" class="pilcrow">¶</a></p>
-<p id="section-3.2-4">The module name is inherited along the path from left to right.  If the
+</code><a href="#section-3.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.3-3">The module name is inherited along the path from left to right.  If the
 defining module does not change (as is typical within a single module, and
 unlike at augment boundaries) the module name does not need to be repeated.
-For example:<a href="#section-3.2-4" class="pilcrow">¶</a></p>
-<p id="section-3.2-5"><code>
+For example:<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.3-4"><code>
 /ietf-routing-policy:routing-policy/defined-sets/prefix-sets
-</code><a href="#section-3.2-5" class="pilcrow">¶</a></p>
-<p id="section-3.2-6">It is also valid to provide the module name on every path segment.  For example:<a href="#section-3.2-6" class="pilcrow">¶</a></p>
-<p id="section-3.2-7"><code>
+</code><a href="#section-3.3-4" class="pilcrow">¶</a></p>
+<p id="section-3.3-5">It is valid to provide the module name on every path segment.  For example:<a href="#section-3.3-5" class="pilcrow">¶</a></p>
+<p id="section-3.3-6"><code>
 /ietf-routing-policy:routing-policy/ietf-routing-policy:defined-sets/ietf-routing-policy:prefix-sets
-</code><a href="#section-3.2-7" class="pilcrow">¶</a></p>
-<p id="section-3.2-8">The first path segment of a ypath <span class="bcp14">SHOULD</span> include a module name.  This ensures
-that the path is self-describing without external schema context.  A
-specification that allows omission of the module name on the first segment
-<span class="bcp14">MUST</span> state the default module to be assumed.<a href="#section-3.2-8" class="pilcrow">¶</a></p>
-<p id="section-3.2-9"><strong>TODO: Is the <span class="bcp14">SHOULD</span> correct here or should it be a <span class="bcp14">MUST</span>?</strong><a href="#section-3.2-9" class="pilcrow">¶</a></p>
+</code><a href="#section-3.3-6" class="pilcrow">¶</a></p>
+<p id="section-3.3-7">An absolute path <span class="bcp14">MUST</span> include a module name on its first segment.  A relative
+path <span class="bcp14">MAY</span> omit the module name on its first segment when the context node
+provides an unambiguous module.  A specification that permits another default
+module <span class="bcp14">MUST</span> define it.  A producer <span class="bcp14">SHOULD</span> include a module name at the first
+segment and at each subsequent module change; it <span class="bcp14">MAY</span> include the module name on
+every segment.<a href="#section-3.3-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="augmentations">
-<section id="section-3.3">
+<section id="section-3.4">
         <h3 id="name-augmentations">
-<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-augmentations" class="section-name selfRef">Augmentations</a>
+<a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-augmentations" class="section-name selfRef">Augmentations</a>
         </h3>
-<p id="section-3.3-1">When a node is defined by an augmenting module, the module name in the path
-<span class="bcp14">MUST</span> change to the augmenting module at the augmented node.  For example:<a href="#section-3.3-1" class="pilcrow">¶</a></p>
-<p id="section-3.3-2"><code>
+<p id="section-3.4-1">When a node is defined by an augmenting module, the module name in the path
+<span class="bcp14">MUST</span> change to the augmenting module at the augmented node.  For example:<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.4-2"><code>
 /ietf-routing:routing/control-plane-protocols/ietf-ospf:ospf/address-family
-</code><a href="#section-3.3-2" class="pilcrow">¶</a></p>
-<p id="section-3.3-3">In this example, <code>control-plane-protocols</code> is defined in <code>ietf-routing</code> and
-<code>ospf</code> is defined in <code>ietf-ospf</code>, which augments <code>ietf-routing</code>.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
-<p id="section-3.3-4">The following fully qualified form is equally valid:<a href="#section-3.3-4" class="pilcrow">¶</a></p>
-<p id="section-3.3-5"><code>
+</code><a href="#section-3.4-2" class="pilcrow">¶</a></p>
+<p id="section-3.4-3">In this example, <code>control-plane-protocols</code> is defined in <code>ietf-routing</code> and
+<code>ospf</code> is defined in <code>ietf-ospf</code>, which augments <code>ietf-routing</code>.<a href="#section-3.4-3" class="pilcrow">¶</a></p>
+<p id="section-3.4-4">The following fully qualified form is equally valid:<a href="#section-3.4-4" class="pilcrow">¶</a></p>
+<p id="section-3.4-5"><code>
 /ietf-routing:routing/ietf-routing:control-plane-protocols/ietf-ospf:ospf/ietf-ospf:address-family
-</code><a href="#section-3.3-5" class="pilcrow">¶</a></p>
+</code><a href="#section-3.4-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="deviations">
-<section id="section-3.4">
+<section id="section-3.5">
         <h3 id="name-deviations">
-<a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-deviations" class="section-name selfRef">Deviations</a>
+<a href="#section-3.5" class="section-number selfRef">3.5. </a><a href="#name-deviations" class="section-name selfRef">Deviations</a>
         </h3>
-<p id="section-3.4-1">Deviations do not change the namespace of YANG nodes.  The module portion of a
-ypath therefore does not change at a deviated node.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+<p id="section-3.5-1">Deviations do not change the namespace of YANG nodes.  The module portion of a
+ypath therefore does not change at a deviated node.<a href="#section-3.5-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="importinclude">
-<section id="section-3.5">
+<section id="section-3.6">
         <h3 id="name-import-include">
-<a href="#section-3.5" class="section-number selfRef">3.5. </a><a href="#name-import-include" class="section-name selfRef">Import/Include</a>
+<a href="#section-3.6" class="section-number selfRef">3.6. </a><a href="#name-import-include" class="section-name selfRef">Import/Include</a>
         </h3>
-<p id="section-3.5-1">Imports and includes do not change the namespace of YANG nodes.  The module
-portion of a ypath therefore does not change solely because a node is accessed
-through an import or include relationship.<a href="#section-3.5-1" class="pilcrow">¶</a></p>
+<p id="section-3.6-1">Imports and includes do not change the namespace of YANG nodes.  The module
+portion of a ypath therefore remains the module that defines the node.  An
+identityref value is different: the identity name in the value is qualified by
+the module that defines that identity, even when the identity is used through
+an import.  That value qualification does not change the namespace of the
+leaf node identified by the ypath.<a href="#section-3.6-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="containers">
-<section id="section-3.6">
+<section id="section-3.7">
         <h3 id="name-containers">
-<a href="#section-3.6" class="section-number selfRef">3.6. </a><a href="#name-containers" class="section-name selfRef">Containers</a>
+<a href="#section-3.7" class="section-number selfRef">3.7. </a><a href="#name-containers" class="section-name selfRef">Containers</a>
         </h3>
 <div id="presence-containers">
-<section id="section-3.6.1">
+<section id="section-3.7.1">
           <h4 id="name-presence-containers">
-<a href="#section-3.6.1" class="section-number selfRef">3.6.1. </a><a href="#name-presence-containers" class="section-name selfRef">Presence Containers</a>
+<a href="#section-3.7.1" class="section-number selfRef">3.7.1. </a><a href="#name-presence-containers" class="section-name selfRef">Presence Containers</a>
           </h4>
-<p id="section-3.6.1-1">A ypath to a presence container references the container node directly:<a href="#section-3.6.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.6.1-2"><code>
+<p id="section-3.7.1-1">A ypath to a presence container references the container node directly:<a href="#section-3.7.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.7.1-2"><code>
 /module:node1/node2/container1/presence-container1
-</code><a href="#section-3.6.1-2" class="pilcrow">¶</a></p>
-<p id="section-3.6.1-3">In instance data, the path exists only when the presence container has been
-instantiated.  In schema paths, the container is always addressable.<a href="#section-3.6.1-3" class="pilcrow">¶</a></p>
+</code><a href="#section-3.7.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.7.1-3">In instance data, the path exists only when the presence container has been
+instantiated.  In schema paths, the container is always addressable.<a href="#section-3.7.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="non-presence-containers">
-<section id="section-3.6.2">
+<section id="section-3.7.2">
           <h4 id="name-non-presence-containers">
-<a href="#section-3.6.2" class="section-number selfRef">3.6.2. </a><a href="#name-non-presence-containers" class="section-name selfRef">Non-Presence Containers</a>
+<a href="#section-3.7.2" class="section-number selfRef">3.7.2. </a><a href="#name-non-presence-containers" class="section-name selfRef">Non-Presence Containers</a>
           </h4>
-<p id="section-3.6.2-1">A ypath to a non-presence container references the container node directly:<a href="#section-3.6.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.6.2-2"><code>
+<p id="section-3.7.2-1">A ypath to a non-presence container references the container node directly:<a href="#section-3.7.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.7.2-2"><code>
 /module:node1/node2/container1/non-presence-container1
-</code><a href="#section-3.6.2-2" class="pilcrow">¶</a></p>
-<p id="section-3.6.2-3">In instance data, the path exists when any child node has been instantiated.
-In schema paths, the container is always addressable.<a href="#section-3.6.2-3" class="pilcrow">¶</a></p>
+</code><a href="#section-3.7.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.7.2-3">In instance data, the path exists when any child node has been instantiated.
+In schema paths, the container is always addressable.<a href="#section-3.7.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="leaves">
-<section id="section-3.7">
+<section id="section-3.8">
         <h3 id="name-leaves">
-<a href="#section-3.7" class="section-number selfRef">3.7. </a><a href="#name-leaves" class="section-name selfRef">Leaves</a>
+<a href="#section-3.8" class="section-number selfRef">3.8. </a><a href="#name-leaves" class="section-name selfRef">Leaves</a>
         </h3>
-<p id="section-3.7-1">A path to a leaf uses the same final segment in schema and instance paths.  The
+<p id="section-3.8-1">A path to a leaf uses the same final segment in schema and instance paths.  The
 parent path segments differ between schema and instance forms when lists appear
-above the leaf.<a href="#section-3.7-1" class="pilcrow">¶</a></p>
-<p id="section-3.7-2">Schema example:<a href="#section-3.7-2" class="pilcrow">¶</a></p>
-<p id="section-3.7-3"><code>
+above the leaf.<a href="#section-3.8-1" class="pilcrow">¶</a></p>
+<p id="section-3.8-2">Schema example:<a href="#section-3.8-2" class="pilcrow">¶</a></p>
+<p id="section-3.8-3"><code>
 /ietf-interfaces:interfaces[name]/description
-</code><a href="#section-3.7-3" class="pilcrow">¶</a></p>
-<p id="section-3.7-4">Instance example:<a href="#section-3.7-4" class="pilcrow">¶</a></p>
-<p id="section-3.7-5"><code>
+</code><a href="#section-3.8-3" class="pilcrow">¶</a></p>
+<p id="section-3.8-4">Instance example:<a href="#section-3.8-4" class="pilcrow">¶</a></p>
+<p id="section-3.8-5"><code>
 /ietf-interfaces:interfaces[name="my_interface"]/description
-</code><a href="#section-3.7-5" class="pilcrow">¶</a></p>
+</code><a href="#section-3.8-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="choices">
-<section id="section-3.8">
+<section id="section-3.9">
         <h3 id="name-choices">
-<a href="#section-3.8" class="section-number selfRef">3.8. </a><a href="#name-choices" class="section-name selfRef">Choices</a>
+<a href="#section-3.9" class="section-number selfRef">3.9. </a><a href="#name-choices" class="section-name selfRef">Choices</a>
         </h3>
-<p id="section-3.8-1">YANG choice and case nodes are not instantiated in the data tree.  A ypath
+<p id="section-3.9-1">YANG choice and case nodes are not instantiated in the data tree.  A ypath
 therefore does not include a segment for the choice or case node when considering
-instance-data.  The path proceeds directly to the node within the selected case.<a href="#section-3.8-1" class="pilcrow">¶</a></p>
-<p id="section-3.8-2">When walking a schema tree to enumerate paths, implementations <span class="bcp14">MUST</span> emit a
-path segment for both the <code>choice</code> and <code>case</code> nodes.<a href="#section-3.8-2" class="pilcrow">¶</a></p>
-<p id="section-3.8-3">For example, consider the following YANG model:<a href="#section-3.8-3" class="pilcrow">¶</a></p>
-<p id="section-3.8-4"><code>
+instance-data.  The path proceeds directly to the node within the selected case.<a href="#section-3.9-1" class="pilcrow">¶</a></p>
+<p id="section-3.9-2">When walking a schema tree to enumerate paths, implementations <span class="bcp14">MUST</span> emit a
+path segment for each explicitly declared <code>choice</code> and <code>case</code> node.  A
+shorthand case as described in Section 7.9.2 of <span>[<a href="#RFC7950" class="cite xref">RFC7950</a>]</span> is implicit and
+does not add a path segment; the child node is named directly.<a href="#section-3.9-2" class="pilcrow">¶</a></p>
+<p id="section-3.9-3">For example, consider the following YANG model:<a href="#section-3.9-3" class="pilcrow">¶</a></p>
+<p id="section-3.9-4"><code>
 module example {
   yang-version 1.1;
   namespace "urn:example:example";
@@ -1764,102 +1745,107 @@ module example {
     }
   }
 }
-</code><a href="#section-3.8-4" class="pilcrow">¶</a></p>
-<p id="section-3.8-5">Instance paths:<a href="#section-3.8-5" class="pilcrow">¶</a></p>
-<p id="section-3.8-6"><code>
+</code><a href="#section-3.9-4" class="pilcrow">¶</a></p>
+<p id="section-3.9-5">Instance paths:<a href="#section-3.9-5" class="pilcrow">¶</a></p>
+<p id="section-3.9-6"><code>
 /example:server/tcp/port
 /example:server/udp/port
-</code><a href="#section-3.8-6" class="pilcrow">¶</a></p>
-<p id="section-3.8-7">Schema paths:<a href="#section-3.8-7" class="pilcrow">¶</a></p>
-<p id="section-3.8-8"><code>
+</code><a href="#section-3.9-6" class="pilcrow">¶</a></p>
+<p id="section-3.9-7">Schema paths:<a href="#section-3.9-7" class="pilcrow">¶</a></p>
+<p id="section-3.9-8"><code>
 /example:server/protocol/tcp/tcp/port
 /example:server/protocol/udp/udp/port
-</code><a href="#section-3.8-8" class="pilcrow">¶</a></p>
+</code><a href="#section-3.9-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="identities-and-identity-references-identityref">
-<section id="section-3.9">
+<section id="section-3.10">
         <h3 id="name-identities-and-identity-ref">
-<a href="#section-3.9" class="section-number selfRef">3.9. </a><a href="#name-identities-and-identity-ref" class="section-name selfRef">Identities and Identity References (identityref)</a>
+<a href="#section-3.10" class="section-number selfRef">3.10. </a><a href="#name-identities-and-identity-ref" class="section-name selfRef">Identities and Identity References (identityref)</a>
         </h3>
-<p id="section-3.9-1">An <code>identityref</code> leaf is referenced by a path to the leaf itself.  The identity
-value is not encoded in the path; it appears in the instance data value.<a href="#section-3.9-1" class="pilcrow">¶</a></p>
-<p id="section-3.9-2">Schema path:<a href="#section-3.9-2" class="pilcrow">¶</a></p>
-<p id="section-3.9-3"><code>
+<p id="section-3.10-1">An <code>identityref</code> leaf is referenced by a path to the leaf itself.  The identity
+value is not encoded in the path; it appears in the instance data value.<a href="#section-3.10-1" class="pilcrow">¶</a></p>
+<p id="section-3.10-2">Schema path:<a href="#section-3.10-2" class="pilcrow">¶</a></p>
+<p id="section-3.10-3"><code>
 /ietf-routing:routing/control-plane-protocols/control-plane-protocol[type]/type
-</code><a href="#section-3.9-3" class="pilcrow">¶</a></p>
-<p id="section-3.9-4">Instance path:<a href="#section-3.9-4" class="pilcrow">¶</a></p>
-<p id="section-3.9-5"><code>
+</code><a href="#section-3.10-3" class="pilcrow">¶</a></p>
+<p id="section-3.10-4">Instance path:<a href="#section-3.10-4" class="pilcrow">¶</a></p>
+<p id="section-3.10-5"><code>
 /ietf-routing:routing/control-plane-protocols/control-plane-protocol[name="main"]/type
-</code><a href="#section-3.9-5" class="pilcrow">¶</a></p>
-<p id="section-3.9-6">Where the leaf value uses the module-qualified identity name (for example,
+</code><a href="#section-3.10-5" class="pilcrow">¶</a></p>
+<p id="section-3.10-6">Where the leaf value uses the module-qualified identity name (for example,
 <code>ietf-ospf:ospf</code>) in the data encoding, that value is not duplicated in the
-ypath.<a href="#section-3.9-6" class="pilcrow">¶</a></p>
+ypath.<a href="#section-3.10-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="lists">
-<section id="section-3.10">
+<section id="section-3.11">
         <h3 id="name-lists">
-<a href="#section-3.10" class="section-number selfRef">3.10. </a><a href="#name-lists" class="section-name selfRef">Lists</a>
+<a href="#section-3.11" class="section-number selfRef">3.11. </a><a href="#name-lists" class="section-name selfRef">Lists</a>
         </h3>
-<p id="section-3.10-1">List handling differs between schema paths and instance paths.<a href="#section-3.10-1" class="pilcrow">¶</a></p>
+<p id="section-3.11-1">List handling differs between schema paths and instance paths.<a href="#section-3.11-1" class="pilcrow">¶</a></p>
 <div id="lists-in-schema">
-<section id="section-3.10.1">
+<section id="section-3.11.1">
           <h4 id="name-lists-in-schema">
-<a href="#section-3.10.1" class="section-number selfRef">3.10.1. </a><a href="#name-lists-in-schema" class="section-name selfRef">Lists in Schema</a>
+<a href="#section-3.11.1" class="section-number selfRef">3.11.1. </a><a href="#name-lists-in-schema" class="section-name selfRef">Lists in Schema</a>
           </h4>
-<p id="section-3.10.1-1">A schema path to a list names the list node.  To address the list keys, each key
-name appears in its own bracket pair without a value.  For example:<a href="#section-3.10.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.10.1-2"><code>
+<p id="section-3.11.1-1">A schema path to a list names the list node.  To address the list keys, each key
+name appears in its own bracket pair without a value.  For example:<a href="#section-3.11.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.11.1-2"><code>
 /ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set
 /ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set[name]
-</code><a href="#section-3.10.1-2" class="pilcrow">¶</a></p>
-<p id="section-3.10.1-3">For multi-key lists:<a href="#section-3.10.1-3" class="pilcrow">¶</a></p>
-<p id="section-3.10.1-4"><code>
+</code><a href="#section-3.11.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.11.1-3">For multi-key lists:<a href="#section-3.11.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.11.1-4"><code>
 /module:node1/node2/list[key1][key2]
-</code><a href="#section-3.10.1-4" class="pilcrow">¶</a></p>
-<p id="section-3.10.1-5">When enumerating schema paths, a path to a list entry <span class="bcp14">MUST</span> include all key
-names in brackets.  A path that uses the key name as a child segment is
-invalid.  For example, the following is not a valid schema path:<a href="#section-3.10.1-5" class="pilcrow">¶</a></p>
-<p id="section-3.10.1-6"><code>
+</code><a href="#section-3.11.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.11.1-5">Schema paths identify schema nodes, not list entries.  A list key is an
+ordinary child schema node and is addressed by its child segment, just like
+other leaves.  For example, the following are valid schema paths:<a href="#section-3.11.1-5" class="pilcrow">¶</a></p>
+<p id="section-3.11.1-6"><code>
+/ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set
 /ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set/name
-</code><a href="#section-3.10.1-6" class="pilcrow">¶</a></p>
+</code><a href="#section-3.11.1-6" class="pilcrow">¶</a></p>
+<p id="section-3.11.1-7">Square-bracket key predicates <span class="bcp14">MUST NOT</span> be used in schema paths.  They are used
+only to identify or select list entries in instance and filter paths.<a href="#section-3.11.1-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="lists-in-instance-data">
-<section id="section-3.10.2">
+<section id="section-3.11.2">
           <h4 id="name-lists-in-instance-data">
-<a href="#section-3.10.2" class="section-number selfRef">3.10.2. </a><a href="#name-lists-in-instance-data" class="section-name selfRef">Lists in Instance Data</a>
+<a href="#section-3.11.2" class="section-number selfRef">3.11.2. </a><a href="#name-lists-in-instance-data" class="section-name selfRef">Lists in Instance Data</a>
           </h4>
-<p id="section-3.10.2-1">An instance path to a list entry includes each key and its value in square
-brackets.  For example:<a href="#section-3.10.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.10.2-2"><code>
+<p id="section-3.11.2-1">An instance path to a list entry includes each key and its value in square
+brackets.  For example:<a href="#section-3.11.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.11.2-2"><code>
 /ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set[name="loopbacks"]
-</code><a href="#section-3.10.2-2" class="pilcrow">¶</a></p>
-<p id="section-3.10.2-3">A leaf under that list entry:<a href="#section-3.10.2-3" class="pilcrow">¶</a></p>
-<p id="section-3.10.2-4"><code>
+</code><a href="#section-3.11.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.11.2-3">A leaf under that list entry:<a href="#section-3.11.2-3" class="pilcrow">¶</a></p>
+<p id="section-3.11.2-4"><code>
 /ietf-routing-policy:routing-policy/defined-sets/prefix-sets/prefix-set[name="loopbacks"]/mode
-</code><a href="#section-3.10.2-4" class="pilcrow">¶</a></p>
-<p id="section-3.10.2-5">For multi-key lists, each key appears in a separate bracket pair:<a href="#section-3.10.2-5" class="pilcrow">¶</a></p>
-<p id="section-3.10.2-6"><code>
+</code><a href="#section-3.11.2-4" class="pilcrow">¶</a></p>
+<p id="section-3.11.2-5">For multi-key lists, each key appears in a separate bracket pair:<a href="#section-3.11.2-5" class="pilcrow">¶</a></p>
+<p id="section-3.11.2-6"><code>
 /module:node1/node2/list[key1="value1"][key2="value2"]
-</code><a href="#section-3.10.2-6" class="pilcrow">¶</a></p>
-<p id="section-3.10.2-7">Key values that are strings <span class="bcp14">MUST</span> be enclosed in double quotes.  Key values
-that are numeric or boolean <span class="bcp14">MAY</span> appear without quotes, provided that the
-unquoted form is unambiguous.  For example:<a href="#section-3.10.2-7" class="pilcrow">¶</a></p>
-<p id="section-3.10.2-8"><code>
+</code><a href="#section-3.11.2-6" class="pilcrow">¶</a></p>
+<p id="section-3.11.2-7">Key values that are strings <span class="bcp14">MUST</span> be enclosed in double quotes.  Key values
+whose YANG type is numeric (including <code>decimal64</code>) or boolean <span class="bcp14">MAY</span> appear
+without quotes, provided that the unquoted form is unambiguous.  A consumer
+uses the schema to determine the key type.  For example:<a href="#section-3.11.2-7" class="pilcrow">¶</a></p>
+<p id="section-3.11.2-8"><code>
 /openconfig-interfaces:interfaces/interface[name="1/1/1"]/subinterfaces/subinterface[index=0]
-</code><a href="#section-3.10.2-8" class="pilcrow">¶</a></p>
+</code><a href="#section-3.11.2-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="keyless-lists">
-<section id="section-3.10.3">
+<section id="section-3.11.3">
           <h4 id="name-keyless-lists">
-<a href="#section-3.10.3" class="section-number selfRef">3.10.3. </a><a href="#name-keyless-lists" class="section-name selfRef">Keyless lists</a>
+<a href="#section-3.11.3" class="section-number selfRef">3.11.3. </a><a href="#name-keyless-lists" class="section-name selfRef">Keyless lists</a>
           </h4>
-<p id="section-3.10.3-1">A keyless list in schema may be referenced without providing a key in square branckets:<a href="#section-3.10.3-1" class="pilcrow">¶</a></p>
-<p id="section-3.10.3-2">Consider the <code>ietf-isis@2022-10-19.yang</code> model and the <code>adjacency-state</code> grouping:<a href="#section-3.10.3-2" class="pilcrow">¶</a></p>
-<p id="section-3.10.3-3"><code>
+<p id="section-3.11.3-1">A keyless list in a schema path is addressed by its node name, without a key
+predicate:<a href="#section-3.11.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.11.3-2">Consider the <code>ietf-isis@2022-10-19.yang</code> model and the <code>adjacency-state</code> grouping:<a href="#section-3.11.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.11.3-3"><code>
 container adjacencies {
   config false;
   list adjacency {
@@ -1876,263 +1862,240 @@ container adjacencies {
       "List of operational adjacencies.";
   }
 }
-</code><a href="#section-3.10.3-3" class="pilcrow">¶</a></p>
-<p id="section-3.10.3-4">In this model, <code>adjacency</code> is a keyless list.  Therefore, the ypath to the
-<code>neighbor-sys-type</code> is:<a href="#section-3.10.3-4" class="pilcrow">¶</a></p>
-<p id="section-3.10.3-5"><code>
+</code><a href="#section-3.11.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.11.3-4">In this model, <code>adjacency</code> is a keyless list.  Therefore, the ypath to the
+<code>neighbor-sys-type</code> is:<a href="#section-3.11.3-4" class="pilcrow">¶</a></p>
+<p id="section-3.11.3-5"><code>
 /ietf-routing:routing/control-plane-protocols/control-plane-protocol[name]/ietf-isis:isis/interfaces/interface[name]/adjacencies/adjacency/neighbor-sys-type
-</code><a href="#section-3.10.3-5" class="pilcrow">¶</a></p>
-<p id="section-3.10.3-6">A keyless list in instance data is refered to the same way:<a href="#section-3.10.3-6" class="pilcrow">¶</a></p>
-<p id="section-3.10.3-7"><code>
-/ietf-routing:routing/control-plane-protocols/control-plane-protocol[name="isis1"]/ietf-isis:isis/interfaces/interface[name="ethernet1"]/adjacencies/adjacency/neighbor-sys-type
-</code><a href="#section-3.10.3-7" class="pilcrow">¶</a></p>
-<p id="section-3.10.3-8">The ability to reference a specific numeric item in a keyless list is not supported in ypath.<a href="#section-3.10.3-8" class="pilcrow">¶</a></p>
+</code><a href="#section-3.11.3-5" class="pilcrow">¶</a></p>
+<p id="section-3.11.3-6">A keyless list in instance data may be addressed by its node name alone when
+the path identifies the list node as a whole.  To identify a particular entry,
+a positional predicate <span class="bcp14">MAY</span> be used.  The position is a positive integer, as in
+the keyless-list form of <code>instance-identifier</code> defined in Section 9.13 of
+<span>[<a href="#RFC7950" class="cite xref">RFC7950</a>]</span>:<a href="#section-3.11.3-6" class="pilcrow">¶</a></p>
+<p id="section-3.11.3-7"><code>
+/ietf-routing:routing/control-plane-protocols/control-plane-protocol[name="isis1"]/ietf-isis:isis/interfaces/interface[name="ethernet1"]/adjacencies/adjacency[1]/neighbor-sys-type
+</code><a href="#section-3.11.3-7" class="pilcrow">¶</a></p>
+<p id="section-3.11.3-8">The position is one-based and refers to the order of the list entries in the
+instance data.  A filter path <span class="bcp14">MUST NOT</span> use a positional predicate because its
+selection semantics could change when entries are inserted or removed.<a href="#section-3.11.3-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="leaf-lists">
-<section id="section-3.11">
+<section id="section-3.12">
         <h3 id="name-leaf-lists">
-<a href="#section-3.11" class="section-number selfRef">3.11. </a><a href="#name-leaf-lists" class="section-name selfRef">Leaf Lists</a>
+<a href="#section-3.12" class="section-number selfRef">3.12. </a><a href="#name-leaf-lists" class="section-name selfRef">Leaf Lists</a>
         </h3>
-<p id="section-3.11-1">A schema path to a leaf-list names the leaf-list node:<a href="#section-3.11-1" class="pilcrow">¶</a></p>
-<p id="section-3.11-2"><code>
+<p id="section-3.12-1">A schema path to a leaf-list names the leaf-list node:<a href="#section-3.12-1" class="pilcrow">¶</a></p>
+<p id="section-3.12-2"><code>
 /ietf-system:system/dns/servers
-</code><a href="#section-3.11-2" class="pilcrow">¶</a></p>
-<p id="section-3.11-3">An instance path to a specific leaf-list entry uses the same predicate form as
-<code>instance-identifier</code> <span>[<a href="#RFC7950" class="cite xref">RFC7950</a>]</span>:<a href="#section-3.11-3" class="pilcrow">¶</a></p>
-<p id="section-3.11-4"><code>
+</code><a href="#section-3.12-2" class="pilcrow">¶</a></p>
+<p id="section-3.12-3">An instance path to a specific leaf-list entry uses the same predicate form as
+<code>instance-identifier</code> <span>[<a href="#RFC7950" class="cite xref">RFC7950</a>]</span>:<a href="#section-3.12-3" class="pilcrow">¶</a></p>
+<p id="section-3.12-4"><code>
 /ietf-system:system/dns/servers[.="192.0.2.1"]
-</code><a href="#section-3.11-4" class="pilcrow">¶</a></p>
-<p id="section-3.11-5">An instance path that references the leaf-list node without selecting a
-particular entry names the leaf-list node without a predicate.<a href="#section-3.11-5" class="pilcrow">¶</a></p>
-<p id="section-3.11-6">A <code>leaf-list-predicate</code> accepts a literal value only (<code>quoted-string</code> or
-<code>unquoted-value</code>).  Wildcards, regular expressions, and key value sets <span class="bcp14">MUST NOT</span> be used in leaf-list predicates.<a href="#section-3.11-6" class="pilcrow">¶</a></p>
-<p id="section-3.11-7"><strong>TODO: This is a first approach to this issue.  It could be considered out-of-scope
+</code><a href="#section-3.12-4" class="pilcrow">¶</a></p>
+<p id="section-3.12-5">An instance path that references the leaf-list node without selecting a
+particular entry names the leaf-list node without a predicate.<a href="#section-3.12-5" class="pilcrow">¶</a></p>
+<p id="section-3.12-6">A <code>leaf-list-predicate</code> accepts a literal value only (<code>quoted-string</code> or
+<code>unquoted-value</code>).  Wildcards, regular expressions, and key value sets <span class="bcp14">MUST NOT</span> be used in leaf-list predicates.<a href="#section-3.12-6" class="pilcrow">¶</a></p>
+<p id="section-3.12-7"><strong>TODO: This is a first approach to this issue.  It could be considered out-of-scope
 to identify specific leaf-list entries or this same approach could be used to allow for
-matching of other specific values (such as leafs) as a solution to that problem</strong><a href="#section-3.11-7" class="pilcrow">¶</a></p>
+matching of other specific values (such as leafs) as a solution to that problem</strong><a href="#section-3.12-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="metadata-annotations">
-<section id="section-3.12">
+<section id="section-3.13">
         <h3 id="name-metadata-annotations">
-<a href="#section-3.12" class="section-number selfRef">3.12. </a><a href="#name-metadata-annotations" class="section-name selfRef">Metadata Annotations</a>
+<a href="#section-3.13" class="section-number selfRef">3.13. </a><a href="#name-metadata-annotations" class="section-name selfRef">Metadata Annotations</a>
         </h3>
-<p id="section-3.12-1">Metadata annotations defined in <span>[<a href="#RFC7952" class="cite xref">RFC7952</a>]</span> are not part of the ypath syntax.
+<p id="section-3.13-1">Metadata annotations defined in <span>[<a href="#RFC7952" class="cite xref">RFC7952</a>]</span> are not part of the ypath syntax.
 A ypath identifies a data tree node only; it does not reference metadata
-annotations attached to nodes.<a href="#section-3.12-1" class="pilcrow">¶</a></p>
+annotations attached to nodes.<a href="#section-3.13-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="actions">
-<section id="section-3.13">
+<section id="section-3.14">
         <h3 id="name-actions">
-<a href="#section-3.13" class="section-number selfRef">3.13. </a><a href="#name-actions" class="section-name selfRef">Actions</a>
+<a href="#section-3.14" class="section-number selfRef">3.14. </a><a href="#name-actions" class="section-name selfRef">Actions</a>
         </h3>
-<p id="section-3.13-1">A ypath to a YANG action names the action node.  For example:<a href="#section-3.13-1" class="pilcrow">¶</a></p>
-<p id="section-3.13-2"><code>
+<p id="section-3.14-1">A schema path <span class="bcp14">MAY</span> identify an <code>action</code>, <code>rpc</code>, or <code>notification</code> node, in
+addition to data nodes.  These are schema nodes and do not appear as
+instantiated nodes in the data tree.  An instance path <span class="bcp14">MUST NOT</span> address an
+<code>rpc</code> or <code>notification</code>.  An instance path to an <code>action</code> identifies the
+action node to invoke; the protocol operation still defines how to invoke it.
+For example:<a href="#section-3.14-1" class="pilcrow">¶</a></p>
+<p id="section-3.14-2"><code>
 /example:mycontainer/do-something
-</code><a href="#section-3.13-2" class="pilcrow">¶</a></p>
-<p id="section-3.13-3">The action <code>input</code> and <code>output</code> nodes are not included in the path used to
-invoke the action.  Input parameters are supplied separately in the protocol or
-API operation that invokes the action.<a href="#section-3.13-3" class="pilcrow">¶</a></p>
-<p id="section-3.13-4"><strong>TODO: Consider how input/output paths should be displayed.  One solution is to
-add a new notation to show input and output.  This is needed as <code>input</code> and <code>output</code>
-fields to an <code>action</code> may have name collisions, for example, the <code>input</code> <code>name</code> and the
-<code>output</code> <code>name</code> which would appear as <code>/example:mycontainer/do-something/name</code> for both
-despite being distinctly separate fields.  A proposal might be the <code>::</code> notation
-to signify that the name before it specifies whether it is <code>input</code> or <code>output</code> with
-these being the only supported options, for example,</strong><a href="#section-3.13-4" class="pilcrow">¶</a></p>
-<p id="section-3.13-5"><code>
-/example:mycontainer/do-something/input::name
-</code>
-          <strong>and</strong>
-          <code>
-/example:mycontainer/do-something/output::name
-</code><a href="#section-3.13-5" class="pilcrow">¶</a></p>
+</code><a href="#section-3.14-2" class="pilcrow">¶</a></p>
+<p id="section-3.14-3">For a schema path that continues below an <code>action</code> or <code>rpc</code>, its <code>input</code> and
+<code>output</code> nodes are explicit path segments.  For example,
+<code>/example:mycontainer/do-something/input/name</code> and
+<code>/example:mycontainer/do-something/output/name</code> identify distinct schema
+nodes.<a href="#section-3.14-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="filter-paths">
+<section id="section-3.15">
+        <h3 id="name-filter-paths">
+<a href="#section-3.15" class="section-number selfRef">3.15. </a><a href="#name-filter-paths" class="section-name selfRef">Filter Paths</a>
+        </h3>
+<p id="section-3.15-1">Filter paths are an optional extension to instance paths.  They select
+instance data nodes by matching list key values.  A specification that uses
+filter paths <span class="bcp14">MUST</span> define how selected nodes are returned or acted upon.  This
+document defines no transport or filter payload.<a href="#section-3.15-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="wildcards">
-<section id="section-3.14">
+<section id="section-3.16">
         <h3 id="name-wildcards">
-<a href="#section-3.14" class="section-number selfRef">3.14. </a><a href="#name-wildcards" class="section-name selfRef">Wildcards</a>
+<a href="#section-3.16" class="section-number selfRef">3.16. </a><a href="#name-wildcards" class="section-name selfRef">Wildcards</a>
         </h3>
-<p id="section-3.14-1">Filter paths <span class="bcp14">MAY</span> use a wildcard, a regular expression (see
-<a href="#regular-expressions" class="auto internal xref">Section 3.15</a>), or a key value set (see <a href="#key-value-sets" class="auto internal xref">Section 3.16</a>) in list
+<p id="section-3.16-1">Filter paths <span class="bcp14">MAY</span> use a wildcard, a regular expression (see
+<a href="#regular-expressions" class="auto internal xref">Section 3.17</a>), or a key value set (see <a href="#key-value-sets" class="auto internal xref">Section 3.18</a>) in list
 key predicates.  These forms apply only to filter paths; they are not used in
-schema paths.<a href="#section-3.14-1" class="pilcrow">¶</a></p>
-<p id="section-3.14-2">For string-typed keys, the wildcard <span class="bcp14">MUST</span> appear inside double quotes:<a href="#section-3.14-2" class="pilcrow">¶</a></p>
-<p id="section-3.14-3"><code>
+schema paths.<a href="#section-3.16-1" class="pilcrow">¶</a></p>
+<p id="section-3.16-2">For string-typed keys, the wildcard <span class="bcp14">MUST</span> appear inside double quotes:<a href="#section-3.16-2" class="pilcrow">¶</a></p>
+<p id="section-3.16-3"><code>
 /ietf-interfaces:interfaces[name="*"]
-</code><a href="#section-3.14-3" class="pilcrow">¶</a></p>
-<p id="section-3.14-4">For numeric or boolean keys, the unquoted form <span class="bcp14">MAY</span> be used:<a href="#section-3.14-4" class="pilcrow">¶</a></p>
-<p id="section-3.14-5"><code>
+</code><a href="#section-3.16-3" class="pilcrow">¶</a></p>
+<p id="section-3.16-4">For numeric or boolean keys, the unquoted form <span class="bcp14">MAY</span> be used:<a href="#section-3.16-4" class="pilcrow">¶</a></p>
+<p id="section-3.16-5"><code>
 /example:items/item[index=*]
-</code><a href="#section-3.14-5" class="pilcrow">¶</a></p>
-<p id="section-3.14-6"><strong>TODO: Need to rethink whether <code>*</code> alone is sufficient or whether it needs to
-be inside double-quotes for string types, or whether it would be better inside
-single quotes in case <code>*</code> is a string value that might be confused with
-a wildcard</strong><a href="#section-3.14-6" class="pilcrow">¶</a></p>
-<p id="section-3.14-7">If any key in a multi-key list uses a wildcard, all keys in that list entry
-<span class="bcp14">MUST</span> use wildcards.  Mixing wildcards and specific values for different keys of
-the same list entry is not permitted.  For example:<a href="#section-3.14-7" class="pilcrow">¶</a></p>
-<p id="section-3.14-8">Valid:<a href="#section-3.14-8" class="pilcrow">¶</a></p>
-<p id="section-3.14-9"><code>
-/module:list[key1="*"][key2="*"]
-</code><a href="#section-3.14-9" class="pilcrow">¶</a></p>
-<p id="section-3.14-10">Not valid:<a href="#section-3.14-10" class="pilcrow">¶</a></p>
-<p id="section-3.14-11"><code>
-/module:list[key1="foo"][key2="*"]
-</code><a href="#section-3.14-11" class="pilcrow">¶</a></p>
+</code><a href="#section-3.16-5" class="pilcrow">¶</a></p>
+<p id="section-3.16-6">Each key in a multi-key list is matched independently.  A wildcard <span class="bcp14">MAY</span> be
+combined with a literal, regular expression, or key value set in another key
+predicate.  For example, <code>/module:list[key1="foo"][key2="*"]</code> is valid.<a href="#section-3.16-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="regular-expressions">
-<section id="section-3.15">
+<section id="section-3.17">
         <h3 id="name-regular-expressions">
-<a href="#section-3.15" class="section-number selfRef">3.15. </a><a href="#name-regular-expressions" class="section-name selfRef">Regular Expressions</a>
+<a href="#section-3.17" class="section-number selfRef">3.17. </a><a href="#name-regular-expressions" class="section-name selfRef">Regular Expressions</a>
         </h3>
-<p id="section-3.15-1">Filter paths <span class="bcp14">MAY</span> use a regular expression as a list key value to match multiple
+<p id="section-3.17-1">Filter paths <span class="bcp14">MAY</span> use a regular expression as a list key value to match multiple
 list entries.  Regular expressions apply only to list key predicates in filter
 paths.  They <span class="bcp14">MUST NOT</span> be used in schema paths or in instance paths that identify
-a single known node.<a href="#section-3.15-1" class="pilcrow">¶</a></p>
-<p id="section-3.15-2">A regular expression key value uses the form <code>r'pattern'</code>, where <code>pattern</code> is
+a single known node.<a href="#section-3.17-1" class="pilcrow">¶</a></p>
+<p id="section-3.17-2">A regular expression key value uses the form <code>r'pattern'</code>, where <code>pattern</code> is
 the regular expression body enclosed in single quotes.  For example, to select
-the <code>description</code> leaf on all interfaces whose name begins with <code>a</code> or <code>A</code>:<a href="#section-3.15-2" class="pilcrow">¶</a></p>
-<p id="section-3.15-3"><code>
+the <code>description</code> leaf on all interfaces whose name begins with <code>a</code> or <code>A</code>:<a href="#section-3.17-2" class="pilcrow">¶</a></p>
+<p id="section-3.17-3"><code>
 /ietf-interfaces:interfaces/interface[name=r'^[aA].*']/description
-</code><a href="#section-3.15-3" class="pilcrow">¶</a></p>
-<p id="section-3.15-4">The <code>r</code> prefix distinguishes a regular expression from a literal string value.
+</code><a href="#section-3.17-3" class="pilcrow">¶</a></p>
+<p id="section-3.17-4">The <code>r</code> prefix distinguishes a regular expression from a literal string value.
 The pattern is matched against the string representation of the list key value
 in the data encoding used by the implementation (for example, the JSON
-encoding defined in <span>[<a href="#RFC7951" class="cite xref">RFC7951</a>]</span>).<a href="#section-3.15-4" class="pilcrow">¶</a></p>
-<p id="section-3.15-5">Regular expression key values <span class="bcp14">MUST</span> use the <code>r'...'</code> form.  Double-quoted
-strings <span class="bcp14">MUST NOT</span> be used to encode regular expressions.<a href="#section-3.15-5" class="pilcrow">¶</a></p>
+encoding defined in <span>[<a href="#RFC7951" class="cite xref">RFC7951</a>]</span>).<a href="#section-3.17-4" class="pilcrow">¶</a></p>
+<p id="section-3.17-5">Regular expression key values <span class="bcp14">MUST</span> use the <code>r'...'</code> form.  Double-quoted
+strings <span class="bcp14">MUST NOT</span> be used to encode regular expressions.<a href="#section-3.17-5" class="pilcrow">¶</a></p>
 <div id="regular-expression-dialect">
-<section id="section-3.15.1">
+<section id="section-3.17.1">
           <h4 id="name-regular-expression-dialect">
-<a href="#section-3.15.1" class="section-number selfRef">3.15.1. </a><a href="#name-regular-expression-dialect" class="section-name selfRef">Regular Expression Dialect</a>
+<a href="#section-3.17.1" class="section-number selfRef">3.17.1. </a><a href="#name-regular-expression-dialect" class="section-name selfRef">Regular Expression Dialect</a>
           </h4>
-<p id="section-3.15.1-1">The regular expression dialect <span class="bcp14">MUST</span> be POSIX Extended Regular Expressions (ERE)
+<p id="section-3.17.1-1">The regular expression dialect <span class="bcp14">MUST</span> be POSIX Extended Regular Expressions (ERE)
 as defined in Section 9.3.6 of IEEE Std 1003.1-2008.  Implementations <span class="bcp14">MAY</span>
 support additional regular expression dialects only if the enclosing
-specification or API documents the dialect in use.<a href="#section-3.15.1-1" class="pilcrow">¶</a></p>
+specification or API documents the dialect in use.<a href="#section-3.17.1-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="escaping">
-<section id="section-3.15.2">
+<section id="section-3.17.2">
           <h4 id="name-escaping">
-<a href="#section-3.15.2" class="section-number selfRef">3.15.2. </a><a href="#name-escaping" class="section-name selfRef">Escaping</a>
+<a href="#section-3.17.2" class="section-number selfRef">3.17.2. </a><a href="#name-escaping" class="section-name selfRef">Escaping</a>
           </h4>
-<p id="section-3.15.2-1">Within the single-quoted pattern, a single quote character is escaped as <code>\'</code>
+<p id="section-3.17.2-1">Within the single-quoted pattern, a single quote character is escaped as <code>\'</code>
 and a backslash is escaped as <code>\\</code>.  All other characters are treated
-literally.<a href="#section-3.15.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.15.2-2"><strong>TODO: Consider UTF-8 characters and if they need a special mention or special
-handling</strong><a href="#section-3.15.2-2" class="pilcrow">¶</a></p>
+literally.<a href="#section-3.17.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.17.2-2"><strong>TODO: Consider UTF-8 characters and if they need a special mention or special
+handling</strong><a href="#section-3.17.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="multi-key-lists">
-<section id="section-3.15.3">
+<section id="section-3.17.3">
           <h4 id="name-multi-key-lists">
-<a href="#section-3.15.3" class="section-number selfRef">3.15.3. </a><a href="#name-multi-key-lists" class="section-name selfRef">Multi-Key Lists</a>
+<a href="#section-3.17.3" class="section-number selfRef">3.17.3. </a><a href="#name-multi-key-lists" class="section-name selfRef">Multi-Key Lists</a>
           </h4>
-<p id="section-3.15.3-1">Unlike wildcards, regular expressions <span class="bcp14">MAY</span> be combined with literal key values
+<p id="section-3.17.3-1">Unlike wildcards, regular expressions <span class="bcp14">MAY</span> be combined with literal key values
 or other regular expressions in different key predicates of the same list entry.
-For example:<a href="#section-3.15.3-1" class="pilcrow">¶</a></p>
-<p id="section-3.15.3-2"><code>
+For example:<a href="#section-3.17.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.17.3-2"><code>
 /module:routes/route[ip-prefix=r'^192\.0\.2\.'][route-type="unicast"]
-</code><a href="#section-3.15.3-2" class="pilcrow">¶</a></p>
+</code><a href="#section-3.17.3-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="leaf-lists-1">
-<section id="section-3.15.4">
+<section id="section-3.17.4">
           <h4 id="name-leaf-lists-2">
-<a href="#section-3.15.4" class="section-number selfRef">3.15.4. </a><a href="#name-leaf-lists-2" class="section-name selfRef">Leaf Lists</a>
+<a href="#section-3.17.4" class="section-number selfRef">3.17.4. </a><a href="#name-leaf-lists-2" class="section-name selfRef">Leaf Lists</a>
           </h4>
-<p id="section-3.15.4-1">Regular expression matching is defined for list keys only.  Leaf-list entry
+<p id="section-3.17.4-1">Regular expression matching is defined for list keys only.  Leaf-list entry
 selection uses literal values with the <code>instance-identifier</code> form (for
-example, <code>[.="value"]</code>).<a href="#section-3.15.4-1" class="pilcrow">¶</a></p>
+example, <code>[.="value"]</code>).<a href="#section-3.17.4-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="key-value-sets">
-<section id="section-3.16">
+<section id="section-3.18">
         <h3 id="name-key-value-sets">
-<a href="#section-3.16" class="section-number selfRef">3.16. </a><a href="#name-key-value-sets" class="section-name selfRef">Key Value Sets</a>
+<a href="#section-3.18" class="section-number selfRef">3.18. </a><a href="#name-key-value-sets" class="section-name selfRef">Key Value Sets</a>
         </h3>
-<p id="section-3.16-1">Filter paths <span class="bcp14">MAY</span> use a key value set to match a list entry when the key value
+<p id="section-3.18-1">Filter paths <span class="bcp14">MAY</span> use a key value set to match a list entry when the key value
 equals any one of a given set of explicit values.  Key value sets apply only to
 list key predicates in filter paths.  They <span class="bcp14">MUST NOT</span> be used in schema paths or
-in instance paths that identify a single known node.<a href="#section-3.16-1" class="pilcrow">¶</a></p>
-<p id="section-3.16-2">A key value set uses curly braces enclosing a comma-separated list of key
+in instance paths that identify a single known node.<a href="#section-3.18-1" class="pilcrow">¶</a></p>
+<p id="section-3.18-2">A key value set uses curly braces enclosing a comma-separated list of key
 values.  For example, to select the <code>description</code> leaf on interfaces named
-<code>ethernet1</code> or <code>ethernet3</code>:<a href="#section-3.16-2" class="pilcrow">¶</a></p>
-<p id="section-3.16-3"><code>
+<code>ethernet1</code> or <code>ethernet3</code>:<a href="#section-3.18-2" class="pilcrow">¶</a></p>
+<p id="section-3.18-3"><code>
 /ietf-interfaces:interfaces/interface[name={"ethernet1", "ethernet3"}]/description
-</code><a href="#section-3.16-3" class="pilcrow">¶</a></p>
-<p id="section-3.16-4">An implementation matches the list entry if the key value is equal to any
+</code><a href="#section-3.18-3" class="pilcrow">¶</a></p>
+<p id="section-3.18-4">An implementation matches the list entry if the key value is equal to any
 member of the set.  The comparison uses the same string representation of key
-values as instance paths (see <a href="#lists-in-instance-data" class="auto internal xref">Section 3.10.2</a>).<a href="#section-3.16-4" class="pilcrow">¶</a></p>
+values as instance paths (see <a href="#lists-in-instance-data" class="auto internal xref">Section 3.11.2</a>).<a href="#section-3.18-4" class="pilcrow">¶</a></p>
 <div id="set-member-values">
-<section id="section-3.16.1">
+<section id="section-3.18.1">
           <h4 id="name-set-member-values">
-<a href="#section-3.16.1" class="section-number selfRef">3.16.1. </a><a href="#name-set-member-values" class="section-name selfRef">Set Member Values</a>
+<a href="#section-3.18.1" class="section-number selfRef">3.18.1. </a><a href="#name-set-member-values" class="section-name selfRef">Set Member Values</a>
           </h4>
-<p id="section-3.16.1-1">Each member of a key value set is a literal key value.  Members <span class="bcp14">MAY</span> be
+<p id="section-3.18.1-1">Each member of a key value set is a literal key value.  Members <span class="bcp14">MAY</span> be
 expressed as a double-quoted string or, if the value contains only characters
-valid for an unquoted value, without quotes.  For example:<a href="#section-3.16.1-1" class="pilcrow">¶</a></p>
-<p id="section-3.16.1-2"><code>
+valid for an unquoted value, without quotes.  For example:<a href="#section-3.18.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.18.1-2"><code>
 /ietf-interfaces:interfaces/interface[name={"ethernet1", "ethernet3"}]/description
 /module:items/item[id={1, 2, 3}]
 /module:items/item[name={"foo", "bar"}]
-</code><a href="#section-3.16.1-2" class="pilcrow">¶</a></p>
-<p id="section-3.16.1-3">Wildcards, regular expressions, and nested key value sets <span class="bcp14">MUST NOT</span> appear as
-set members.<a href="#section-3.16.1-3" class="pilcrow">¶</a></p>
+</code><a href="#section-3.18.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.18.1-3">Wildcards, regular expressions, and nested key value sets <span class="bcp14">MUST NOT</span> appear as
+set members.<a href="#section-3.18.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="multi-key-lists-1">
-<section id="section-3.16.2">
+<section id="section-3.18.2">
           <h4 id="name-multi-key-lists-2">
-<a href="#section-3.16.2" class="section-number selfRef">3.16.2. </a><a href="#name-multi-key-lists-2" class="section-name selfRef">Multi-Key Lists</a>
+<a href="#section-3.18.2" class="section-number selfRef">3.18.2. </a><a href="#name-multi-key-lists-2" class="section-name selfRef">Multi-Key Lists</a>
           </h4>
-<p id="section-3.16.2-1">A key value set applies to a single key predicate.  Different keys in a
+<p id="section-3.18.2-1">A key value set applies to a single key predicate.  Different keys in a
 multi-key list <span class="bcp14">MAY</span> each use their own literal value, regular expression,
-wildcard, or key value set independently.  For example:<a href="#section-3.16.2-1" class="pilcrow">¶</a></p>
-<p id="section-3.16.2-2"><code>
+wildcard, or key value set independently.  For example:<a href="#section-3.18.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.18.2-2"><code>
 /module:routes/route[ip-prefix={"192.0.2.1/32", "192.0.2.2/32"}][route-type="unicast"]
-</code><a href="#section-3.16.2-2" class="pilcrow">¶</a></p>
+</code><a href="#section-3.18.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="leaf-lists-2">
-<section id="section-3.16.3">
+<section id="section-3.18.3">
           <h4 id="name-leaf-lists-3">
-<a href="#section-3.16.3" class="section-number selfRef">3.16.3. </a><a href="#name-leaf-lists-3" class="section-name selfRef">Leaf Lists</a>
+<a href="#section-3.18.3" class="section-number selfRef">3.18.3. </a><a href="#name-leaf-lists-3" class="section-name selfRef">Leaf Lists</a>
           </h4>
-<p id="section-3.16.3-1">Key value sets are defined for list keys only.  Leaf-list entry selection is
-not defined for key value sets in this document.<a href="#section-3.16.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.18.3-1">Key value sets are defined for list keys only.  Leaf-list entry selection is
+not defined for key value sets in this document.<a href="#section-3.18.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-</section>
-</div>
-<div id="relationship-to-json-encoding">
-<section id="section-3.17">
-        <h3 id="name-relationship-to-json-encodi">
-<a href="#section-3.17" class="section-number selfRef">3.17. </a><a href="#name-relationship-to-json-encodi" class="section-name selfRef">Relationship to JSON Encoding</a>
-        </h3>
-<p id="section-3.17-1">Considering the instance path
-<code>/ietf-routing:routing/control-plane-protocols/ietf-ospf:ospf/address-family</code>
-with a value of <code>ipv4</code>, the corresponding JSON based on <span>[<a href="#RFC7951" class="cite xref">RFC7951</a>]</span> is:<a href="#section-3.17-1" class="pilcrow">¶</a></p>
-<p id="section-3.17-2"><code>
-{
-  "ietf-routing:routing": {
-    "control-plane-protocols": {
-      "ietf-ospf:ospf": {
-        "address-family": "ipv4"
-      }
-    }
-  }
-}
-</code><a href="#section-3.17-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2142,19 +2105,26 @@ with a value of <code>ipv4</code>, the corresponding JSON based on <span>[<a hre
       <h2 id="name-formal-syntax">
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-formal-syntax" class="section-name selfRef">Formal Syntax</a>
       </h2>
-<p id="section-4-1">The grammar below uses ABNF as defined in <span>[<a href="#RFC7950" class="cite xref">RFC7950</a>]</span>, Section 14.  The rules
+<p id="section-4-1">The grammar below uses ABNF as defined in <span>[<a href="#RFC7950" class="cite xref">RFC7950</a>]</span>, Section 14.  A ypath is
+either an absolute path or a relative path.  Relative paths use <code>.</code> for the
+context node and <code>..</code> for its parent; their resolution context is defined by
+the specification or application using them (see <a href="#ypath-expressions" class="auto internal xref">Section 3.2</a>).  The rules
 <code>identifier</code>, <code>node-identifier</code>, <code>quoted-string</code>, <code>WSP</code>, <code>SQUOTE</code>, and
 <code>DIGIT</code> are used as defined there.  Path segments and key names in
 predicates use <code>node-identifier</code>, as in the <code>instance-identifier</code> type in
 <span>[<a href="#RFC7950" class="cite xref">RFC7950</a>]</span>, and <span class="bcp14">MAY</span> include a module prefix (for example,
 <code>/prefix:node</code> or <code>[prefix:key="value"]</code>).  An <code>unquoted-value</code> is a numeric
-or boolean key value (see <a href="#lists-in-instance-data" class="auto internal xref">Section 3.10.2</a>); all other key values
+or boolean key value (see <a href="#lists-in-instance-data" class="auto internal xref">Section 3.11.2</a>); all other key values
 use <code>quoted-string</code>.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <div class="breakable lang-abnf sourcecode" id="section-4-2">
 <pre>
-ypath = absolute-path
+ypath = absolute-path / relative-path
 
 absolute-path = 1*("/" path-step)
+
+relative-path = relative-step *("/" path-step)
+
+relative-step = "." / ".." / path-step
 
 path-step = node-identifier *predicate
 
@@ -2162,6 +2132,9 @@ predicate = schema-predicate
           / instance-predicate
           / filter-predicate
           / leaf-list-predicate
+          / position-predicate
+
+position-predicate = "[" *WSP 1*DIGIT *WSP "]"
 
 schema-predicate = "[" *WSP key-name *WSP "]"
 
@@ -2217,12 +2190,14 @@ leaf-list-predicate = "[" *WSP "." *WSP "=" *WSP leaf-list-key-value
 </div>
 <p id="section-4-3">A <code>filter-predicate</code> is syntactically identical to an <code>instance-predicate</code>.
 Filter-specific <code>key-value</code> forms (wildcards, regular expressions, and key
-value sets) are defined in <a href="#wildcards" class="auto internal xref">Section 3.14</a>, <a href="#regular-expressions" class="auto internal xref">Section 3.15</a>, and
-<a href="#key-value-sets" class="auto internal xref">Section 3.16</a>.  Literal key values remain valid in filter paths unless a
+value sets) are defined in <a href="#wildcards" class="auto internal xref">Section 3.16</a>, <a href="#regular-expressions" class="auto internal xref">Section 3.17</a>, and
+<a href="#key-value-sets" class="auto internal xref">Section 3.18</a>.  Literal key values remain valid in filter paths unless a
 rule in those sections forbids them (for example, wildcard mixing in
-<a href="#wildcards" class="auto internal xref">Section 3.14</a>).  A <code>leaf-list-predicate</code> uses <code>leaf-list-key-value</code>, which
+<a href="#wildcards" class="auto internal xref">Section 3.16</a>).  A <code>leaf-list-predicate</code> uses <code>leaf-list-key-value</code>, which
 permits only <code>quoted-string</code> or <code>unquoted-value</code>; filter extensions <span class="bcp14">MUST NOT</span>
-be used in leaf-list predicates.<a href="#section-4-3" class="pilcrow">¶</a></p>
+be used in leaf-list predicates.  A positional predicate contains a one-based
+list entry position and <span class="bcp14">MUST</span> be used only with a keyless list in an instance
+path (see <a href="#keyless-lists" class="auto internal xref">Section 3.11.3</a>).<a href="#section-4-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conformance">
@@ -2244,21 +2219,22 @@ that returns the current context path) <span class="bcp14">MUST</span>:<a href="
             <p id="section-5.1-2.1.1">generate paths that conform to the grammar in <a href="#formal-syntax" class="auto internal xref">Section 4</a>;<a href="#section-5.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-2.2">
-            <p id="section-5.1-2.2.1">use a leading <code>/</code> on every path;<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-2.2.1">use an absolute path unless the specification defines a relative path
+context;<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-2.3">
-            <p id="section-5.1-2.3.1">include a module name on the first path segment unless a specification
-defines a default module for the context; and<a href="#section-5.1-2.3.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-2.3.1">include a module name on the first segment of an absolute path and at module
+changes; and<a href="#section-5.1-2.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-2.4">
-            <p id="section-5.1-2.4.1">use schema predicates for schema paths and value predicates for instance
-paths.<a href="#section-5.1-2.4.1" class="pilcrow">¶</a></p>
+            <p id="section-5.1-2.4.1">use child node segments for schema paths and key or position predicates only
+on instance and filter paths.<a href="#section-5.1-2.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-5.1-3">A producer generating filter paths <span class="bcp14">MUST</span> use <code>*</code> only as specified in
-<a href="#wildcards" class="auto internal xref">Section 3.14</a>, regular expressions only as specified in
-<a href="#regular-expressions" class="auto internal xref">Section 3.15</a>, and key value sets only as specified in
-<a href="#key-value-sets" class="auto internal xref">Section 3.16</a>.<a href="#section-5.1-3" class="pilcrow">¶</a></p>
+<a href="#wildcards" class="auto internal xref">Section 3.16</a>, regular expressions only as specified in
+<a href="#regular-expressions" class="auto internal xref">Section 3.17</a>, and key value sets only as specified in
+<a href="#key-value-sets" class="auto internal xref">Section 3.18</a>.<a href="#section-5.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="consumers">
@@ -2275,7 +2251,10 @@ paths.<a href="#section-5.1-2.4.1" class="pilcrow">¶</a></p>
             <p id="section-5.2-2.2.1">resolve module inheritance from left to right along the path; and<a href="#section-5.2-2.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.2-2.3">
-            <p id="section-5.2-2.3.1">apply module name changes at augment boundaries.<a href="#section-5.2-2.3.1" class="pilcrow">¶</a></p>
+            <p id="section-5.2-2.3.1">apply module name changes at augment boundaries; and<a href="#section-5.2-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.2-2.4">
+            <p id="section-5.2-2.4.1">resolve relative paths only when the applicable context is defined.<a href="#section-5.2-2.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 <p id="section-5.2-3">A consumer that does not support filter paths <span class="bcp14">MUST</span> reject paths containing the
@@ -2288,8 +2267,8 @@ wildcard <code>*</code>, a <code>regex-value</code>, or a <code>key-value-set</c
 <a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-path-enumeration" class="section-name selfRef">Path Enumeration</a>
         </h3>
 <p id="section-5.3-1">An implementation that walks a YANG schema and returns ypaths <span class="bcp14">MUST</span> return
-schema paths with list key names in bracket pairs and <span class="bcp14">MUST NOT</span> return paths
-that address list keys as child node segments.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+schema paths with list keys as child node segments and <span class="bcp14">MUST NOT</span> return schema
+paths with key predicates.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2299,79 +2278,33 @@ that address list keys as child node segments.<a href="#section-5.3-1" class="pi
       <h2 id="name-examples">
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-examples" class="section-name selfRef">Examples</a>
       </h2>
-<p id="section-6-1">This section provides non-normative examples of ypath usage.<a href="#section-6-1" class="pilcrow">¶</a></p>
-<div id="referencing-yang-paths-in-netconf-filters">
-<section id="section-6.1">
-        <h3 id="name-referencing-yang-paths-in-n">
-<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-referencing-yang-paths-in-n" class="section-name selfRef">Referencing YANG Paths in NETCONF Filters</a>
-        </h3>
-<p id="section-6.1-1">NETCONF subtree filters <span>[<a href="#RFC6241" class="cite xref">RFC6241</a>]</span> select data by structure rather than by a
-single path string.  A ypath can nonetheless identify the subtree root that a
-filter targets.  For example, to retrieve all interfaces, a client might use
-the filter path:<a href="#section-6.1-1" class="pilcrow">¶</a></p>
-<p id="section-6.1-2"><code>
-/ietf-interfaces:interfaces[name="*"]
-</code><a href="#section-6.1-2" class="pilcrow">¶</a></p>
-<p id="section-6.1-3">The enclosing specification or implementation maps this ypath to the
-appropriate NETCONF filter payload.<a href="#section-6.1-3" class="pilcrow">¶</a></p>
-</section>
-</div>
+<p id="section-6-1">This section provides non-normative examples of ypath syntax.<a href="#section-6-1" class="pilcrow">¶</a></p>
 <div id="filter-paths-with-regular-expressions">
-<section id="section-6.2">
+<section id="section-6.1">
         <h3 id="name-filter-paths-with-regular-e">
-<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-filter-paths-with-regular-e" class="section-name selfRef">Filter Paths with Regular Expressions</a>
+<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-filter-paths-with-regular-e" class="section-name selfRef">Filter Paths with Regular Expressions</a>
         </h3>
-<p id="section-6.2-1">A filter path can use a regular expression in a key predicate to match a
-subset of list entries.  For example, to retrieve the <code>description</code> leaf for
-all interfaces whose name starts with <code>a</code> or <code>A</code>:<a href="#section-6.2-1" class="pilcrow">¶</a></p>
-<p id="section-6.2-2"><code>
+<p id="section-6.1-1">A filter path can use a regular expression in a key predicate to match a
+subset of list entries.  For example:<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+<p id="section-6.1-2"><code>
 /ietf-interfaces:interfaces/interface[name=r'^[aA].*']/description
-</code><a href="#section-6.2-2" class="pilcrow">¶</a></p>
-<p id="section-6.2-3">An implementation evaluates the regular expression against each candidate list
-key value and includes matching entries in the result set.<a href="#section-6.2-3" class="pilcrow">¶</a></p>
+</code><a href="#section-6.1-2" class="pilcrow">¶</a></p>
+<p id="section-6.1-3">An implementation evaluates the regular expression against each candidate list
+key value and includes matching entries in the result set.<a href="#section-6.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="filter-paths-with-key-value-sets">
-<section id="section-6.3">
+<section id="section-6.2">
         <h3 id="name-filter-paths-with-key-value">
-<a href="#section-6.3" class="section-number selfRef">6.3. </a><a href="#name-filter-paths-with-key-value" class="section-name selfRef">Filter Paths with Key Value Sets</a>
+<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-filter-paths-with-key-value" class="section-name selfRef">Filter Paths with Key Value Sets</a>
         </h3>
-<p id="section-6.3-1">A filter path can use a key value set to match multiple list entries with
-explicit key values.  For example, to retrieve the <code>description</code> leaf for
-interfaces <code>ethernet1</code> and <code>ethernet3</code>:<a href="#section-6.3-1" class="pilcrow">¶</a></p>
-<p id="section-6.3-2"><code>
+<p id="section-6.2-1">A filter path can use a key value set to match multiple list entries with
+explicit key values.  For example:<a href="#section-6.2-1" class="pilcrow">¶</a></p>
+<p id="section-6.2-2"><code>
 /ietf-interfaces:interfaces/interface[name={"ethernet1", "ethernet3"}]/description
-</code><a href="#section-6.3-2" class="pilcrow">¶</a></p>
-<p id="section-6.3-3">An implementation includes each list entry whose key value equals any member
-of the set.<a href="#section-6.3-3" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="referencing-yang-paths-in-netconf-rpc-error-messages">
-<section id="section-6.4">
-        <h3 id="name-referencing-yang-paths-in-ne">
-<a href="#section-6.4" class="section-number selfRef">6.4. </a><a href="#name-referencing-yang-paths-in-ne" class="section-name selfRef">Referencing YANG Paths in NETCONF rpc-error Messages</a>
-        </h3>
-<p id="section-6.4-1">NETCONF <code>rpc-error</code> replies include an <code>error-path</code> element <span>[<a href="#RFC6241" class="cite xref">RFC6241</a>]</span> that
-identifies the node associated with the error.  An implementation may
-populate <code>error-path</code> using ypath instance syntax.  For example:<a href="#section-6.4-1" class="pilcrow">¶</a></p>
-<p id="section-6.4-2"><code>
-/ietf-interfaces:interfaces[name="eth0"]/mtu
-</code><a href="#section-6.4-2" class="pilcrow">¶</a></p>
-</section>
-</div>
-<div id="checking-existence">
-<section id="section-6.5">
-        <h3 id="name-checking-existence">
-<a href="#section-6.5" class="section-number selfRef">6.5. </a><a href="#name-checking-existence" class="section-name selfRef">Checking Existence</a>
-        </h3>
-<p id="section-6.5-1">An implementation can test whether a node exists in a datastore by resolving an
-instance path.  For example, the path:<a href="#section-6.5-1" class="pilcrow">¶</a></p>
-<p id="section-6.5-2"><code>
-/ietf-interfaces:interfaces[name="eth0"]
-</code><a href="#section-6.5-2" class="pilcrow">¶</a></p>
-<p id="section-6.5-3">identifies a specific list entry.  If the path resolves to an existing node,
-the entry is present; if resolution fails, the entry is absent.  The mechanism
-by which resolution is performed is defined by the enclosing API or protocol.<a href="#section-6.5-3" class="pilcrow">¶</a></p>
+</code><a href="#section-6.2-2" class="pilcrow">¶</a></p>
+<p id="section-6.2-3">An implementation includes each list entry whose key value equals any member
+of the set.<a href="#section-6.2-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2468,15 +2401,101 @@ namespace, YANG module, media type, or other protocol element requiring IANA
 registration.<a href="#section-8-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="sec-combined-references">
+<div id="potential-uses">
 <section id="section-9">
+      <h2 id="name-appendix-a-potential-uses-o">
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-appendix-a-potential-uses-o" class="section-name selfRef">Appendix A. Potential Uses of Ypath</a>
+      </h2>
+<p id="section-9-1"><strong>RFC Editor:</strong> Please remove this appendix before publication.<a href="#section-9-1" class="pilcrow">¶</a></p>
+<p id="section-9-2">This appendix records possible applications of ypath to guide discussion of
+future work.  It is non-normative.  Listing an application here does not define
+its protocol binding, processing model, or conformance requirements.<a href="#section-9-2" class="pilcrow">¶</a></p>
+<div id="identifying-a-specific-instance-data-node">
+<section id="section-9.1">
+        <h3 id="name-identifying-a-specific-inst">
+<a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-identifying-a-specific-inst" class="section-name selfRef">Identifying a Specific Instance-Data Node</a>
+        </h3>
+<p id="section-9.1-1">An instance path can identify one node in YANG instance data.  For a path to
+identify one specific list entry, every list in the path <span class="bcp14">MUST</span> have all of its
+keys specified with valid values for the corresponding YANG types.  Filter
+predicates such as wildcards, regular expressions, and key value sets select
+sets of entries and therefore do not identify a single entry.<a href="#section-9.1-1" class="pilcrow">¶</a></p>
+<p id="section-9.1-2">One possible use is for a YANG Push notification to identify the data node
+object being returned.  Another use already illustrated in this document is
+identifying the node associated with a NETCONF <code>rpc-error</code> <code>error-path</code>
+(<span>[<a href="#RFC6241" class="cite xref">RFC6241</a>]</span>), for example:<a href="#section-9.1-2" class="pilcrow">¶</a></p>
+<p id="section-9.1-3"><code>
+/ietf-interfaces:interfaces/interface[name="eth0"]/mtu
+</code><a href="#section-9.1-3" class="pilcrow">¶</a></p>
+<p id="section-9.1-4">An API can also use an instance path to check whether a node exists by
+resolving the path against a datastore.  The API defines the resolution
+mechanism and how it reports whether a node is present.<a href="#section-9.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="identifying-a-set-of-instance-data-nodes">
+<section id="section-9.2">
+        <h3 id="name-identifying-a-set-of-instan">
+<a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-identifying-a-set-of-instan" class="section-name selfRef">Identifying a Set of Instance-Data Nodes</a>
+        </h3>
+<p id="section-9.2-1">A filter path can identify a set of entries by matching list keys.  A possible
+use is a YANG Push version 2 subscription filter.  YANG Packages could use
+ypath to identify schema mount points or to express a <code>parent-reference</code>.
+Specifications defining these uses would need to specify the expected path
+form and how matching nodes are used.<a href="#section-9.2-1" class="pilcrow">¶</a></p>
+<p id="section-9.2-2">The document's NETCONF filter example illustrates a related use: a ypath can
+name the root targeted by a NETCONF subtree filter <span>[<a href="#RFC6241" class="cite xref">RFC6241</a>]</span>, while the
+NETCONF specification or implementation defines the filter payload and
+processing:<a href="#section-9.2-2" class="pilcrow">¶</a></p>
+<p id="section-9.2-3"><code>
+/ietf-interfaces:interfaces[name="*"]
+</code><a href="#section-9.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="schema-path-enumeration-and-display">
+<section id="section-9.3">
+        <h3 id="name-schema-path-enumeration-and">
+<a href="#section-9.3" class="section-number selfRef">9.3. </a><a href="#name-schema-path-enumeration-and" class="section-name selfRef">Schema-Path Enumeration and Display</a>
+        </h3>
+<p id="section-9.3-1">Implementations can enumerate or display schema paths for tools, diagnostics,
+or operator interfaces.  The conformance requirements for schema-path
+enumeration are specified in <a href="#conformance" class="auto internal xref">Section 5</a>.<a href="#section-9.3-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="future-yang-expressions">
+<section id="section-9.4">
+        <h3 id="name-future-yang-expressions">
+<a href="#section-9.4" class="section-number selfRef">9.4. </a><a href="#name-future-yang-expressions" class="section-name selfRef">Future YANG Expressions</a>
+        </h3>
+<p id="section-9.4-1">A future YANG revision might use ypath as the node-reference syntax within
+<code>must2</code> or <code>when2</code> expressions.  Such a feature would require a more complete
+expression language, including rules for navigation, operators, type
+conversion, and evaluation.  This document defines no such language; YANG 1.1
+<code>must</code> and <code>when</code> continue to use XPath (see <a href="#ypath-expressions" class="auto internal xref">Section 3.2</a>).<a href="#section-9.4-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="other-possible-uses">
+<section id="section-9.5">
+        <h3 id="name-other-possible-uses">
+<a href="#section-9.5" class="section-number selfRef">9.5. </a><a href="#name-other-possible-uses" class="section-name selfRef">Other Possible Uses</a>
+        </h3>
+<p id="section-9.5-1">Ypaths could be used in authorization policies to identify the nodes to which
+a rule applies.  The security considerations in <a href="#security-considerations" class="auto internal xref">Section 7</a>
+discuss path normalization for this use.  These and the other applications
+listed above are examples for discussion, not endorsements or protocol
+specifications.<a href="#section-9.5-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="sec-combined-references">
+<section id="section-10">
       <h2 id="name-references">
-<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-references" class="section-name selfRef">References</a>
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-references" class="section-name selfRef">References</a>
       </h2>
 <div id="sec-normative-references">
-<section id="section-9.1">
+<section id="section-10.1">
         <h3 id="name-normative-references">
-<a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+<a href="#section-10.1" class="section-number selfRef">10.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
 <dt id="RFC2119">[RFC2119]</dt>
@@ -2495,9 +2514,9 @@ registration.<a href="#section-8-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-informative-references">
-<section id="section-9.2">
+<section id="section-10.2">
         <h3 id="name-informative-references">
-<a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+<a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
 <dt id="RFC6241">[RFC6241]</dt>
@@ -2535,14 +2554,13 @@ registration.<a href="#section-8-1" class="pilcrow">¶</a></p>
 <a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
       </h2>
 <p id="appendix-A-1">The author would like to thank the Network Modeling (NETMOD) working
-group for its discussion of YANG path formats and Robert Wilton for their
-early review.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+group for its discussion of YANG path formats.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="authors-addresses">
 <section id="appendix-B">
-      <h2 id="name-authors-address">
-<a href="#name-authors-address" class="section-name selfRef">Author's Address</a>
+      <h2 id="name-authors-addresses">
+<a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
       </h2>
 <address class="vcard">
         <div dir="auto" class="left"><span class="fn nameRole">James Cumming</span></div>
@@ -2550,6 +2568,14 @@ early review.<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 <div class="email">
 <span>Email:</span>
 <a href="mailto:james.cumming@nokia.com" class="email">james.cumming@nokia.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Robert Wilton</span></div>
+<div dir="auto" class="left"><span class="org">Cisco</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:rwilton@cisco.com" class="email">rwilton@cisco.com</a>
 </div>
 </address>
 </section>
