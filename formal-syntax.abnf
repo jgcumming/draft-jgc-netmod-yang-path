@@ -1,6 +1,10 @@
-ypath = absolute-path
+ypath = absolute-path / relative-path
 
 absolute-path = 1*("/" path-step)
+
+relative-path = relative-step *("/" path-step)
+
+relative-step = "." / ".." / path-step
 
 path-step = node-identifier *predicate
 
@@ -8,6 +12,9 @@ predicate = schema-predicate
           / instance-predicate
           / filter-predicate
           / leaf-list-predicate
+          / position-predicate
+
+position-predicate = "[" *WSP 1*DIGIT *WSP "]"
 
 schema-predicate = "[" *WSP key-name *WSP "]"
 
